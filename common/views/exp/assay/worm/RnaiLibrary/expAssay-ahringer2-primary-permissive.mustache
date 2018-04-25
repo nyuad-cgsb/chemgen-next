@@ -1,0 +1,131 @@
+<div class="">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="screenInfo">
+        <h2>Screen Information</h2>
+        <h3>Plate View</h3>
+        <p> Screen {{{workflowData.screenName}}} {{{wellData.taxTerm}}}</p>
+        <!--TODO Make sure plateURL is correct Format-->
+        <a href="{{{expPlate.plateWpPost}}}">{{expPlate.barcode}}</a>
+      </div>
+      <div id="libraryInfo">
+        {{#wellData.parentLibraryData.rnaiId}}
+          <h3> Parent Library Info </h3>
+          <table class="table responsive">
+            <tbody>
+            <tr>
+              <td>BioLoc</td>
+              <td>{{wellData.parentLibraryData.bioloc}}</td>
+            </tr>
+            <tr>
+              <td>Fwd Primer</td>
+              <td>{{wellData.parentLibraryData.fwdPrimer}}</td>
+            </tr>
+            <tr>
+              <td>Reverse Primer</td>
+              <td>{{wellData.parentLibraryData.revPrimer}}</td>
+            </tr>
+            <tr>
+              <td>Stock Title</td>
+              <td>{{wellData.parentLibraryData.stocktitle}}</td>
+            </tr>
+            <tr>
+              <td>Stock Location</td>
+              <td>{{wellData.parentLibraryData.stockloc}}</td>
+            </tr>
+            </tbody>
+          </table>
+        {{/wellData.parentLibraryData.rnaiId}}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div id="taxTerms">
+        <table class="table responsive">
+          <thead>
+          <tr>
+            <th>Tag</th>
+            <th>Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{{table}}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div id="thisWell" class="col-md-8">
+      [envira-gallery-dynamic id="tags-AI-{{{wellData.expAssay.assayId}}}" cols="1"]
+    </div>
+    <div class="col-md-4">
+      <p>Model Data Coming Soon!</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <section id="screenGeneGallery">
+        <div>
+          <!--Tax Term Header-->
+          {{#hasTaxTerm}}
+            <h2>{{{taxTerm}}}</h2>
+          {{/hasTaxTerm}}
+          <!-- !Tax Term Header-->
+
+          <h3> Permissive </h3>
+
+          <!-- Permissive Mutant Strain + L4440-->
+          {{#annotationData.ctrl_rnai}}
+            <div id="enviraCPM">
+              <h3>Permissive {{{ workflowData.biosamples.experimentBiosample.name }}} + L4440 </h3>
+              <p>
+                [envira-gallery-dynamic id="tags-EGI-{{{annotationData.ctrl_rnai.expGroupId}}}" columns="4" limit="4"
+                sort="random"]
+              </p>
+            </div>
+          {{/annotationData.ctrl_rnai}}
+          <!-- !Permissive Mutant Strain + L4440-->
+
+          <!-- Permissive Mutant Strain + RNAi-->
+          {{#hasTaxTerm}}
+            <div id="enviraEM">
+              <h3>Permissive {{{ workflowData.biosamples.experimentBiosample.name }}} + RNAi </h3>
+              <p>
+                [envira-gallery-dynamic id="tags-EGI-{{{annotationData.treat_rnai.expGroupId}}}" cols="2"]
+              </p>
+            </div>
+          {{/hasTaxTerm}}
+          <!-- !Permissive Mutant Strain + RNAi-->
+
+          <!-- Permissive WildType Strain + L4440-->
+          {{#annotationData.ctrl_null}}
+            <div id="enviraCPN">
+              <h3>Permissive {{{ workflowData.biosamples.ctrlBiosample.name }}} + L4440</h3>
+              <p>
+                [envira-gallery-dynamic id="tags-EGI-{{annotationData.ctrl_null.expGroupId}}" columns="4" limit="4"
+                sort="random"]
+              </p>
+            </div>
+          {{/annotationData.ctrl_null}}
+          <!-- !! Permissive WildType Strain + L4440-->
+
+          <!--Permissive WildType Strain + RNAi-->
+          {{#hasTaxTerm}}
+              <div id="enviraEN">
+                <h3>Permissive {{{ workflowData.biosamples.ctrlBiosample.name }}} + RNAi</h3>
+                <p>
+                  [envira-gallery-dynamic id="tags-EGI-{{{annotationData.ctrl_rnai.expGroupId}}}" cols="2"]
+                </p>
+              </div>
+          {{/hasTaxTerm}}
+          <!-- !! Permissive WildType Strain + RNAi-->
+
+          <br><br>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</div>
+

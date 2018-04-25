@@ -8,27 +8,71 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
-    "posttest": "npm run lint && nsp check"
+    "test": "find ./ -name '*.test.js' | grep -v node_modules | xargs mocha",
+    "posttest": "echo 'npm run lint && nsp check'"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.106",
+    "@types/loopback": "^3.2.3",
+    "camelcase": "^4.1.0",
+    "commander": "^2.15.1",
     "compression": "^1.0.3",
+    "config": "^1.30.0",
     "cors": "^2.5.2",
+    "decamelize": "^2.0.0",
+    "deepcopy": "^0.6.3",
+    "flat": "^4.0.0",
     "helmet": "^1.3.0",
+    "js-php-serialize": "0.0.4",
+    "jsonfile": "^4.0.0",
+    "lodash.capitalize": "^4.2.1",
+    "loopback": "^3.0.0",
     "loopback-boot": "^2.6.5",
-    "serve-favicon": "^2.0.1",
-    "strong-error-handler": "^2.0.0",
     "loopback-component-explorer": "^4.0.0",
-    "loopback": "^3.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^3.17.1",
-    "eslint-config-loopback": "^8.0.0",
-    "nsp": "^2.1.0"
+    "loopback-connector-mongodb": "^3.4.2",
+    "loopback-connector-mssql": "^3.2.0",
+    "loopback-connector-mysql": "^2.4.1",
+    "loopback-ds-readonly-mixin": "^2.0.4",
+    "mkdirp-promise": "^5.0.1",
+    "mustache": "^2.3.0",
+    "npm": "^5.7.1",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2",
+    "serve-favicon": "^2.0.1",
+    "slug": "^0.9.1",
+    "strong-error-handler": "^2.0.0",
+    "typescript": "^2.7.2",
+    "uppercamelcase": "^3.0.0",
+    "winston": "^2.4.1"
   },
   "repository": {
     "type": "",
     "url": ""
   },
   "license": "UNLICENSED",
-  "description": "chemgen-next"
+  "description": "chemgen-next",
+  "devDependencies": {
+    "@angular/cli": "^1.7.4",
+    "@mean-expert/loopback-sdk-builder": "^2.2.0",
+    "@types/chai": "^4.1.2",
+    "@types/commander": "^2.12.2",
+    "@types/mocha": "^2.2.48",
+    "babel": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "chai": "^4.1.2",
+    "eslint": "^4.18.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-config-standard-jsx": "^5.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^5.0.4",
+    "mock-http-server": "^0.2.0",
+    "nock": "^9.2.3",
+    "nyc": "^11.6.0",
+    "standard": "^11.0.0",
+    "ts-node": "^5.0.1"
+  }
 }
