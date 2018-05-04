@@ -66,10 +66,16 @@ ExpPlate.load.createExperimentPlate = function (workflowData, instrumentPlate: P
  * Given the experimentalData (workflowData) transform the instrument plate to a expPlate
  * @param workflowData
  * @param instrumentPlate
- * @returns {{plateImagePath: string; screenId: any | number | {name: string; type: string} | {name; type}; barcode; screenStage: any | string | {name: string; type: string} | {name; type} | number; instrumentId: any | number; instrumentPlateId: number | {name: string; type: string} | {name; type}; plateStartTime: string | Date | {name: string; type: string} | {name; type}; plateCreationDate: Date | {name: string; type: string} | {name; type} | string}}
+ * @returns [ExpPlateResultSet, ExpPlateResultSet]
  */
 ExpPlate.load.transformInstrumentPlate = function (workflowData: ExpScreenUploadWorkflowResultSet, instrumentPlate: PlateResultSet) {
-  let imagePath = path.normalize(instrumentPlate.imagepath).split('\\');
+
+  let csPlateid = instrumentPlate.csPlateid;
+  let imagepath = instrumentPlate.imagepath;
+  let barcode = instrumentPlate.name;
+  let creationdate = instrumentPlate.creationdate;
+
+  let imagePath = path.normalize(imagepath).split('\\');
 
   /*
   For some reason if I searched on the whole plate object it was always returning not found
@@ -81,7 +87,7 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData: ExpScreenUpload
     expWorkflowId: workflowData.id,
     //Instrument Plate Things
     instrumentId: workflowData.instrumentId,
-    instrumentPlateId: instrumentPlate.csPlateid,
+    instrumentPlateId: csPlateid,
   };
   let plateObj: ExpPlateResultSet = {
     //Screen Info
@@ -91,13 +97,13 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData: ExpScreenUpload
     expWorkflowId: workflowData.id,
     //Instrument Plate Things
     instrumentId: workflowData.instrumentId,
-    instrumentPlateId: instrumentPlate.csPlateid,
-    instrumentPlateImagePath: instrumentPlate.imagepath,
+    instrumentPlateId: csPlateid,
+    instrumentPlateImagePath: imagepath,
     //Plate Data
-    plateImagePath: `${imagePath[4]}/${instrumentPlate.csPlateid}`,
-    barcode: instrumentPlate.name,
+    plateImagePath: `${imagePath[4]}/${csPlateid}`,
+    barcode: barcode,
     plateAssayDate: workflowData.stockPrepDate,
-    plateImageDate: instrumentPlate.creationdate,
+    plateImageDate: creationdate,
     plateTemperature: workflowData.temperature,
   };
   return [plateObj, lookUpPlateObj];

@@ -14,14 +14,24 @@ program
 var workflow = path.resolve(process.cwd(), program.workflow);
 console.log('Beginning workflow upload...');
 console.log("Found workflow " + workflow);
-var workflowData = jsonfile.readFileSync(workflow);
-ExpScreenUploadWorkflow.load.workflows.doWork(workflowData)
+var workflowData;
+try {
+    workflowData = jsonfile.readFileSync(workflow);
+}
+catch (error) {
+    app.winston.info("Could not read file " + workflow);
+    process.exit(1);
+}
+// app.agenda.on('ready', function(){
+//   console.log('app started!');
+//   app.agenda.now('testJob');
+//   app.agenda.now('ExpScreenUploadWorkflow.doWork', {workflowData: workflowData});
+// });
+ExpScreenUploadWorkflow.load.workflows.worms.doWork(workflowData)
     .then(function () {
-    app.winston.info('Workflow complete');
     process.exit(0);
 })
     .catch(function (error) {
-    app.winston.error('Workflow did not complete successfully!');
-    app.winston.error(error);
     process.exit(1);
 });
+//# sourceMappingURL=upload_screens.js.map

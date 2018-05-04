@@ -5,9 +5,12 @@ module.exports = function (RnaiLibrary) {
   RnaiLibrary.helpers.primary = {}
   RnaiLibrary.helpers.secondary = {}
   RnaiLibrary.load = {}
+  RnaiLibrary.load.primary = {}
+  RnaiLibrary.load.secondary = {}
   RnaiLibrary.load.workflows = {}
   RnaiLibrary.extract = {}
   RnaiLibrary.extract.primary = {}
+  RnaiLibrary.extract.secondary = {}
   RnaiLibrary.extract.workflows = {}
   RnaiLibrary.transform = {}
   RnaiLibrary.transform.workflows = {}
@@ -16,6 +19,7 @@ module.exports = function (RnaiLibrary) {
     require('../load/RnaiLibrary')
     require('../extract/RnaiLibrary')
     require('../extract/primary/RnaiLibrary')
+    require('../extract/secondary/RnaiLibrary')
     require('../helpers/RnaiLibrary')
   })
 }

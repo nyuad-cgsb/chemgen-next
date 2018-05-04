@@ -41,3 +41,4 @@ RnaiLibrary.extract.primary.getLibraryInfo = function (workflowData, barcode) {
         });
     });
 };
+//# sourceMappingURL=RnaiLibrary.js.map

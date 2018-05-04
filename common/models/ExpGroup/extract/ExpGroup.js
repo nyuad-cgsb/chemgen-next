@@ -21,3 +21,4 @@ ExpGroup.extract.getExpGroupFromScreenData = function (expGroupId, screenData) {
     });
     return _.uniqBy(expGroups, 'expGroupId')[0];
 };
+//# sourceMappingURL=ExpGroup.js.map

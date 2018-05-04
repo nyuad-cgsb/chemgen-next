@@ -236,6 +236,7 @@ RnaiLibrary.search = function (where) {
  * @returns {{}}
  */
 RnaiLibrary.helpers.genLibraryResult = function (barcode, libraryResults, well) {
+    var thisWellLibraryResults = [];
     var libraryResult = {};
     if (barcode.match('L4440')) {
         libraryResult.name = 'L4440';
@@ -244,11 +245,13 @@ RnaiLibrary.helpers.genLibraryResult = function (barcode, libraryResults, well) 
     else {
         // I'm sure I use the quadrant for something  - just not sure what
         // var quadrant = RnaiLibrary.helpers.getQuad(barcode);
+        // TODO
+        //Return all the wells - change to filter
         libraryResult = _.find(libraryResults, {
             well: well,
         });
+        libraryResult = RnaiLibrary.helpers.checkLibraryResult(libraryResult);
     }
-    libraryResult = RnaiLibrary.helpers.checkLibraryResult(libraryResult);
     return libraryResult;
 };
 /**
@@ -265,3 +268,4 @@ RnaiLibrary.helpers.checkLibraryResult = function (libraryResult) {
     }
     return libraryResult;
 };
+//# sourceMappingURL=RnaiLibrary.js.map

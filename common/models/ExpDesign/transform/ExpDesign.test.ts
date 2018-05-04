@@ -13,19 +13,19 @@ const ExpDesign = app.models.ExpDesign as (typeof WorkflowModel);
 const RnaiLibrary = app.models.RnaiLibrary as (typeof WorkflowModel);
 
 const rnaiLibraries = require('../../../../test/data/rnai_library.json');
-const instrumentPlates: PlateResultSet[] = require('../../../../test/data/rnai_instrument_plate_data_list.json');
+const primaryInstrumentPlates: PlateResultSet[] = require('../../../../test/data/rnai_instrument_plate_data_list.json');
 const workflowData: any = require('../../../../test/data/rnai_workflow_data.json');
 
 import shared = require('../../../../test/shared');
 
 shared.makeMemoryDb();
 
-describe('ExpDesign.transform', function () {
+describe('ExpDesign.transform primary', function () {
   shared.prepareRnai();
 
   it('ExpDesign.transform.prepareExpDesign', function (done) {
     this.timeout(5000);
-    ExpScreenUploadWorkflow.load.workflows.worms.primary.populatePlateData(workflowData, instrumentPlates)
+    ExpScreenUploadWorkflow.load.workflows.worms.primary.populatePlateData(workflowData, primaryInstrumentPlates)
       .then((results: PlateCollection[]) => {
         //TODO Add tests to ensure wells with same reagent get grouped separately
         let groups = ExpDesign.transform.groupExpConditions(workflowData, results);
@@ -40,6 +40,46 @@ describe('ExpDesign.transform', function () {
         assert.equal(groups['treat_rnai'].length, 3);
         assert.equal(matchedGroups.length, 3);
         assert.deepEqual(expDesignRows[0], {treatmentGroupId: 2, controlGroupId: 5});
+        done();
+      })
+      .catch((error) => {
+        done(new Error(error));
+      })
+  });
+
+  shared.sharedAfter();
+});
+
+describe('ExpDesign.transform secondary', function(){
+
+  shared.prepareRnai();
+
+  it('ExpDesign.transform.prepareExpDesign', function (done) {
+    this.timeout(5000);
+    ExpScreenUploadWorkflow.load.workflows.worms.populatePlateData(shared.rnaiData.secondaryWorkflowData[0], shared.rnaiData.secondaryInstrumentPlates)
+      .then((results: PlateCollection[]) => {
+        //TODO Add tests to ensure wells with same reagent get grouped separately
+        let groups = ExpDesign.transform.groupExpConditions(workflowData, results);
+        let matchedGroups = ExpDesign.transform.createExpSets(workflowData, groups);
+        let expDesignRows = ExpDesign.transform.prepareExpDesign(workflowData, groups, matchedGroups);
+        expDesignRows = _.sortBy(expDesignRows, 'treatmentGroupId');
+
+        const treatmentGroupId = 5;
+        let firstSetTreatmentRows = _.filter(expDesignRows, (row) =>{
+          return _.isEqual(row.treatmentGroupId, treatmentGroupId);
+        });
+        assert.equal(firstSetTreatmentRows.length, 3);
+        //There should only be 2 of the rnai conditions because there are only two wells A02,A03 with rnai in them
+        // A01,A12 are L4440
+        // H11 is empty
+        assert.equal(groups['ctrl_null'].length, 1);
+        assert.equal(groups['ctrl_strain'].length, 1);
+        assert.equal(groups['ctrl_rnai'].length, 2);
+        assert.equal(groups['treat_rnai'].length, 2);
+        assert.equal(matchedGroups.length, 2);
+        assert.deepEqual(expDesignRows[0], {treatmentGroupId: 5, controlGroupId: 2});
+
+
         done();
       })
       .catch((error) => {

@@ -1,4 +1,5 @@
 module.exports = {
-  imageConversionHost: '10.230.9.204',
-  imageConversionPort: '3001'
+  imageConversionHost: 'pyrite.abudhabi.nyu.edu',
+  imageConversionPort: '3001',
+  wpUrl: 'http://onyx.abudhabi.nyu.edu/wordpress'
 }

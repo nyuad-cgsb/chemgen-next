@@ -23,7 +23,7 @@ WpPosts.load.workflows.createPost = function (workflowData, postData: any) {
     postParent: 0,
     pingStatus: 'open',
     commentStatus: 'open',
-    guid: config.get('wpUrl') + '/' + postData.titleSlug,
+    guid: config.get('wpUrl')  + postData.titleSlug,
   };
 
   let dateNow = new Date().toISOString();
@@ -52,7 +52,7 @@ WpPosts.load.workflows.createPost = function (workflowData, postData: any) {
 WpPosts.load.updatePost = function (workflowData, postData: any, postResult: WpPostsResultSet) {
   return new Promise(function (resolve, reject) {
     postResult.postContent = postData.postContent;
-    var dateNow = new Date().toISOString();
+    const dateNow = new Date().toISOString();
     postResult.postModified = dateNow;
     postResult.postModifiedGmt = dateNow;
     // This was nuts - the in memory model I used for testing could deal with any of these
@@ -82,12 +82,12 @@ WpPosts.load.workflows.genImagePost = function (postData: WpPostsResultSet, imag
     menuOrder: 0,
     postContent: '',
     postStatus: 'inherit',
-    postTitle: imagePostData.title + '.jpeg',
+    postTitle: imagePostData.title,
     postName: imagePostData.title,
     postParent: 0,
     pingStatus: 'closed',
     commentStatus: 'open',
-    guid: config.get('wpUrl') + '/wp-content/uploads/' + imagePostData.imagePath,
+    guid: config.get('wpUrl') + '/wp-content/uploads/assays/' + imagePostData.imagePath,
   };
 
   let dateNow = new Date().toISOString();
@@ -139,7 +139,7 @@ WpPosts.load.createImageMetaData = function (postData: WpPostsResultSet, imagePo
       {
         postId: imagePostData.id,
         metaKey: '_wp_attached_file',
-        metaValue: imagePostData.imagePath,
+        metaValue: 'assays/' + imagePostData.imagePath,
       },
       {
         postId: imagePostData.id,

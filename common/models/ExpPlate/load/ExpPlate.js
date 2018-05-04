@@ -54,10 +54,14 @@ ExpPlate.load.createExperimentPlate = function (workflowData, instrumentPlate) {
  * Given the experimentalData (workflowData) transform the instrument plate to a expPlate
  * @param workflowData
  * @param instrumentPlate
- * @returns {{plateImagePath: string; screenId: any | number | {name: string; type: string} | {name; type}; barcode; screenStage: any | string | {name: string; type: string} | {name; type} | number; instrumentId: any | number; instrumentPlateId: number | {name: string; type: string} | {name; type}; plateStartTime: string | Date | {name: string; type: string} | {name; type}; plateCreationDate: Date | {name: string; type: string} | {name; type} | string}}
+ * @returns [ExpPlateResultSet, ExpPlateResultSet]
  */
 ExpPlate.load.transformInstrumentPlate = function (workflowData, instrumentPlate) {
-    var imagePath = path.normalize(instrumentPlate.imagepath).split('\\');
+    var csPlateid = instrumentPlate.csPlateid;
+    var imagepath = instrumentPlate.imagepath;
+    var barcode = instrumentPlate.name;
+    var creationdate = instrumentPlate.creationdate;
+    var imagePath = path.normalize(imagepath).split('\\');
     /*
     For some reason if I searched on the whole plate object it was always returning not found
     So I just search for a subset of the plate object
@@ -68,7 +72,7 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData, instrumentPlate
         expWorkflowId: workflowData.id,
         //Instrument Plate Things
         instrumentId: workflowData.instrumentId,
-        instrumentPlateId: instrumentPlate.csPlateid,
+        instrumentPlateId: csPlateid,
     };
     var plateObj = {
         //Screen Info
@@ -78,13 +82,13 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData, instrumentPlate
         expWorkflowId: workflowData.id,
         //Instrument Plate Things
         instrumentId: workflowData.instrumentId,
-        instrumentPlateId: instrumentPlate.csPlateid,
-        instrumentPlateImagePath: instrumentPlate.imagepath,
+        instrumentPlateId: csPlateid,
+        instrumentPlateImagePath: imagepath,
         //Plate Data
-        plateImagePath: imagePath[4] + "/" + instrumentPlate.csPlateid,
-        barcode: instrumentPlate.name,
+        plateImagePath: imagePath[4] + "/" + csPlateid,
+        barcode: barcode,
         plateAssayDate: workflowData.stockPrepDate,
-        plateImageDate: instrumentPlate.creationdate,
+        plateImageDate: creationdate,
         plateTemperature: workflowData.temperature,
     };
     return [plateObj, lookUpPlateObj];
@@ -115,3 +119,4 @@ ExpPlate.load.workflows.createExpPlateInterface = function (workflowData, screen
         });
     });
 };
+//# sourceMappingURL=ExpPlate.js.map

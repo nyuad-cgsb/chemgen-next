@@ -119,3 +119,4 @@ ModelPredictedPheno.load.getPhenos = function (workflowData, wellData) {
         });
     });
 };
+//# sourceMappingURL=ModelPredictedPheno.js.map

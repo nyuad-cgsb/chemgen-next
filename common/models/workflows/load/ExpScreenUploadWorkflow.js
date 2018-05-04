@@ -2,14 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../server/server.js");
 var Promise = require("bluebird");
+/* tslint:disable */
 var ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow;
-ExpScreenUploadWorkflow.load.workflows.worms.primary = {};
+/* tslint:enable */
 ExpScreenUploadWorkflow.load.workflows.doWork = function (workflowData) {
     return new Promise(function (resolve, reject) {
         if (workflowData instanceof Array) {
             Promise.map(workflowData, function (data) {
                 var biosampleType = data.biosampleType + "s";
-                return ExpScreenUploadWorkflow.load.workflows[biosampleType][data.screenStage].processWorkflow(data);
+                return ExpScreenUploadWorkflow.load.workflows[biosampleType].processWorkflow(data);
             })
                 .then(function () {
                 resolve();
@@ -20,13 +21,16 @@ ExpScreenUploadWorkflow.load.workflows.doWork = function (workflowData) {
             });
         }
         else {
-            ExpScreenUploadWorkflow.load.workflows.worms.primary.processWorkflow(workflowData)
+            var biosampleType = workflowData.biosampleType + "s";
+            ExpScreenUploadWorkflow.load.workflows[biosampleType].processWorkflow(workflowData)
                 .then(function () {
                 resolve();
             })
                 .catch(function (error) {
+                console.log(error);
                 reject(new Error(error));
             });
         }
     });
 };
+//# sourceMappingURL=ExpScreenUploadWorkflow.js.map

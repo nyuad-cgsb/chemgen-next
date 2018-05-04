@@ -14,15 +14,12 @@ ExpDesign.load.workflows.createExpDesigns = function (workflowData: ExpScreenUpl
     Promise.map(expDesignRows, (expDesignRow) => {
       return ExpDesign
         .findOrCreate({where: app.etlWorkflow.helpers.findOrCreateObj(expDesignRow)}, expDesignRow)
-        .then((results) => {
-          return results[0];
-        })
-        .catch((error) =>{
-          return new Error(error);
-        })
-    }, {concurrency: 1})
+    })
       .then((results: ExpDesignResultSet[]) => {
-        resolve(results);
+        let expDesignRows = results.map((result) => {
+          return result[0];
+        });
+        resolve(expDesignRows);
       })
       .catch((error) => {
         reject(new Error(error));

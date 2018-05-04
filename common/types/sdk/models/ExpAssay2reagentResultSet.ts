@@ -2,7 +2,8 @@
 import {
   ExpScreenResultSet,
   ExpPlateResultSet,
-  ExpAssayResultSet
+  ExpAssayResultSet,
+  ReagentLibraryResultSet
 } from '../index';
 
 /* Jillian */
@@ -10,6 +11,7 @@ declare var Object: any;
 export interface ExpAssay2reagentResultSetInterface {
   "assay2reagentId"?: number;
   "screenId"?: number;
+  "libraryId"?: number;
   "plateId"?: number;
   "assayId"?: number;
   "stockId"?: number;
@@ -24,11 +26,13 @@ export interface ExpAssay2reagentResultSetInterface {
   expScreens?: ExpScreenResultSet[];
   expPlates?: ExpPlateResultSet[];
   expAssays?: ExpAssayResultSet[];
+  reagentLibrarys?: ReagentLibraryResultSet[];
 }
 
 export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInterface {
   "assay2reagentId": number;
   "screenId": number;
+  "libraryId": number;
   "plateId": number;
   "assayId": number;
   "stockId": number;
@@ -43,6 +47,7 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
   expScreens: ExpScreenResultSet[];
   expPlates: ExpPlateResultSet[];
   expAssays: ExpAssayResultSet[];
+  reagentLibrarys: ReagentLibraryResultSet[];
   constructor(data?: ExpAssay2reagentResultSetInterface) {
     Object.assign(this, data);
   }
@@ -82,6 +87,10 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
         },
         "screenId": {
           name: 'screenId',
+          type: 'number'
+        },
+        "libraryId": {
+          name: 'libraryId',
           type: 'number'
         },
         "plateId": {
@@ -153,6 +162,14 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
           relationType: 'hasMany',
                   keyFrom: 'assay2reagentId',
           keyTo: 'assayId'
+        },
+        reagentLibrarys: {
+          name: 'reagentLibrarys',
+          type: 'ReagentLibraryResultSet[]',
+          model: 'ReagentLibrary',
+          relationType: 'hasMany',
+                  keyFrom: 'assay2reagentId',
+          keyTo: 'libraryId'
         },
       }
     }

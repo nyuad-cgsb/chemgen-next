@@ -17,6 +17,7 @@ ExpAssay2reagent.load.createAssayStock = function (workflowData: any, expPlateDa
         plateId: expPlateData.expPlate.plateId,
         screenId: workflowData.screenId,
         stockId: wellData.stockLibraryData.stockId,
+        libraryId: workflowData.libraryId,
         reagentId: wellData.stockLibraryData[workflowData.reagentLookUp],
         parentLibraryPlate: wellData.parentLibraryData.plate,
         parentLibraryWell: wellData.parentLibraryData.well,

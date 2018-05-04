@@ -12,6 +12,7 @@ ExpAssay2reagent.load.createAssayStock = function (workflowData, expPlateData) {
                 plateId: expPlateData.expPlate.plateId,
                 screenId: workflowData.screenId,
                 stockId: wellData.stockLibraryData.stockId,
+                libraryId: workflowData.libraryId,
                 reagentId: wellData.stockLibraryData[workflowData.reagentLookUp],
                 parentLibraryPlate: wellData.parentLibraryData.plate,
                 parentLibraryWell: wellData.parentLibraryData.well,
@@ -38,3 +39,4 @@ ExpAssay2reagent.load.createAssayStock = function (workflowData, expPlateData) {
         });
     });
 };
+//# sourceMappingURL=ExpAssay2reagent.js.map

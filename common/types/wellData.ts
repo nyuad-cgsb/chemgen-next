@@ -1,7 +1,7 @@
 import {
   ExpAssay2reagentResultSet,
   ExpAssayResultSet, ExpDesignResultSet, ExpGroupResultSet, ModelPredictedPhenoResultSet,
-  RnaiLibraryResultSet
+  RnaiLibraryResultSet, WpTermTaxonomyResultSet
 } from "./sdk/models";
 import {RnaiLibraryStockResultSet} from "./sdk/models";
 import {ChemicalLibraryResultSet, ChemicalLibraryStockResultSet, ExpPlateResultSet} from "./sdk/models";
@@ -10,10 +10,20 @@ declare var Object: any;
 export interface annotationDataInterface {
  geneName?: string;
  taxTerm?: string;
- taxTerms: Array<object>;
+ taxTerms: Array<any> | WpTermTaxonomyResultSet[];
+}
+
+export class annotationData {
+  geneName?: string;
+  taxTerm?: string;
+  taxTerms: Array<any> ;
+  constructor(data?: annotationDataInterface) {
+    Object.assign(this, data);
+  }
 }
 
 export interface RnaiWellDataInterface {
+  well?: string;
   parentLibraryData?: RnaiLibraryResultSet | ChemicalLibraryResultSet;
   stockLibraryData?: RnaiLibraryStockResultSet | ChemicalLibraryStockResultSet;
   annotationData?: annotationDataInterface;
@@ -24,6 +34,7 @@ export interface RnaiWellDataInterface {
 }
 
 export class RnaiWellCollection {
+  well?: string;
   parentLibraryData: RnaiLibraryResultSet | ChemicalLibraryResultSet;
   stockLibraryData: RnaiLibraryStockResultSet | ChemicalLibraryStockResultSet;
   expGroup?: ExpGroupResultSet;
@@ -55,12 +66,14 @@ export interface ScreenCollectionInterface{
   plateDataList: PlateCollection[];
   expDesignList?: ExpDesignResultSet[];
   expGroupList?: ExpGroupResultSet[];
+  annotationData?: annotationDataInterface;
 }
 
 export class ScreenCollection {
   plateDataList: PlateCollection[];
   expDesignList?: ExpDesignResultSet[];
   expGroupList?: ExpGroupResultSet[];
+  annotationData?: annotationDataInterface;
   constructor(data?: ScreenCollectionInterface) {
     Object.assign(this, data);
   }

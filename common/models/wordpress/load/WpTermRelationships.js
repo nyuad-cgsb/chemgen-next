@@ -29,3 +29,4 @@ WpTermRelationships.load.createRelationships = function (postId, taxTermObjList)
         });
     });
 };
+//# sourceMappingURL=WpTermRelationships.js.map

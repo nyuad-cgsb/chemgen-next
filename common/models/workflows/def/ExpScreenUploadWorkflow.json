@@ -6,6 +6,27 @@
     "validateUpsert": true
   },
   "properties": {
+    "name": {
+      "type": "string"
+    },
+    "comment": {
+      "type": "string"
+    },
+    "platePlan": {
+      "type": "any"
+    },
+    "platePlanId": {
+      "type": "any"
+    },
+    "assayViewType": {
+      "type": "string"
+    },
+    "plateViewType": {
+      "type": "string"
+    },
+    "instrumentPlateIdLookup": {
+      "type": "string"
+    },
     "wells": {
       "type": [
         "string"

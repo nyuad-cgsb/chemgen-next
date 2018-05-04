@@ -14,12 +14,13 @@ var WpPosts = app.models['WpPosts'];
  */
 WpPosts.helpers.genImageMeta = function (imageBase) {
     // var imageSizes = ['150x150', '300x300', '768x768', '1024x1024', '1024x1024', '1110x530', '730x350', '350x300'];
+    // TODO In WP all image are prefaced with 'assays', but this should really be a configuration
     var imageSplit = imageBase.split('/');
     var imageName = imageSplit.pop();
     var imageMetaObj = {
         width: 1600,
         height: 1600,
-        file: imageBase + '.jpeg',
+        file: 'assays/' + imageBase + '.jpeg',
         sizes: {
             thumbnail: {
                 file: imageName + '-150x150.jpeg',
@@ -85,6 +86,6 @@ WpPosts.helpers.genImageMeta = function (imageBase) {
             keywords: {},
         },
     };
-    var s = php.serialize(imageMetaObj);
-    return s;
+    return php.serialize(imageMetaObj);
 };
+//# sourceMappingURL=WpPosts.js.map

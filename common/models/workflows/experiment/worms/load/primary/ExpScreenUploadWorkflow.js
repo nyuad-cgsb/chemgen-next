@@ -4,7 +4,6 @@ var app = require("../../../../../../../server/server.js");
 var Promise = require("bluebird");
 var wellData_1 = require("../../../../../../types/wellData");
 var ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow;
-ExpScreenUploadWorkflow.load.workflows.worms.primary = {};
 /**
  * This workflow goes from the upload screenData to building the interfaces
  * TODO Name this something more informative
@@ -52,10 +51,6 @@ ExpScreenUploadWorkflow.load.workflows.worms.primary.processWorkflow = function 
         ExpScreenUploadWorkflow.load.workflows.worms.primary.populateExperimentData(workflowData, instrumentPlates)
             .then(function (screenData) {
             return ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces(workflowData, screenData);
-        })
-            .then(function (screenData) {
-            app.winston.info('RETURNING Scores');
-            return app.models.ModelPredictedPheno.load.workflows.parseScreen(workflowData, screenData);
         })
             .then(function () {
             resolve();
@@ -187,3 +182,4 @@ ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces = function (wor
         });
     });
 };
+//# sourceMappingURL=ExpScreenUploadWorkflow.js.map

@@ -65,13 +65,17 @@ ExpDesign.transform.createExpSets = function (workflowData: ExpScreenUploadWorkf
   let exp = Object.keys(workflowData.experimentMatchConditions)[0];
   let control = workflowData.experimentMatchConditions[exp];
 
-  return groupsData[exp].map((expGroup: ExpGroupResultSet) => {
-    let reagentId = expGroup.reagentId;
-    let well = expGroup.well;
-    let controlGroup: ExpGroupResultSet = _.find(groupsData[control], {reagentId: reagentId, well: well});
-    return {expGroup: expGroup, controlGroup: controlGroup};
-  });
-
+  if(_.get(groupsData, exp)){
+    return groupsData[exp].map((expGroup: ExpGroupResultSet) => {
+      let reagentId = expGroup.reagentId;
+      let well = expGroup.well;
+      let controlGroup: ExpGroupResultSet = _.find(groupsData[control], {reagentId: reagentId, well: well});
+      return {expGroup: expGroup, controlGroup: controlGroup};
+    });
+  }
+  else{
+    return [];
+  }
 };
 
 ExpDesign.transform.prepareExpDesign = function (workflowData: ExpScreenUploadWorkflowResultSet, groups: any, matchedExpGroups: any) {

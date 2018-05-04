@@ -6,9 +6,10 @@ import {ExpPlateResultSet} from "../../../types/sdk/models";
 const ExpScreenUploadWorkflow = app.models['ExpScreenUploadWorkflow'];
 
 import shared = require('../../../../test/shared');
+
 shared.makeMemoryDb();
 
-const expPlates: ExpPlateResultSet[] = [
+const expPlates: Array<any> = [
   {
     "plateId": 1,
     "screenId": 1,
@@ -114,13 +115,13 @@ describe('ExpScreenUploadWorkflow.load', function () {
 
   shared.sharedBefore();
 
-  it('ExpScreenUploadWorkflow should be empty', function(done){
+  it('ExpScreenUploadWorkflow should be empty', function (done) {
     ExpScreenUploadWorkflow.count()
-      .then((count) =>{
+      .then((count) => {
         assert.equal(count, 0);
         done();
       })
-      .catch((error)=>{
+      .catch((error) => {
         done(new Error(error));
       })
   });
@@ -132,6 +133,30 @@ describe('ExpScreenUploadWorkflow.load', function () {
         .findOrCreate({
           where: search,
         }, workflowData)
+        .then((results) => {
+          return results[0];
+        })
+    }, {concurrency: 1})
+      .then((results) => {
+        assert.equal(results[0].id, 1);
+        assert.equal(results[1].id, 1);
+        assert.equal(results[2].id, 1);
+        assert.equal(results[3].id, 1);
+        done();
+      })
+      .catch((error) => {
+        done(new Error(error));
+      });
+  });
+  it('ExpScreenUploadWorkflow.findOrCreate on deeply nested object - secondary', function (done) {
+    //This only sort of works. Just flattening the whole thing got me funny results.
+    //TODO Write tests against the mongodb datastore - this is ridiculous
+    let search = app.models[workflowData.libraryModel].load.createWorkflowSearchObj(shared.rnaiData.secondaryWorkflowData[0]);
+    Promise.map([1, 2, 3, 4], function () {
+      return ExpScreenUploadWorkflow
+        .findOrCreate({
+          where: search,
+        }, shared.rnaiData.secondaryWorkflowData[0])
         .then((results) => {
           return results[0];
         })

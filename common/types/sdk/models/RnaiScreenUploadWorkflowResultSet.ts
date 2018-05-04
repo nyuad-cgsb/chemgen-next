@@ -3,6 +3,12 @@
 /* Jillian */
 declare var Object: any;
 export interface RnaiScreenUploadWorkflowResultSetInterface {
+  "name"?: string;
+  "comment"?: string;
+  "platePlan"?: any;
+  "platePlanId"?: string;
+  "assayViewType"?: string;
+  "plateViewType"?: string;
   "wells"?: Array<any>;
   "screenId"?: number;
   "instrumentId"?: number;
@@ -28,10 +34,17 @@ export interface RnaiScreenUploadWorkflowResultSetInterface {
   "experimentGroups"?: any;
   "temperature"?: any;
   "librarycode"?: string;
+  "instrumentPlateIdLookup"?: string;
   "id"?: any;
 }
 
 export class RnaiScreenUploadWorkflowResultSet implements RnaiScreenUploadWorkflowResultSetInterface {
+  "name": string;
+  "comment": string;
+  "platePlan": any;
+  "platePlanId": string;
+  "assayViewType": string;
+  "plateViewType": string;
   "wells": Array<any>;
   "screenId": number;
   "instrumentId": number;
@@ -57,6 +70,7 @@ export class RnaiScreenUploadWorkflowResultSet implements RnaiScreenUploadWorkfl
   "experimentGroups": any;
   "temperature": any;
   "librarycode": string;
+  "instrumentPlateIdLookup": string;
   "id": any;
   constructor(data?: RnaiScreenUploadWorkflowResultSetInterface) {
     Object.assign(this, data);
@@ -91,6 +105,30 @@ export class RnaiScreenUploadWorkflowResultSet implements RnaiScreenUploadWorkfl
       path: 'RnaiScreenUploadWorkflows',
       idName: 'id',
       properties: {
+        "name": {
+          name: 'name',
+          type: 'string'
+        },
+        "comment": {
+          name: 'comment',
+          type: 'string'
+        },
+        "platePlan": {
+          name: 'platePlan',
+          type: 'any'
+        },
+        "platePlanId": {
+          name: 'platePlanId',
+          type: 'string'
+        },
+        "assayViewType": {
+          name: 'assayViewType',
+          type: 'string'
+        },
+        "plateViewType": {
+          name: 'plateViewType',
+          type: 'string'
+        },
         "wells": {
           name: 'wells',
           type: 'Array&lt;any&gt;',
@@ -200,6 +238,10 @@ export class RnaiScreenUploadWorkflowResultSet implements RnaiScreenUploadWorkfl
         },
         "librarycode": {
           name: 'librarycode',
+          type: 'string'
+        },
+        "instrumentPlateIdLookup": {
+          name: 'instrumentPlateIdLookup',
           type: 'string'
         },
         "id": {

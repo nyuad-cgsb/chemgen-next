@@ -17,7 +17,7 @@ module.exports = {
   chemgenDS: {
     name: 'chemgenDS',
     connector: 'mysql',
-    host: 'onyx.abudhabi.nyu.edu',
+    host: process.env.CHEMGEN_HOST,
     port: 3306,
     url: process.env.CHEMGEN_URL,
     database: process.env.CHEMGEN_DB,
@@ -27,7 +27,7 @@ module.exports = {
   wordpressDS: {
     name: 'wordpressDS',
     connector: 'mysql',
-    host: 'onyx.abudhabi.nyu.edu',
+    host: process.env.WP_HOST,
     port: 3306,
     database: process.env.WP_DB,
     password: process.env.WP_PASS,

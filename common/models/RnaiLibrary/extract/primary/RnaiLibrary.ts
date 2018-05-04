@@ -1,8 +1,6 @@
 import app  = require('../../../../../server/server.js');
 
-import {ExpAssayResultSet} from "../../../";
-import {ExpPlateResultSet} from "../../../";
-import {RnaiLibraryResultSet} from "../../../";
+import {RnaiLibraryResultSet} from "../../../../types/sdk/models";
 import {WorkflowModel} from "../../../index";
 import Promise = require('bluebird');
 

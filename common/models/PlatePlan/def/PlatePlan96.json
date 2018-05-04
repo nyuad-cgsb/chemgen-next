@@ -12,6 +12,9 @@
     "platePlanUploadDate": {
       "type": "date"
     },
+    "libraryId": {
+      "type": "number"
+    },
     "A01": {
       "type": "object"
     },

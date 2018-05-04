@@ -27,3 +27,4 @@ RnaiLibraryStock.load.createStocks = function (workflowData, expPlateData) {
         });
     });
 };
+//# sourceMappingURL=RnaiLibraryStock.js.map

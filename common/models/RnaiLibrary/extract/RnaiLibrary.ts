@@ -1,6 +1,6 @@
 import app  = require('../../../../server/server.js');
-import {ExpPlateResultSet, RnaiLibraryResultSet, RnaiLibraryStockResultSet} from "../../../types/sdk/models";
 import {RnaiWellCollection} from "../../../types/wellData";
+import {ExpPlateResultSet, RnaiLibraryResultSet, RnaiLibraryStockResultSet} from "../../../types/sdk/models";
 import {WorkflowModel} from "../../index";
 import Promise = require('bluebird');
 
@@ -12,26 +12,24 @@ const RnaiLibrary = app.models['RnaiLibrary'] as (typeof WorkflowModel);
 //Here we can map A01 -> A01
 //But in NY its TileThing -> Well
 RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate: ExpPlateResultSet, libraryResults: RnaiLibraryResultSet[]) {
-  app.winston.info('extract parseLibraryResults');
   return new Promise(function (resolve, reject) {
     let allWells = workflowData.wells;
     let barcode = expPlate.barcode;
     let plateId = expPlate.plateId;
 
-    //TODO This will go into workflowData
-    // let condition = RnaiLibrary.helpers
-    //   .parseCond(expPlate.barcode);
-    // let taxID = 'geneName';
-    // let strain = RnaiLibrary.helpers.wormStrain(barcode);
 
+    //TODO Need to incorporate multiple wells
     Promise.map(allWells, function (well) {
-      let libraryResult : RnaiLibraryResultSet = RnaiLibrary.helpers.genLibraryResult(barcode, libraryResults, well);
+      let createStocks = [];
+      let parentLibraryResults  = [];
+      let libraryResult: RnaiLibraryResultSet = RnaiLibrary.helpers.genLibraryResult(barcode, libraryResults, well);
       return app.models.RnaiWormbaseXrefs.extract.genTaxTerms({
         where: {
           wbGeneSequenceId: libraryResult.geneName,
         },
       })
         .then(function (wormTaxTerms) {
+          // TODO Add taxTerms per library / screenStage
           let taxTerms = [];
           // For secondary plates we need to add an additional taxTerm for control wells
           wormTaxTerms.taxTerms.forEach(function (wormTaxTerm) {
@@ -64,7 +62,7 @@ RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate: ExpP
           //This is the skeleton for the stock creator
           //But it does not actually get created until
           //The assay is created
-          let createStock : RnaiLibraryStockResultSet = {
+          let createStock: RnaiLibraryStockResultSet = new RnaiLibraryStockResultSet({
             plateId: plateId,
             libraryId: workflowData.libraryId,
             rnaiId: libraryResult.rnaiId,
@@ -73,15 +71,14 @@ RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate: ExpP
             location: '',
             datePrepared: workflowData.stockPrepDate,
             preparedBy: '',
-          };
+          });
 
-          let wellData : RnaiWellCollection = new RnaiWellCollection({
+          return new RnaiWellCollection({
+            well: well,
             stockLibraryData: createStock,
             parentLibraryData: libraryResult,
             annotationData: {geneName: libraryResult.geneName, taxTerm: libraryResult.geneName, taxTerms: taxTerms}
           });
-
-          return wellData;
         });
     })
       .then(function (results) {
@@ -91,6 +88,7 @@ RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate: ExpP
         app.winston.error(error.stack);
         reject(new Error(error));
       });
+
   });
 };
 

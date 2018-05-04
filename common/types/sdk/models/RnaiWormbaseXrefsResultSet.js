@@ -33,7 +33,7 @@ var RnaiWormbaseXrefsResultSet = /** @class */ (function () {
             name: 'RnaiWormbaseXrefsResultSet',
             plural: 'RnaiWormbaseXrefsResultSets',
             path: 'RnaiWormbaseXrefs',
-            idName: 'wbGeneSequenceId',
+            idName: 'id',
             properties: {
                 "wbGeneSequenceId": {
                     name: 'wbGeneSequenceId',
@@ -71,6 +71,10 @@ var RnaiWormbaseXrefsResultSet = /** @class */ (function () {
                     name: 'uniprotAccession',
                     type: 'string'
                 },
+                "id": {
+                    name: 'id',
+                    type: 'number'
+                },
             },
             relations: {}
         };
@@ -78,3 +82,4 @@ var RnaiWormbaseXrefsResultSet = /** @class */ (function () {
     return RnaiWormbaseXrefsResultSet;
 }());
 exports.RnaiWormbaseXrefsResultSet = RnaiWormbaseXrefsResultSet;
+//# sourceMappingURL=RnaiWormbaseXrefsResultSet.js.map

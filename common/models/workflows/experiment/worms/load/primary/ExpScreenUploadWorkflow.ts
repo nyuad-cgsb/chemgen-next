@@ -6,8 +6,6 @@ import {PlateCollection, RnaiWellCollection, ScreenCollection} from "../../../..
 
 const ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow as (typeof WorkflowModel);
 
-ExpScreenUploadWorkflow.load.workflows.worms.primary = {};
-
 /**
  * This workflow goes from the upload screenData to building the interfaces
  * TODO Name this something more informative
@@ -58,10 +56,10 @@ ExpScreenUploadWorkflow.load.workflows.worms.primary.processWorkflow = function 
       .then((screenData: ScreenCollection) => {
         return ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces(workflowData, screenData)
       })
-      .then((screenData: ScreenCollection) => {
-        app.winston.info('RETURNING Scores');
-        return app.models.ModelPredictedPheno.load.workflows.parseScreen(workflowData, screenData)
-      })
+      // .then((screenData: ScreenCollection) => {
+      //   app.winston.info('RETURNING Scores');
+      //   return app.models.ModelPredictedPheno.load.workflows.parseScreen(workflowData, screenData)
+      // })
       .then(() => {
         resolve();
       })

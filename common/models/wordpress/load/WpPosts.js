@@ -17,7 +17,7 @@ WpPosts.load.workflows.createPost = function (workflowData, postData) {
         postParent: 0,
         pingStatus: 'open',
         commentStatus: 'open',
-        guid: config.get('wpUrl') + '/' + postData.titleSlug,
+        guid: config.get('wpUrl') + postData.titleSlug,
     };
     var dateNow = new Date().toISOString();
     var postObjWithDate = deepcopy(postObj);
@@ -72,12 +72,12 @@ WpPosts.load.workflows.genImagePost = function (postData, imagePostData) {
         menuOrder: 0,
         postContent: '',
         postStatus: 'inherit',
-        postTitle: imagePostData.title + '.jpeg',
+        postTitle: imagePostData.title,
         postName: imagePostData.title,
         postParent: 0,
         pingStatus: 'closed',
         commentStatus: 'open',
-        guid: config.get('wpUrl') + '/wp-content/uploads/' + imagePostData.imagePath,
+        guid: config.get('wpUrl') + '/wp-content/uploads/assays/' + imagePostData.imagePath,
     };
     var dateNow = new Date().toISOString();
     var postObjWithDate = deepcopy(postObj);
@@ -125,7 +125,7 @@ WpPosts.load.createImageMetaData = function (postData, imagePostData) {
             {
                 postId: imagePostData.id,
                 metaKey: '_wp_attached_file',
-                metaValue: imagePostData.imagePath,
+                metaValue: 'assays/' + imagePostData.imagePath,
             },
             {
                 postId: imagePostData.id,
@@ -147,3 +147,4 @@ WpPosts.load.createImageMetaData = function (postData, imagePostData) {
         });
     });
 };
+//# sourceMappingURL=WpPosts.js.map

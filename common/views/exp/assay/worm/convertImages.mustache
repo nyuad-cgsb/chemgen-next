@@ -23,9 +23,10 @@ convert  "{{{images.baseImage}}}-autolevel.bmp" "{{{images.baseImage}}}-autoleve
 convert  -layers flatten -quality 50 "{{{images.baseImage}}}-autolevel.bmp" "{{{images.baseImage}}}-autolevel.jpeg"
 
 {{#thumbSizes}}
-  convert -thumbnail {{{.}}} "{{{images.autoLevelJpegImage}}}" "{{{images.baseImage}}}-autolevel-{{{.}}}.jpeg"
+  convert -thumbnail {{{.}}} "{{{images.baseImage}}}-autolevel.jpeg" "{{{images.baseImage}}}-autolevel-{{{.}}}.jpeg"
 {{/thumbSizes}}
 
 cd /tmp
 rm -rf /tmp/{{{random}}}
-
+rm -rf "{{{images.baseImage}}}.bmp"
+rm -rf "{{{images.baseImage}}}.tiff"

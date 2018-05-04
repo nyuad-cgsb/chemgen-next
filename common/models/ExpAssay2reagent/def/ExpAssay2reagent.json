@@ -39,6 +39,21 @@
         "nullable": "Y"
       }
     },
+    "libraryId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "library_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
     "plateId": {
       "type": "Number",
       "required": false,
@@ -206,6 +221,12 @@
     }
   },
   "relations": {
+    "reagentLibrarys": {
+      "type": "hasMany",
+      "model": "ReagentLibrary",
+      "foreignKey": "libraryId",
+      "propertyId": "libraryId"
+    },
     "expAssays": {
       "type": "hasMany",
       "model": "ExpAssay",

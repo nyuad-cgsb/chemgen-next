@@ -14,6 +14,8 @@
   "dependencies": {
     "@types/lodash": "^4.14.106",
     "@types/loopback": "^3.2.3",
+    "agenda": "^1.0.3",
+    "agendash": "^0.4.0",
     "camelcase": "^4.1.0",
     "commander": "^2.15.1",
     "compression": "^1.0.3",

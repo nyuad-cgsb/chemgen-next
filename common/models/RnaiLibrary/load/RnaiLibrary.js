@@ -24,10 +24,8 @@ RnaiLibrary.load.workflows.processExpPlates = function (workflowData, expPlates)
 };
 RnaiLibrary.load.workflows.processExpPlate = function (workflowData, expPlate) {
     return new Promise(function (resolve, reject) {
-        app.winston.info('Getting Parent Plate');
         RnaiLibrary['extract'][workflowData.screenStage].getParentLibrary(workflowData, expPlate.barcode)
             .then(function (libraryResults) {
-            app.winston.info('Parsing Library Results');
             return RnaiLibrary.extract.parseLibraryResults(workflowData, expPlate, libraryResults);
         })
             .then(function (libraryDataList) {
@@ -42,6 +40,9 @@ RnaiLibrary.load.workflows.processExpPlate = function (workflowData, expPlate) {
 };
 //TODO Thsi should be primary
 RnaiLibrary.load.createWorkflowSearchObj = function (workflowData) {
+    return RnaiLibrary.load[workflowData.screenStage].createWorkflowSearchObj(workflowData);
+};
+RnaiLibrary.load.primary.createWorkflowSearchObj = function (workflowData) {
     return {
         and: [
             {
@@ -65,6 +66,48 @@ RnaiLibrary.load.createWorkflowSearchObj = function (workflowData) {
             {
                 stockPrepDate: workflowData.stockPrepDate,
             },
+            {
+                'replicates.1.0': workflowData.replicates[1][0],
+            }
         ]
     };
 };
+RnaiLibrary.load.secondary.createWorkflowSearchObj = function (workflowData) {
+    // I was also searching by the platePlan Id
+    // But for some reason that is not recognized properly
+    // It is encoded as a string here and in mongodb
+    // TODO Check into changing into an embedded relationship
+    return {
+        and: [
+            {
+                screenId: workflowData.screenId,
+            },
+            {
+                instrumentId: workflowData.instrumentId,
+            },
+            {
+                screenStage: workflowData.screenStage,
+            },
+            {
+                stockPrepDate: workflowData.stockPrepDate,
+            },
+            {
+                'platePlan.platePlanName': workflowData.platePlan.platePlanName,
+            },
+            {
+                'replicates.1.0': workflowData.replicates[1][0],
+            }
+        ]
+    };
+};
+RnaiLibrary.load.primary.genTaxTerms = function (workflowData) {
+    return [
+        { taxonomy: 'rnai_plate', taxTerm: workflowData.search.rnaiLibrary.plate },
+        { taxonomy: 'rnai_chrom', taxTerm: workflowData.search.rnaiLibrary.chrom },
+        { taxonomy: 'rnai_quadrant', taxTerm: workflowData.search.rnaiLibrary.quadrant },
+    ];
+};
+RnaiLibrary.load.secondary.genTaxTerms = function (workflowData) {
+    return [];
+};
+//# sourceMappingURL=RnaiLibrary.js.map

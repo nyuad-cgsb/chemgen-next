@@ -9,19 +9,17 @@ ExpDesign.load.workflows.createExpDesigns = function (workflowData, expDesignRow
     return new Promise(function (resolve, reject) {
         Promise.map(expDesignRows, function (expDesignRow) {
             return ExpDesign
-                .findOrCreate({ where: app.etlWorkflow.helpers.findOrCreateObj(expDesignRow) }, expDesignRow)
-                .then(function (results) {
-                return results[0];
-            })
-                .catch(function (error) {
-                return new Error(error);
-            });
-        }, { concurrency: 1 })
+                .findOrCreate({ where: app.etlWorkflow.helpers.findOrCreateObj(expDesignRow) }, expDesignRow);
+        })
             .then(function (results) {
-            resolve(results);
+            var expDesignRows = results.map(function (result) {
+                return result[0];
+            });
+            resolve(expDesignRows);
         })
             .catch(function (error) {
             reject(new Error(error));
         });
     });
 };
+//# sourceMappingURL=ExpDesign.js.map

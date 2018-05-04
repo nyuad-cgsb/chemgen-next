@@ -3,6 +3,13 @@
 /* Jillian */
 declare var Object: any;
 export interface ExpScreenUploadWorkflowResultSetInterface {
+  "name"?: string;
+  "comment"?: string;
+  "platePlan"?: any;
+  "platePlanId"?: any;
+  "assayViewType"?: string;
+  "plateViewType"?: string;
+  "instrumentPlateIdLookup"?: string;
   "wells"?: Array<any>;
   "screenId"?: number;
   "instrumentId"?: number;
@@ -32,6 +39,13 @@ export interface ExpScreenUploadWorkflowResultSetInterface {
 }
 
 export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflowResultSetInterface {
+  "name": string;
+  "comment": string;
+  "platePlan": any;
+  "platePlanId": any;
+  "assayViewType": string;
+  "plateViewType": string;
+  "instrumentPlateIdLookup": string;
   "wells": Array<any>;
   "screenId": number;
   "instrumentId": number;
@@ -91,6 +105,34 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
       path: 'ExpScreenUploadWorkflows',
       idName: 'id',
       properties: {
+        "name": {
+          name: 'name',
+          type: 'string'
+        },
+        "comment": {
+          name: 'comment',
+          type: 'string'
+        },
+        "platePlan": {
+          name: 'platePlan',
+          type: 'any'
+        },
+        "platePlanId": {
+          name: 'platePlanId',
+          type: 'any'
+        },
+        "assayViewType": {
+          name: 'assayViewType',
+          type: 'string'
+        },
+        "plateViewType": {
+          name: 'plateViewType',
+          type: 'string'
+        },
+        "instrumentPlateIdLookup": {
+          name: 'instrumentPlateIdLookup',
+          type: 'string'
+        },
         "wells": {
           name: 'wells',
           type: 'Array&lt;any&gt;',

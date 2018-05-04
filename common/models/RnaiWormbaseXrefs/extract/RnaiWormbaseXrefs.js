@@ -42,3 +42,4 @@ RnaiWormbaseXrefs.extract.genTaxTerms = function (where) {
         });
     });
 };
+//# sourceMappingURL=RnaiWormbaseXrefs.js.map

@@ -31,3 +31,4 @@ __export(require("./ModelPredictedCountsResultSet"));
 __export(require("./PlatePlan96ResultSet"));
 __export(require("./BaseModels"));
 __export(require("./FireLoopRef"));
+//# sourceMappingURL=index.js.map

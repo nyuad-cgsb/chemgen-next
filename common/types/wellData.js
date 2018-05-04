@@ -1,5 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var annotationData = /** @class */ (function () {
+    function annotationData(data) {
+        Object.assign(this, data);
+    }
+    return annotationData;
+}());
+exports.annotationData = annotationData;
 var RnaiWellCollection = /** @class */ (function () {
     function RnaiWellCollection(data) {
         Object.assign(this, data);
@@ -28,3 +35,4 @@ var ExpSet = /** @class */ (function () {
     return ExpSet;
 }());
 exports.ExpSet = ExpSet;
+//# sourceMappingURL=wellData.js.map

@@ -34,9 +34,10 @@ ExpAssay.load.workflows.createExpAssayInterfaces = function (workflowData, scree
             })
                 .then(function (results) {
                 //Then associate taxTerms to posts
-                return ExpAssay.load.workflows.createPostTaxRels(workflowData, plateData, wellData, results);
+                return ExpAssay.load.workflows.createPostTaxRels(workflowData, screenData, wellData, results);
             })
                 .catch(function (error) {
+                app.winston.error('Error in ExpAssay.load.createExpAssayInterfaces .map');
                 reject(new Error(error));
             });
         })
@@ -44,6 +45,7 @@ ExpAssay.load.workflows.createExpAssayInterfaces = function (workflowData, scree
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.workflows.createExpAssayInterfaces');
             reject(new Error(error));
         });
     });
@@ -74,6 +76,7 @@ ExpAssay.load.workflows.getAssayRelations = function (workflowData, screenData, 
             }
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.getAssayRelations');
             reject(new Error(error));
         });
     });
@@ -121,6 +124,7 @@ ExpAssay.load.genHtmlView = function (workflowData, screenData, plateData, wellD
             resolve(assayView);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.genHtmlView');
             reject(new Error(error));
         });
     });
@@ -142,7 +146,7 @@ ExpAssay.load.workflows.createWpPosts = function (workflowData, plateData, wellD
             title: title,
             titleSlug: slug(title),
             postContent: postContent,
-            imagePath: assayImagePath + ".jpeg",
+            imagePath: assayImagePath + "-autolevel.jpeg",
         };
         app.models.WpPosts.load.workflows.createPost(workflowData, postData)
             .then(function (result) {
@@ -157,6 +161,7 @@ ExpAssay.load.workflows.createWpPosts = function (workflowData, plateData, wellD
             resolve(postData);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.workflows.createWpPosts');
             reject(new Error(error));
         });
     });
@@ -175,6 +180,7 @@ ExpAssay.load.updateExpAssay = function (wellData, postData) {
             resolve(postData);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.updateExpAssay');
             reject(new Error(error));
         });
     });
@@ -203,9 +209,9 @@ ExpAssay.load.updateExpAssay = function (wellData, postData) {
  * @param {RnaiWellCollection} wellData
  * @param postsResults
  */
-ExpAssay.load.relateTaxToPost = function (workflowData, plateData, wellData) {
+ExpAssay.load.relateTaxToPost = function (workflowData, screenData, wellData) {
     var results = _.map(wellData.annotationData.taxTerms, function (taxTerm) {
-        return _.filter(plateData.annotationData.taxTerms, function (taxTermResultSet) {
+        return _.filter(screenData.annotationData.taxTerms, function (taxTermResultSet) {
             return _.isEqual(String(taxTermResultSet.term), String(taxTerm.taxTerm)) && _.isEqual(String(taxTermResultSet.taxonomy), String(taxTerm.taxonomy));
         });
     });
@@ -221,9 +227,10 @@ ExpAssay.load.relateTaxToPost = function (workflowData, plateData, wellData) {
  * @param {RnaiWellCollection} wellData
  * @param postData
  */
-ExpAssay.load.workflows.createPostTaxRels = function (workflowData, plateData, wellData, postData) {
+ExpAssay.load.workflows.createPostTaxRels = function (workflowData, screenData, wellData, postData) {
     return new Promise(function (resolve, reject) {
-        var taxTerms = ExpAssay.load.relateTaxToPost(workflowData, plateData, wellData);
+        var taxTerms = ExpAssay.load.relateTaxToPost(workflowData, screenData, wellData);
+        taxTerms = _.uniqWith(taxTerms, _.isEqual);
         Promise.map(Object.keys(postData), function (postType) {
             return app.models.WpTermRelationships.load
                 .createRelationships(postData[postType].id, taxTerms);
@@ -232,7 +239,9 @@ ExpAssay.load.workflows.createPostTaxRels = function (workflowData, plateData, w
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.PostTaxRels');
             reject(new Error(error));
         });
     });
 };
+//# sourceMappingURL=ExpAssay.js.map

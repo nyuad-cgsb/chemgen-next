@@ -3,6 +3,9 @@
 /* Jillian */
 declare var Object: any;
 export interface PlatePlan96ResultSetInterface {
+  "platePlanName"?: string;
+  "platePlanUploadDate"?: Date;
+  "libraryId"?: number;
   "A01"?: any;
   "A02"?: any;
   "A03"?: any;
@@ -103,6 +106,9 @@ export interface PlatePlan96ResultSetInterface {
 }
 
 export class PlatePlan96ResultSet implements PlatePlan96ResultSetInterface {
+  "platePlanName": string;
+  "platePlanUploadDate": Date;
+  "libraryId": number;
   "A01": any;
   "A02": any;
   "A03": any;
@@ -233,6 +239,18 @@ export class PlatePlan96ResultSet implements PlatePlan96ResultSetInterface {
       path: 'PlatePlan96s',
       idName: 'id',
       properties: {
+        "platePlanName": {
+          name: 'platePlanName',
+          type: 'string'
+        },
+        "platePlanUploadDate": {
+          name: 'platePlanUploadDate',
+          type: 'Date'
+        },
+        "libraryId": {
+          name: 'libraryId',
+          type: 'number'
+        },
         "A01": {
           name: 'A01',
           type: 'any'
