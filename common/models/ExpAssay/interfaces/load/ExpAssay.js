@@ -106,14 +106,18 @@ ExpAssay.load.mapAssayRelations = function (workflowData, expSet) {
  */
 // return ExpAssay.load.genHtmlView(workflowData, screenData, plateData, wellData, annotationData);
 ExpAssay.load.genHtmlView = function (workflowData, screenData, plateData, wellData, annotationData) {
-    var templateName = workflowData.librarycode + "-" + workflowData.screenStage + "-" + workflowData.screenType + ".mustache";
+    var templateName = workflowData.librarycode + "-" + workflowData.screenStage + ".mustache";
     var templateFile = path.join(path.dirname(__filename), "../../../../../common/views/exp/assay/" + workflowData.biosampleType + "/" + workflowData.libraryModel + "/expAssay-" + templateName);
+    var screenType = _.capitalize(workflowData.screenType);
     //TODO Generate WpUrl for Plate
     var table = app.models.WpTerms.load.genTermTable(wellData.annotationData.taxTerms);
+    var libraryData = app.models[workflowData.libraryModel].load.genLibraryViewData(workflowData, wellData);
     return new Promise(function (resolve, reject) {
         readFile(templateFile, 'utf8')
             .then(function (contents) {
             var assayView = Mustache.render(contents, {
+                libraryData: libraryData,
+                screenType: screenType,
                 wellData: wellData,
                 expPlate: plateData.expPlate,
                 workflowData: workflowData,
@@ -186,6 +190,7 @@ ExpAssay.load.updateExpAssay = function (wellData, postData) {
     });
 };
 /**
+ * TODO move this to WpTerms - it can be used for ExpPlate and ExpAssay
  * Annotation data gets preprocessed at the end of each plate
  * plateData.annotationData is an array of taxonomy -> termIds relationships
  * In Annotation Data it looks like this
@@ -240,6 +245,7 @@ ExpAssay.load.workflows.createPostTaxRels = function (workflowData, screenData, 
         })
             .catch(function (error) {
             app.winston.error('Error in ExpAssay.load.PostTaxRels');
+            app.winston.error(error);
             reject(new Error(error));
         });
     });

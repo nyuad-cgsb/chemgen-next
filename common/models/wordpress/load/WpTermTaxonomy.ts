@@ -3,12 +3,13 @@ import app  = require('../../../../server/server.js');
 import {WorkflowModel} from "../../index";
 import { WpTermsResultSet, WpTermTaxonomyResultSet} from "../../../types/sdk/models";
 import Promise = require('bluebird');
+import {shuffle} from 'lodash';
 
 const WpTermTaxonomy = app.models['WpTermTaxonomy'] as (typeof WorkflowModel);
 
 WpTermTaxonomy.load.createTaxTerms = function (taxTermsList: WpTermsResultSet[]) {
   return new Promise((resolve, reject) => {
-    Promise.map(taxTermsList, (taxTermObj) => {
+    Promise.map(shuffle(taxTermsList), (taxTermObj) => {
       let createObj = {
         termId: taxTermObj.termId,
         //taxTerm from original object

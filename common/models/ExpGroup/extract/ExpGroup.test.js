@@ -18,12 +18,12 @@ describe('ExpGroup.extract', function () {
             var results = ExpGroup.extract.getExpGroupFromScreenData(6, screenData);
             assert.deepEqual(shared.convertToJSON(results), {
                 "expGroupId": 6,
-                "expGroupType": "treat_rnai",
+                "expGroupType": "ctrl_rnai",
                 "screenId": 1,
                 "libraryId": 1,
-                "reagentId": 701,
+                "reagentId": 703,
                 "biosampleId": 1,
-                "well": "A01",
+                "well": "A03",
                 "expWorkflowId": 1,
             });
             done();

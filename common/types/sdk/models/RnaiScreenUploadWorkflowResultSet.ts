@@ -11,6 +11,7 @@ export interface RnaiScreenUploadWorkflowResultSetInterface {
   "plateViewType"?: string;
   "wells"?: Array<any>;
   "screenId"?: number;
+  "screenName"?: string;
   "instrumentId"?: number;
   "libraryId"?: number;
   "screenStage"?: string;
@@ -47,6 +48,7 @@ export class RnaiScreenUploadWorkflowResultSet implements RnaiScreenUploadWorkfl
   "plateViewType": string;
   "wells": Array<any>;
   "screenId": number;
+  "screenName": string;
   "instrumentId": number;
   "libraryId": number;
   "screenStage": string;
@@ -137,6 +139,10 @@ export class RnaiScreenUploadWorkflowResultSet implements RnaiScreenUploadWorkfl
         "screenId": {
           name: 'screenId',
           type: 'number'
+        },
+        "screenName": {
+          name: 'screenName',
+          type: 'string'
         },
         "instrumentId": {
           name: 'instrumentId',

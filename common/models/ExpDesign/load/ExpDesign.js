@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../server/server.js");
 var Promise = require("bluebird");
-var _ = require("lodash");
+var lodash_1 = require("lodash");
 var ExpDesign = app.models.ExpDesign;
 ExpDesign.load.workflows.createExpDesigns = function (workflowData, expDesignRows) {
-    expDesignRows = _.uniqWith(expDesignRows, _.isEqual);
+    expDesignRows = lodash_1.uniqWith(expDesignRows, lodash_1.isEqual);
     return new Promise(function (resolve, reject) {
-        Promise.map(expDesignRows, function (expDesignRow) {
+        Promise.map(lodash_1.shuffle(expDesignRows), function (expDesignRow) {
             return ExpDesign
                 .findOrCreate({ where: app.etlWorkflow.helpers.findOrCreateObj(expDesignRow) }, expDesignRow);
         })

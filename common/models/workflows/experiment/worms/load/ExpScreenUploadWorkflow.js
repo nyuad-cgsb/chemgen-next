@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../../../server/server.js");
 var Promise = require("bluebird");
 var wellData_1 = require("../../../../../types/wellData");
-var jsonfile = require("jsonfile");
 var lodash_1 = require("lodash");
+var deepcopy = require("deepcopy");
+var chalk = require("chalk");
 var ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow;
 /**
  * This workflow goes from the upload screenData to building the interfaces
@@ -12,14 +13,12 @@ var ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow;
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  */
 ExpScreenUploadWorkflow.load.workflows.worms.doWork = function (workflowData) {
-    app.winston.info('Doing some work!!!!');
     return new Promise(function (resolve, reject) {
         if (workflowData instanceof Array) {
             Promise.map(workflowData, function (data) {
                 return ExpScreenUploadWorkflow.load.workflows.worms.processWorkflow(data);
             }, { concurrency: 1 })
                 .then(function () {
-                app.winston.info('Complete');
                 resolve();
             })
                 .catch(function (error) {
@@ -30,7 +29,6 @@ ExpScreenUploadWorkflow.load.workflows.worms.doWork = function (workflowData) {
         else {
             ExpScreenUploadWorkflow.load.workflows.worms.processWorkflow(workflowData)
                 .then(function () {
-                app.winston.info('Complete');
                 resolve();
             })
                 .catch(function (error) {
@@ -53,6 +51,8 @@ ExpScreenUploadWorkflow.load.getInstrumentPlates = function (workflowData) {
 };
 ExpScreenUploadWorkflow.load.workflows.worms.processWorkflow = function (workflowData) {
     return new Promise(function (resolve, reject) {
+        console.log(chalk.magenta("ExpScreenUploadWorkflow.doWork " + workflowData.name));
+        console.time("ExpScreenUploadWorkflow.doWork " + workflowData.name);
         var instrumentPlates = ExpScreenUploadWorkflow.load.getInstrumentPlates(workflowData);
         ExpScreenUploadWorkflow.load[workflowData.screenStage].createWorkflowInstance(workflowData)
             .then(function (workflowData) {
@@ -60,10 +60,11 @@ ExpScreenUploadWorkflow.load.workflows.worms.processWorkflow = function (workflo
         })
             .then(function (screenData) {
             //Export to file
-            jsonfile.writeFileSync('rnai-secondary-screen-data.json', screenData);
             return ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces(workflowData, screenData);
         })
             .then(function () {
+            console.log(chalk.cyan("Time: ExpScreenUploadWorkflow.doWork " + workflowData.name));
+            console.timeEnd("ExpScreenUploadWorkflow.doWork " + workflowData.name);
             resolve();
         })
             .catch(function (error) {
@@ -82,11 +83,11 @@ ExpScreenUploadWorkflow.load.workflows.worms.populateExperimentData = function (
     return new Promise(function (resolve, reject) {
         ExpScreenUploadWorkflow.load.workflows.worms.populatePlateData(workflowData, instrumentPlates)
             .then(function (results) {
-            app.winston.info('Begin: Populate ExpDesignData');
+            app.winston.info("Begin: Populate ExpDesignData " + workflowData.name);
             return ExpScreenUploadWorkflow.load.workflows.worms.populateExpDesignData(workflowData, results);
         })
             .then(function (results) {
-            app.winston.info('Complete: Populate ExpDesignData');
+            app.winston.info("Complete: Populate ExpDesignData " + workflowData.name);
             resolve(results);
         })
             .catch(function (error) {
@@ -105,15 +106,18 @@ ExpScreenUploadWorkflow.load.workflows.worms.populateExperimentData = function (
 ExpScreenUploadWorkflow.load.fixPlates = function (workflowData) {
     Object.keys(workflowData.experimentGroups).map(function (expGroup) {
         if (lodash_1.get(workflowData, ['experimentGroups', expGroup, 'plates'])) {
-            workflowData.experimentGroups[expGroup].plates.map(function (plate) {
+            workflowData.experimentGroups[expGroup].plates.map(function (plate, index) {
                 Object.keys(plate).map(function (key) {
                     var origKey = key;
                     key = key.replace('[', '');
                     key = key.replace(']', '');
-                    plate[key] = plate[origKey];
+                    plate[key] = deepcopy(plate[origKey]);
                     plate['instrumentPlateId'] = Number(plate.csPlateid);
-                    delete plate[origKey];
+                    if (!lodash_1.isEqual(key, origKey)) {
+                        delete plate[origKey];
+                    }
                 });
+                workflowData.experimentGroups[expGroup].plates[index] = plate;
             });
         }
         else {
@@ -210,15 +214,15 @@ ExpScreenUploadWorkflow.load.createWorkflowInstance = function (workflowData) {
  * @param {PlateResultSet[]} instrumentPlates
  */
 ExpScreenUploadWorkflow.load.workflows.worms.populatePlateData = function (workflowData, instrumentPlates) {
-    app.winston.info('Begin: Populating Plate Data');
+    app.winston.info("Begin: Populating Plate Data " + workflowData.name);
     return new Promise(function (resolve, reject) {
         app.models.ExpPlate.load.workflows.processInstrumentPlates(workflowData, instrumentPlates)
             .then(function (expPlatesList) {
-            app.winston.info('Begin: ExpAssay.load.workflows.processExpPlates');
+            app.winston.info("Begin: ExpAssay.load.workflows.processExpPlates " + workflowData.name);
             return app.models.ExpAssay.load.workflows.processExpPlates(workflowData, expPlatesList);
         })
             .then(function (results) {
-            app.winston.info('Complete: Populating Plate Data');
+            app.winston.info("Complete: Populating Plate Data " + workflowData.name);
             resolve(results);
         })
             .catch(function (error) {
@@ -257,7 +261,7 @@ ExpScreenUploadWorkflow.load.workflows.worms.populateExpDesignData = function (w
  * @param {ScreenCollection} screenData
  */
 ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces = function (workflowData, screenData) {
-    app.winston.info('Creating Experiment Interfaces');
+    app.winston.info("Creating Experiment Interfaces: " + workflowData.name);
     return new Promise(function (resolve, reject) {
         //TODO Add in create exp terms here
         return app.models.WpTerms.load.workflows.createAnnotationData(workflowData, screenData)
@@ -276,7 +280,7 @@ ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces = function (wor
             }, { concurrency: 1 });
         })
             .then(function () {
-            app.winston.info('Complete Experiment Interfaces!');
+            app.winston.info("Complete Experiment Interfaces! " + workflowData.name);
             // I don't actually do anything with the results from the interfaces
             // They are just there to look pretty
             resolve(screenData);

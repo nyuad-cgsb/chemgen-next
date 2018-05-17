@@ -4,14 +4,14 @@ import {ExpDesignResultSet, ExpGroupResultSet, ExpScreenUploadWorkflowResultSet}
 import {PlateCollection, RnaiWellCollection} from "../../../types/wellData";
 
 import Promise = require('bluebird');
-import * as _ from "lodash";
+import {uniqWith, shuffle, isEqual} from 'lodash';
 
 const ExpDesign = app.models.ExpDesign as (typeof WorkflowModel);
 
 ExpDesign.load.workflows.createExpDesigns = function (workflowData: ExpScreenUploadWorkflowResultSet, expDesignRows: ExpDesignResultSet[]) {
-  expDesignRows = _.uniqWith(expDesignRows, _.isEqual);
+  expDesignRows = uniqWith(expDesignRows, isEqual);
   return new Promise((resolve, reject) => {
-    Promise.map(expDesignRows, (expDesignRow) => {
+    Promise.map(shuffle(expDesignRows), (expDesignRow) => {
       return ExpDesign
         .findOrCreate({where: app.etlWorkflow.helpers.findOrCreateObj(expDesignRow)}, expDesignRow)
     })

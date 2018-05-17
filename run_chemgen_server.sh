@@ -15,9 +15,13 @@ export CHEMGEN_PASS="chemGen123"
 
 ## Wordpress DB Mysql
 export WP_HOST="onyx.abudhabi.nyu.edu"
+export WP_PASS="chemGen123"
+export WP_SITE="http://onyx.abudhabi.nyu.edu/wordpress"
 export WP_DB="chemgen_wp_dev"
 export WP_USER="chemgen_wp_dev"
-export WP_PASS="chemGen123"
+#export WP_SITE="http://onyx.abudhabi.nyu.edu/chemgen-next"
+#export WP_DB="chemgen_next_wp"
+#export WP_USER="chemgen_next_wp"
 
 ## MongoDB - miscalleneous things!
 export MONGO_HOST="onyx.abudhabi.nyu.edu"

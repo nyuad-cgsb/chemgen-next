@@ -166,21 +166,8 @@ describe('ExpAssay.load', function () {
       .then((results: PlateCollection) => {
         return ExpAssay.load.prepareAnnotationData(workflowData, results);
       })
-      .then((results) => {
-        assert.equal(results.length, 54);
-        done();
-      })
-      .catch((error) => {
-        done(new Error(error));
-      });
-  });
-  it('ExpAssay.load.workflows.createAnnotationData', function (done) {
-    ExpAssay.load.workflows.processExpPlate(workflowData, expPlates[4])
-      .then((results) => {
-        return ExpAssay.load.workflows.createAnnotationData(workflowData, results);
-      })
-      .then((results) => {
-        assert.equal(results.annotationData.taxTerms.length, 54);
+      .then((plateData: PlateCollection) => {
+        assert.equal(plateData.wellDataList[0].annotationData.taxTerms.length, 12);
         done();
       })
       .catch((error) => {
@@ -207,13 +194,8 @@ describe('ExpAssay.load', function () {
     ExpAssay.load.workflows.processExpPlates(workflowData, expPlates)
       .then((results: PlateCollection[]) =>{
         assert.equal(results.length, 5);
-        assert.equal(results[0].hasOwnProperty('annotationData'), true);
         assert.equal(results[0].hasOwnProperty('expPlate'), true);
         assert.equal(results[0].hasOwnProperty('wellDataList'), true);
-        //Term is not technically on the WpTermTaxonomy class def, but it gets added in there for convenience
-        assert.equal(results[0].annotationData.taxTerms[0].term, 'C48E7.5');
-        assert.equal(results[0].annotationData.taxTerms[0].termId, 1);
-        assert.equal(results[0].annotationData.taxTerms[0].taxonomy, 'wb_gene_sequence_id');
         done();
       })
       .catch((error)=>{

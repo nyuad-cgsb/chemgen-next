@@ -92,6 +92,7 @@ ExpDesign.transform.prepareExpDesign = function (workflowData: ExpScreenUploadWo
       });
     });
   });
+  expDesignRows = _.uniqWith(expDesignRows, _.isEqual);
 
   return expDesignRows;
 };

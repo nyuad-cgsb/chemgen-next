@@ -19,19 +19,25 @@ try {
     workflowData = jsonfile.readFileSync(workflow);
 }
 catch (error) {
-    app.winston.info("Could not read file " + workflow);
+    console.log("Could not read file " + workflow);
     process.exit(1);
 }
-// app.agenda.on('ready', function(){
-//   console.log('app started!');
-//   app.agenda.now('testJob');
-//   app.agenda.now('ExpScreenUploadWorkflow.doWork', {workflowData: workflowData});
-// });
-ExpScreenUploadWorkflow.load.workflows.worms.doWork(workflowData)
-    .then(function () {
+app.agenda.on('ready', function () {
+    try {
+        app.agenda.now('ExpScreenUploadWorkflow.doWork', { workflowData: workflowData });
+    }
+    catch (error) {
+        console.log("Received error: " + error);
+        process.exit(1);
+    }
     process.exit(0);
-})
-    .catch(function (error) {
-    process.exit(1);
+    //
+    // ExpScreenUploadWorkflow.load.workflows.worms.doWork(workflowData)
+    //   .then(() => {
+    //     process.exit(0);
+    //   })
+    //   .catch((error) => {
+    //     process.exit(1);
+    //   });
 });
 //# sourceMappingURL=upload_screens.js.map

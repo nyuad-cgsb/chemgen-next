@@ -38,44 +38,45 @@ RnaiLibrary.extract.secondary.getLibraryInfo = function (workflowData, barcode) 
                 //TODO Add hook for multiple library entries per well
                 var wells = initialize96Wells();
                 var libraryInfoList_1 = [];
-                Object.keys(workflowData.platePlan).map(function (well) {
-                    if (workflowData.platePlan.well instanceof Array) {
-                        workflowData.platePlan.well.map(function (wellData) {
-                            libraryInfoList_1 = getPlatePlanWell(wellData, well, libraryInfoList_1);
-                        });
-                    }
-                    else if (workflowData.platePlan.well instanceof Object) {
-                        libraryInfoList_1 = getPlatePlanWell(workflowData.platePlan.well, well, libraryInfoList_1);
-                    }
-                    else {
-                        reject(new Error('PlatePlan format is invalid'));
-                    }
-                });
-                // wells.map((well) => {
-                //   if(! get(workflowData.platePlan, [ well, 'lookUp'])){
-                //     return;
-                //   } else if (isEqual(workflowData.platePlan[well].lookUp, 'empty')) {
-                //     return;
-                //   } else if (isEqual(workflowData.platePlan[well].lookUp, 'L4440')) {
-                //     const libraryInfo: any = {};
-                //     libraryInfo.well = well;
-                //     libraryInfo.geneName = 'L4440';
-                //     libraryInfo.taxTerm = 'L4440';
+                // Object.keys(workflowData.platePlan).map((well) =>{
+                //   if(workflowData.platePlan.well instanceof Array){
+                //     workflowData.platePlan.well.map((wellData) =>{
+                //       libraryInfoList = getPlatePlanWell(wellData, well, libraryInfoList);
+                //     });
+                //   }else if (workflowData.platePlan.well instanceof Object){
+                //     libraryInfoList = getPlatePlanWell(workflowData.platePlan.well, well, libraryInfoList);
                 //
-                //     libraryInfoList.push(libraryInfo);
-                //   } else {
-                //     const libraryInfo = get(workflowData.platePlan, [ well, 'parentLibrary']);
-                //     if (libraryInfo) {
-                //       // This is a hack
-                //       // In the processing step it looks for the library result based on the well
-                //       // So it gets changed here
-                //       // In the primary screen there is a 1:1 mapping of well : well
-                //       libraryInfo.origWell = libraryInfo.well;
-                //       libraryInfo.well = well;
-                //       libraryInfoList.push(libraryInfo);
-                //     }
+                //   }else{
+                //     reject(new Error('PlatePlan format is invalid'));
                 //   }
                 // });
+                wells.map(function (well) {
+                    if (!lodash_1.get(workflowData.platePlan, [well, 'lookUp'])) {
+                        return;
+                    }
+                    else if (lodash_1.isEqual(workflowData.platePlan[well].lookUp, 'empty')) {
+                        return;
+                    }
+                    else if (lodash_1.isEqual(workflowData.platePlan[well].lookUp, 'L4440')) {
+                        var libraryInfo = {};
+                        libraryInfo.well = well;
+                        libraryInfo.geneName = 'L4440';
+                        libraryInfo.taxTerm = 'L4440';
+                        libraryInfoList_1.push(libraryInfo);
+                    }
+                    else {
+                        var libraryInfo = lodash_1.get(workflowData.platePlan, [well, 'parentLibrary']);
+                        if (libraryInfo) {
+                            // This is a hack
+                            // In the processing step it looks for the library result based on the well
+                            // So it gets changed here
+                            // In the primary screen there is a 1:1 mapping of well : well
+                            libraryInfo.origWell = libraryInfo.well;
+                            libraryInfo.well = well;
+                            libraryInfoList_1.push(libraryInfo);
+                        }
+                    }
+                });
                 resolve(libraryInfoList_1);
             }
         }

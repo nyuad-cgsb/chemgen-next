@@ -1,0 +1,674 @@
+[
+  {
+    "libraryModel": "RnaiLibrary",
+    "screenType": "permissive",
+    "libraryStockModel": "RnaiLibraryStock",
+    "librarycode": "ahringer2",
+    "biosampleType": "worm",
+    "reagentLookUp": "rnaiId",
+    "instrumentPlateIdLookup": "csPlateid",
+    "assayViewType": "exp_assay_ahringer2",
+    "plateViewType": "exp_plate_ahringer2",
+    "instrumentId": 1,
+    "instrumentLookUp": "arrayScan",
+    "conditions": [
+      "treat_rnai",
+      "ctrl_rnai",
+      "ctrl_null",
+      "ctrl_strain"
+    ],
+    "controlConditions": [
+      "ctrl_strain",
+      "ctrl_null"
+    ],
+    "experimentConditions": [
+      "treat_rnai",
+      "ctrl_rnai"
+    ],
+    "experimentMatchConditions": {
+      "treat_rnai": "ctrl_rnai"
+    },
+    "biosampleMatchConditions": {
+      "treat_rnai": "ctrl_strain",
+      "ctrl_rnai": "ctrl_null"
+    },
+    "experimentDesign": {
+      "treat_rnai": [
+        "ctrl_rnai",
+        "ctrl_strain",
+        "ctrl_null"
+      ]
+    },
+    "name": "2016-03 RNAi",
+    "comment": "this is a test",
+    "screenId": 1,
+    "libraryId": 1,
+    "stockPrepDate": "2016-03-16T04:14:11.000Z",
+    "assayDates": [
+      "2016-03-16T04:14:11.000Z"
+    ],
+    "biosamples": {
+      "experimentBiosample": {
+        "id": 5,
+        "name": "mel-28"
+      },
+      "ctrlBiosample": {
+        "id": 4,
+        "name": "N2"
+      }
+    },
+    "temperature": "17.5",
+    "replicates": {
+      "1": [
+        4402,
+        4400,
+        4450,
+        4448
+      ],
+      "2": [
+        4403,
+        4401,
+        4451,
+        4449
+      ]
+    },
+    "experimentGroups": {
+      "treat_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4402,
+            "id": "MFGTMP-PC_160322190003",
+            "name": "RNAiI.1Q1E_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322190003\\",
+            "platebarcode": "RNAII.1Q1E_M"
+          },
+          {
+            "csPlateid": 4403,
+            "id": "MFGTMP-PC_160322200001",
+            "name": "RNAiI.1Q1E_D_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200001\\",
+            "platebarcode": "RNAII.1Q1E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4400,
+            "id": "MFGTMP-PC_160322190001",
+            "name": "RNAiI.1Q1E",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322190001\\",
+            "platebarcode": "RNAII.1Q1E"
+          },
+          {
+            "csPlateid": 4401,
+            "id": "MFGTMP-PC_160322190002",
+            "name": "RNAiI.1Q1E_D",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322190002\\",
+            "platebarcode": "RNAII.1Q1E_D"
+          }
+        ],
+        "biosampleId": 4
+      },
+      "ctrl_strain": {
+        "plates": [
+          {
+            "csPlateid": 4450,
+            "id": "MFGTMP-PC_160323000004",
+            "name": "L4440E_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000004\\",
+            "platebarcode": "L4440E_M"
+          },
+          {
+            "csPlateid": 4451,
+            "id": "MFGTMP-PC_160323000005",
+            "name": "L4440E_D_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000005\\",
+            "platebarcode": "L4440E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_null": {
+        "plates": [
+          {
+            "csPlateid": 4448,
+            "id": "MFGTMP-PC_160323000002",
+            "name": "L4440E",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000002\\",
+            "platebarcode": "L4440E"
+          },
+          {
+            "csPlateid": 4449,
+            "id": "MFGTMP-PC_160323000003",
+            "name": "L4440E_D",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000003\\",
+            "platebarcode": "L4440E_D"
+          }
+        ],
+        "biosampleId": 4
+      }
+    },
+    "search": {
+      "rnaiLibrary": {
+        "plate": "1",
+        "quadrant": "Q1",
+        "chrom": "I"
+      }
+    },
+    "screenStage": "primary"
+  },
+  {
+    "libraryModel": "RnaiLibrary",
+    "screenType": "permissive",
+    "libraryStockModel": "RnaiLibraryStock",
+    "librarycode": "ahringer2",
+    "biosampleType": "worm",
+    "reagentLookUp": "rnaiId",
+    "instrumentPlateIdLookup": "csPlateid",
+    "assayViewType": "exp_assay_ahringer2",
+    "plateViewType": "exp_plate_ahringer2",
+    "instrumentId": 1,
+    "instrumentLookUp": "arrayScan",
+    "conditions": [
+      "treat_rnai",
+      "ctrl_rnai",
+      "ctrl_null",
+      "ctrl_strain"
+    ],
+    "controlConditions": [
+      "ctrl_strain",
+      "ctrl_null"
+    ],
+    "experimentConditions": [
+      "treat_rnai",
+      "ctrl_rnai"
+    ],
+    "experimentMatchConditions": {
+      "treat_rnai": "ctrl_rnai"
+    },
+    "biosampleMatchConditions": {
+      "treat_rnai": "ctrl_strain",
+      "ctrl_rnai": "ctrl_null"
+    },
+    "experimentDesign": {
+      "treat_rnai": [
+        "ctrl_rnai",
+        "ctrl_strain",
+        "ctrl_null"
+      ]
+    },
+    "name": "2016-03 RNAi",
+    "comment": "this is a test",
+    "screenId": 1,
+    "libraryId": 1,
+    "stockPrepDate": "2016-03-16T04:14:11.000Z",
+    "assayDates": [
+      "2016-03-16T04:14:11.000Z"
+    ],
+    "biosamples": {
+      "experimentBiosample": {
+        "id": 5,
+        "name": "mel-28"
+      },
+      "ctrlBiosample": {
+        "id": 4,
+        "name": "N2"
+      }
+    },
+    "temperature": "17.5",
+    "replicates": {
+      "1": [
+        4406,
+        4404,
+        4450,
+        4448
+      ],
+      "2": [
+        4407,
+        4405,
+        4451,
+        4449
+      ]
+    },
+    "experimentGroups": {
+      "treat_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4406,
+            "id": "MFGTMP-PC_160322200004",
+            "name": "RNAiI.1Q2E_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200004\\",
+            "platebarcode": "RNAII.1Q2E_M"
+          },
+          {
+            "csPlateid": 4407,
+            "id": "MFGTMP-PC_160322200005",
+            "name": "RNAiI.1Q2E_D_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200005\\",
+            "platebarcode": "RNAII.1Q2E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4404,
+            "id": "MFGTMP-PC_160322200002",
+            "name": "RNAiI.1Q2E",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200002\\",
+            "platebarcode": "RNAII.1Q2E"
+          },
+          {
+            "csPlateid": 4405,
+            "id": "MFGTMP-PC_160322200003",
+            "name": "RNAiI.1Q2E_D",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200003\\",
+            "platebarcode": "RNAII.1Q2E_D"
+          }
+        ],
+        "biosampleId": 4
+      },
+      "ctrl_strain": {
+        "plates": [
+          {
+            "csPlateid": 4450,
+            "id": "MFGTMP-PC_160323000004",
+            "name": "L4440E_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000004\\",
+            "platebarcode": "L4440E_M"
+          },
+          {
+            "csPlateid": 4451,
+            "id": "MFGTMP-PC_160323000005",
+            "name": "L4440E_D_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000005\\",
+            "platebarcode": "L4440E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_null": {
+        "plates": [
+          {
+            "csPlateid": 4448,
+            "id": "MFGTMP-PC_160323000002",
+            "name": "L4440E",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000002\\",
+            "platebarcode": "L4440E"
+          },
+          {
+            "csPlateid": 4449,
+            "id": "MFGTMP-PC_160323000003",
+            "name": "L4440E_D",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000003\\",
+            "platebarcode": "L4440E_D"
+          }
+        ],
+        "biosampleId": 4
+      }
+    },
+    "search": {
+      "rnaiLibrary": {
+        "plate": "1",
+        "quadrant": "Q2",
+        "chrom": "I"
+      }
+    },
+    "screenStage": "primary"
+  },
+  {
+    "libraryModel": "RnaiLibrary",
+    "screenType": "permissive",
+    "libraryStockModel": "RnaiLibraryStock",
+    "librarycode": "ahringer2",
+    "biosampleType": "worm",
+    "reagentLookUp": "rnaiId",
+    "instrumentPlateIdLookup": "csPlateid",
+    "assayViewType": "exp_assay_ahringer2",
+    "plateViewType": "exp_plate_ahringer2",
+    "instrumentId": 1,
+    "instrumentLookUp": "arrayScan",
+    "conditions": [
+      "treat_rnai",
+      "ctrl_rnai",
+      "ctrl_null",
+      "ctrl_strain"
+    ],
+    "controlConditions": [
+      "ctrl_strain",
+      "ctrl_null"
+    ],
+    "experimentConditions": [
+      "treat_rnai",
+      "ctrl_rnai"
+    ],
+    "experimentMatchConditions": {
+      "treat_rnai": "ctrl_rnai"
+    },
+    "biosampleMatchConditions": {
+      "treat_rnai": "ctrl_strain",
+      "ctrl_rnai": "ctrl_null"
+    },
+    "experimentDesign": {
+      "treat_rnai": [
+        "ctrl_rnai",
+        "ctrl_strain",
+        "ctrl_null"
+      ]
+    },
+    "name": "2016-03 RNAi",
+    "comment": "this is a test",
+    "screenId": 1,
+    "libraryId": 1,
+    "stockPrepDate": "2016-03-16T04:14:11.000Z",
+    "assayDates": [
+      "2016-03-16T04:14:11.000Z"
+    ],
+    "biosamples": {
+      "experimentBiosample": {
+        "id": 5,
+        "name": "mel-28"
+      },
+      "ctrlBiosample": {
+        "id": 4,
+        "name": "N2"
+      }
+    },
+    "temperature": "17.5",
+    "replicates": {
+      "1": [
+        4410,
+        4408,
+        4450,
+        4448
+      ],
+      "2": [
+        4411,
+        4409,
+        4451,
+        4449
+      ]
+    },
+    "experimentGroups": {
+      "treat_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4410,
+            "id": "MFGTMP-PC_160322200008",
+            "name": "RNAiI.1Q3E_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200008\\",
+            "platebarcode": "RNAII.1Q3E_M"
+          },
+          {
+            "csPlateid": 4411,
+            "id": "MFGTMP-PC_160322200009",
+            "name": "RNAiI.1Q3E_D_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200009\\",
+            "platebarcode": "RNAII.1Q3E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4408,
+            "id": "MFGTMP-PC_160322200006",
+            "name": "RNAiI.1Q3E",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200006\\",
+            "platebarcode": "RNAII.1Q3E"
+          },
+          {
+            "csPlateid": 4409,
+            "id": "MFGTMP-PC_160322200007",
+            "name": "RNAiI.1Q3E_D",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200007\\",
+            "platebarcode": "RNAII.1Q3E_D"
+          }
+        ],
+        "biosampleId": 4
+      },
+      "ctrl_strain": {
+        "plates": [
+          {
+            "csPlateid": 4450,
+            "id": "MFGTMP-PC_160323000004",
+            "name": "L4440E_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000004\\",
+            "platebarcode": "L4440E_M"
+          },
+          {
+            "csPlateid": 4451,
+            "id": "MFGTMP-PC_160323000005",
+            "name": "L4440E_D_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000005\\",
+            "platebarcode": "L4440E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_null": {
+        "plates": [
+          {
+            "csPlateid": 4448,
+            "id": "MFGTMP-PC_160323000002",
+            "name": "L4440E",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000002\\",
+            "platebarcode": "L4440E"
+          },
+          {
+            "csPlateid": 4449,
+            "id": "MFGTMP-PC_160323000003",
+            "name": "L4440E_D",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000003\\",
+            "platebarcode": "L4440E_D"
+          }
+        ],
+        "biosampleId": 4
+      }
+    },
+    "search": {
+      "rnaiLibrary": {
+        "plate": "1",
+        "quadrant": "Q3",
+        "chrom": "I"
+      }
+    },
+    "screenStage": "primary"
+  },
+  {
+    "libraryModel": "RnaiLibrary",
+    "screenType": "permissive",
+    "libraryStockModel": "RnaiLibraryStock",
+    "librarycode": "ahringer2",
+    "biosampleType": "worm",
+    "reagentLookUp": "rnaiId",
+    "instrumentPlateIdLookup": "csPlateid",
+    "assayViewType": "exp_assay_ahringer2",
+    "plateViewType": "exp_plate_ahringer2",
+    "instrumentId": 1,
+    "instrumentLookUp": "arrayScan",
+    "conditions": [
+      "treat_rnai",
+      "ctrl_rnai",
+      "ctrl_null",
+      "ctrl_strain"
+    ],
+    "controlConditions": [
+      "ctrl_strain",
+      "ctrl_null"
+    ],
+    "experimentConditions": [
+      "treat_rnai",
+      "ctrl_rnai"
+    ],
+    "experimentMatchConditions": {
+      "treat_rnai": "ctrl_rnai"
+    },
+    "biosampleMatchConditions": {
+      "treat_rnai": "ctrl_strain",
+      "ctrl_rnai": "ctrl_null"
+    },
+    "experimentDesign": {
+      "treat_rnai": [
+        "ctrl_rnai",
+        "ctrl_strain",
+        "ctrl_null"
+      ]
+    },
+    "name": "2016-03 RNAi",
+    "comment": "this is a test",
+    "screenId": 1,
+    "libraryId": 1,
+    "stockPrepDate": "2016-03-16T04:14:11.000Z",
+    "assayDates": [
+      "2016-03-16T04:14:11.000Z"
+    ],
+    "biosamples": {
+      "experimentBiosample": {
+        "id": 5,
+        "name": "mel-28"
+      },
+      "ctrlBiosample": {
+        "id": 4,
+        "name": "N2"
+      }
+    },
+    "temperature": "17.5",
+    "replicates": {
+      "1": [
+        4414,
+        4412,
+        4450,
+        4448
+      ],
+      "2": [
+        4415,
+        4413,
+        4451,
+        4449
+      ]
+    },
+    "experimentGroups": {
+      "treat_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4414,
+            "id": "MFGTMP-PC_160322210001",
+            "name": "RNAiI.1Q4E_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322210001\\",
+            "platebarcode": "RNAII.1Q4E_M"
+          },
+          {
+            "csPlateid": 4415,
+            "id": "MFGTMP-PC_160322210002",
+            "name": "RNAiI.1Q4E_D_M",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322210002\\",
+            "platebarcode": "RNAII.1Q4E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_rnai": {
+        "plates": [
+          {
+            "csPlateid": 4412,
+            "id": "MFGTMP-PC_160322200010",
+            "name": "RNAiI.1Q4E",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200010\\",
+            "platebarcode": "RNAII.1Q4E"
+          },
+          {
+            "csPlateid": 4413,
+            "id": "MFGTMP-PC_160322200011",
+            "name": "RNAiI.1Q4E_D",
+            "creationdate": "2016-03-22T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160322200011\\",
+            "platebarcode": "RNAII.1Q4E_D"
+          }
+        ],
+        "biosampleId": 4
+      },
+      "ctrl_strain": {
+        "plates": [
+          {
+            "csPlateid": 4450,
+            "id": "MFGTMP-PC_160323000004",
+            "name": "L4440E_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000004\\",
+            "platebarcode": "L4440E_M"
+          },
+          {
+            "csPlateid": 4451,
+            "id": "MFGTMP-PC_160323000005",
+            "name": "L4440E_D_M",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000005\\",
+            "platebarcode": "L4440E_D_M"
+          }
+        ],
+        "biosampleId": 5
+      },
+      "ctrl_null": {
+        "plates": [
+          {
+            "csPlateid": 4448,
+            "id": "MFGTMP-PC_160323000002",
+            "name": "L4440E",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000002\\",
+            "platebarcode": "L4440E"
+          },
+          {
+            "csPlateid": 4449,
+            "id": "MFGTMP-PC_160323000003",
+            "name": "L4440E_D",
+            "creationdate": "2016-03-23T00:00:00.000Z",
+            "imagepath": "\\\\aduae120-wap\\CS_DATA_SHARE\\2016Mar21\\MFGTMP-PC_160323000003\\",
+            "platebarcode": "L4440E_D"
+          }
+        ],
+        "biosampleId": 4
+      }
+    },
+    "search": {
+      "rnaiLibrary": {
+        "plate": "1",
+        "quadrant": "Q4",
+        "chrom": "I"
+      }
+    },
+    "screenStage": "primary"
+  }
+]

@@ -3,6 +3,7 @@ import app = require('../../../../../../../server/server.js');
 import Promise = require('bluebird');
 import {PlateCollection, ScreenCollection} from "../../../../../../types/wellData";
 import {WorkflowModel} from "../../../../../index";
+import jsonfile = require('jsonfile');
 
 import assert = require('assert');
 
@@ -49,9 +50,11 @@ describe('ExpScreenUploadWorkflow.worms.primary', function () {
       .then((results: ScreenCollection) => {
         assert.equal(results.expDesignList.length, 9);
         assert.equal(results.plateDataList.length, 8);
+        let treatmentId = results.expDesignList[0].treatmentGroupId;
         let countTreatment = _.filter(results.expDesignList, (expDesign) => {
-          return _.isEqual(expDesign.treatmentGroupId, 6)
+          return _.isEqual(expDesign.treatmentGroupId, treatmentId)
         }).length;
+        jsonfile.writeFileSync('rnai_primary_new_screen.json', results);
         assert.equal(countTreatment, 3);
         done();
       })
@@ -63,8 +66,6 @@ describe('ExpScreenUploadWorkflow.worms.primary', function () {
   it('ExpScreenUploadWorkflow.load.workflows.worms.primary.createExpInterfaces', function (done) {
     this.timeout(30000);
     delete workflowData.id;
-    // ExpScreenUploadWorkflow.load.workflows.worms.primary.populateExperimentData(workflowData, instrumentPlates)
-    //   .then((screenData: ScreenCollection) => {
     ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces(workflowData, screenData)
       .then((results) => {
         assert.equal(workflowData.biosamples.ctrlBiosample.name, 'N2');

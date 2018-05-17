@@ -1,4 +1,5 @@
 import Agenda = require('agenda');
+
 const mongoConnectionString = 'mongodb://admin:admin123@onyx.abudhabi.nyu.edu/agenda';
 import app = require('../server/server');
 
@@ -8,11 +9,11 @@ let agenda = new Agenda({
   },
 });
 
-agenda.on('start', function(job) {
+agenda.on('start', function (job) {
   // console.log('Job %s starting', job.attrs.name);
 });
 
-agenda.on('error', function(error) {
+agenda.on('error', function (error) {
   console.log('We got an error! ' + JSON.stringify(error));
 });
 
@@ -21,10 +22,8 @@ agenda.define('testJob', function (job) {
 });
 
 agenda.define('ExpScreenUploadWorkflow.doWork', function (job, done) {
-  console.log('In agenda do work!!!');
   app.models.ExpScreenUploadWorkflow.load.workflows.doWork(job.attrs.data.workflowData)
     .then(() => {
-      console.log('Finished!!!');
       done();
     })
     .catch((error) => {
@@ -34,16 +33,16 @@ agenda.define('ExpScreenUploadWorkflow.doWork', function (job, done) {
 
 // require('./jobs/jobs.js')(agenda);
 
-agenda.on('ready', function() {
-  agenda.processEvery('2 seconds');
-  agenda.maxConcurrency(5);
-  agenda.defaultConcurrency(1);
-  agenda.start();
-});
+// agenda.on('ready', function () {
+//   agenda.processEvery('2 seconds');
+//   agenda.maxConcurrency(100);
+//   agenda.defaultConcurrency(20);
+//   agenda.start();
+// });
 
-agenda.on('complete', function(job) {
-  console.log('Job %s finished', job.attrs.name);
-  job.remove(function(err) {
+agenda.on('complete', function (job) {
+  // console.log('Job %s finished', job.attrs.name);
+  job.remove(function (err) {
     if (err) {
       console.log('there was a problem removing job ' + err);
     }
@@ -51,7 +50,7 @@ agenda.on('complete', function(job) {
 });
 
 function graceful() {
-  agenda.stop(function() {
+  agenda.stop(function () {
     process.exit(0);
   });
 }

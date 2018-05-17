@@ -12,6 +12,7 @@ export interface ExpScreenUploadWorkflowResultSetInterface {
   "instrumentPlateIdLookup"?: string;
   "wells"?: Array<any>;
   "screenId"?: number;
+  "screenName"?: string;
   "instrumentId"?: number;
   "libraryId"?: number;
   "screenStage"?: string;
@@ -23,7 +24,7 @@ export interface ExpScreenUploadWorkflowResultSetInterface {
   "instrumentLookUp"?: string;
   "biosampleType"?: string;
   "stockPrepDate"?: Date;
-  "assayDates"?: any;
+  "assayDates"?: Array<any>;
   "search"?: any;
   "replicates"?: any;
   "conditions"?: Array<any>;
@@ -48,6 +49,7 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
   "instrumentPlateIdLookup": string;
   "wells": Array<any>;
   "screenId": number;
+  "screenName": string;
   "instrumentId": number;
   "libraryId": number;
   "screenStage": string;
@@ -59,7 +61,7 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
   "instrumentLookUp": string;
   "biosampleType": string;
   "stockPrepDate": Date;
-  "assayDates": any;
+  "assayDates": Array<any>;
   "search": any;
   "replicates": any;
   "conditions": Array<any>;
@@ -142,6 +144,10 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
           name: 'screenId',
           type: 'number'
         },
+        "screenName": {
+          name: 'screenName',
+          type: 'string'
+        },
         "instrumentId": {
           name: 'instrumentId',
           type: 'number'
@@ -188,7 +194,7 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
         },
         "assayDates": {
           name: 'assayDates',
-          type: 'any'
+          type: 'Array&lt;any&gt;'
         },
         "search": {
           name: 'search',

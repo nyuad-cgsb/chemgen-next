@@ -8,6 +8,8 @@ declare var Object: any;
 export interface ChemicalLibraryResultSetInterface {
   "compoundId"?: number;
   "libraryId"?: number;
+  "plate": string;
+  "well": string;
   "compoundLibraryId"?: number;
   "compoundSystematicName"?: string;
   "compoundCommonName"?: string;
@@ -19,6 +21,8 @@ export interface ChemicalLibraryResultSetInterface {
 export class ChemicalLibraryResultSet implements ChemicalLibraryResultSetInterface {
   "compoundId": number;
   "libraryId": number;
+  "plate": string;
+  "well": string;
   "compoundLibraryId": number;
   "compoundSystematicName": string;
   "compoundCommonName": string;
@@ -65,6 +69,14 @@ export class ChemicalLibraryResultSet implements ChemicalLibraryResultSetInterfa
         "libraryId": {
           name: 'libraryId',
           type: 'number'
+        },
+        "plate": {
+          name: 'plate',
+          type: 'string'
+        },
+        "well": {
+          name: 'well',
+          type: 'string'
         },
         "compoundLibraryId": {
           name: 'compoundLibraryId',

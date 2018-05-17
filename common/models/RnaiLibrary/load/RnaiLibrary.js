@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../server/server.js");
 var Promise = require("bluebird");
 var wellData_1 = require("../../../types/wellData");
+var _ = require("lodash");
 var RnaiLibrary = app.models['RnaiLibrary'];
 //TODO This should be moved ot the stock - I am not actually creating anything in the rnai_library table
 // Or Put this in 'extract'
@@ -109,5 +110,23 @@ RnaiLibrary.load.primary.genTaxTerms = function (workflowData) {
 };
 RnaiLibrary.load.secondary.genTaxTerms = function (workflowData) {
     return [];
+};
+RnaiLibrary.load.genLibraryViewData = function (workflowData, wellData) {
+    var dbXRefs = wellData.annotationData.dbXRefs;
+    if (!_.isEmpty(dbXRefs) || _.isNull(dbXRefs)) {
+        try {
+            var row = _.find(dbXRefs, function (xref) {
+                return !_.isNull(xref) && !_.isEmpty(xref) && !_.isEmpty(xref.wbGeneCgcName) && !_.isNull(xref.wbGeneCgcName);
+            });
+            var cosmid_id = row.wbGeneCgcName;
+            return { cosmid_id: cosmid_id, row: row };
+        }
+        catch (error) {
+            return {};
+        }
+    }
+    else {
+        return {};
+    }
 };
 //# sourceMappingURL=RnaiLibrary.js.map

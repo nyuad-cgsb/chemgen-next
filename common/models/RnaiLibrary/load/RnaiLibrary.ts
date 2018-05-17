@@ -1,10 +1,14 @@
 import app  = require('../../../../server/server.js');
 
-import {ExpPlateResultSet} from "../../../types/sdk/models";
+import {
+  ExpPlateResultSet, ExpScreenUploadWorkflowResultSet,
+  RnaiWormbaseXrefsResultSet
+} from "../../../types/sdk/models";
 import {WorkflowModel} from "../../index";
 import Promise = require('bluebird');
 
 import {PlateCollection, RnaiWellCollection} from "../../../types/wellData";
+import * as _ from "lodash";
 
 const RnaiLibrary = app.models['RnaiLibrary'] as (typeof WorkflowModel);
 
@@ -122,3 +126,23 @@ RnaiLibrary.load.secondary.genTaxTerms = function (workflowData) {
   return []
 };
 
+RnaiLibrary.load.genLibraryViewData = function (workflowData: ExpScreenUploadWorkflowResultSet, wellData: RnaiWellCollection) {
+
+  let dbXRefs = wellData.annotationData.dbXRefs;
+  if (!_.isEmpty(dbXRefs) || _.isNull(dbXRefs)) {
+    try {
+      let row: RnaiWormbaseXrefsResultSet = _.find(dbXRefs, (xref: RnaiWormbaseXrefsResultSet) => {
+        return !_.isNull(xref) && !_.isEmpty(xref) && !_.isEmpty(xref.wbGeneCgcName) && !_.isNull(xref.wbGeneCgcName);
+      });
+      let cosmid_id = row.wbGeneCgcName;
+      return {cosmid_id: cosmid_id, row: row};
+    }
+    catch (error) {
+      return {};
+    }
+  }
+  else {
+    return {}
+  }
+
+};

@@ -1,7 +1,7 @@
 import {
   ExpAssay2reagentResultSet,
   ExpAssayResultSet, ExpDesignResultSet, ExpGroupResultSet, ModelPredictedPhenoResultSet,
-  RnaiLibraryResultSet, WpTermTaxonomyResultSet
+  RnaiLibraryResultSet, RnaiWormbaseXrefsResultSet, WpTermTaxonomyResultSet
 } from "./sdk/models";
 import {RnaiLibraryStockResultSet} from "./sdk/models";
 import {ChemicalLibraryResultSet, ChemicalLibraryStockResultSet, ExpPlateResultSet} from "./sdk/models";
@@ -11,12 +11,14 @@ export interface annotationDataInterface {
  geneName?: string;
  taxTerm?: string;
  taxTerms: Array<any> | WpTermTaxonomyResultSet[];
+  dbXRefs?: RnaiWormbaseXrefsResultSet | RnaiWormbaseXrefsResultSet[];
 }
 
 export class annotationData {
   geneName?: string;
   taxTerm?: string;
   taxTerms: Array<any> ;
+  dbXRefs?: RnaiWormbaseXrefsResultSet | RnaiWormbaseXrefsResultSet[];
   constructor(data?: annotationDataInterface) {
     Object.assign(this, data);
   }

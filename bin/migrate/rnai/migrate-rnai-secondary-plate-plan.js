@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Promise = require("bluebird");
 var app = require("../../../server/server");
 var lodash_1 = require("lodash");
+var jsonfile = require('jsonfile');
+var path = require('path');
 var rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 var cols = ['01', '02', '03', '04', '05',
     '06', '07', '08', '09', '10', '11', '12'
@@ -14,6 +16,7 @@ rows.map(function (row) {
     });
 });
 var getParentLibrary = function (workflowData) {
+    console.log('in parent library!');
     return new Promise(function (resolve, reject) {
         parseCustomPlate(workflowData)
             .then(function (results) {
@@ -31,71 +34,87 @@ var getParentLibrary = function (workflowData) {
         });
     });
 };
+var findOtherGeneNames = function (taxTerm) {
+    return new Promise(function (resolve, reject) {
+        if (taxTerm) {
+            app.models.RnaiWormbaseXrefs.findOne({
+                where: { wbGeneSequenceId: taxTerm }
+            })
+                .then(function (results) {
+                resolve(results);
+            })
+                .catch(function (error) {
+                reject(new Error(error));
+            });
+        }
+        else {
+            resolve({});
+        }
+    });
+};
 var migrateToNewFormat = function (wellData) {
     var workflowData = {};
     return new Promise(function (resolve, reject) {
         wells96.map(function (well) {
-            try {
-                var wellRow = lodash_1.find(wellData, function (wellRow) {
-                    return lodash_1.isEqual(wellRow.well, well);
-                });
-                workflowData[well] = {};
-                workflowData[well].isValid = true;
-                workflowData[well].well = well;
-                if (wellRow) {
-                    try {
+            workflowData[well] = {};
+            workflowData[well].isValid = true;
+            workflowData[well].well = well;
+            if (!lodash_1.isEmpty(well)) {
+                try {
+                    var wellRow = lodash_1.find(wellData, function (wellRow) {
+                        if (!lodash_1.isEmpty(wellRow)) {
+                            return lodash_1.isEqual(wellRow.well, well);
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                    if (wellRow) {
                         workflowData[well].taxTerm = wellRow.geneName;
                         workflowData[well].geneName = wellRow.geneName;
                         workflowData[well].lookUp = wellRow.lookUp;
                     }
-                    catch (error) {
-                        console.log(error);
-                        reject(new Error(error));
+                    if (wellRow && lodash_1.get(wellRow, 'rnaiId')) {
+                        var parentLibrary = addToWorkflowData(workflowData, wellRow);
+                        workflowData[well].parentLibrary = parentLibrary;
                     }
-                    if (lodash_1.get(wellRow, 'rnaiId')) {
-                        try {
-                            //   "rnaiId": 73,
-                            //   "libraryId": 1,
-                            //   "rnaiType": "clone",
-                            //   "plate": "1",
-                            //   "well": "A02",
-                            //   "chrom": "I",
-                            //   "geneName": "K12C11.2",
-                            //   "fwdPrimer": "GAGAAACCGAGTATCTCAGTGGA",
-                            //   "revPrimer": "GCGATGCGTTTAATTAAGTTTTG",
-                            //   "bioloc": "I-1O13",
-                            //   "stocktitle": "I-1--A1",
-                            //   "stockloc": "A1-H07"
-                            workflowData[well].parentLibrary = {};
-                            workflowData[well].parentLibrary.rnaiId = wellRow.rnaiId;
-                            workflowData[well].parentLibrary.libraryId = wellRow.libraryId;
-                            workflowData[well].parentLibrary.rnaiType = wellRow.rnaiType;
-                            workflowData[well].parentLibrary.plate = wellRow.plate;
-                            workflowData[well].parentLibrary.well = wellRow.well;
-                            workflowData[well].parentLibrary.chrom = wellRow.chrom;
-                            workflowData[well].parentLibrary.geneName = wellRow.geneName;
-                            workflowData[well].parentLibrary.fwdPrimer = wellRow.fwdPrimer;
-                            workflowData[well].parentLibrary.revPrimer = wellRow.revPrimer;
-                            workflowData[well].parentLibrary.bioloc = wellRow.bioloc;
-                            workflowData[well].parentLibrary.stocktitle = wellRow.stocktitle;
-                            workflowData[well].parentLibrary.stockloc = wellRow.stockloc;
-                        }
-                        catch (error) {
-                            console.log(error);
-                            reject(new Error(error));
-                        }
+                    if (wellRow && lodash_1.get(wellRow, ['geneData', 'wbGeneSequenceId'])) {
+                        workflowData[well].geneData = wellRow.geneData;
+                    }
+                    else {
+                        workflowData[well].geneData = {};
                     }
                 }
-            }
-            catch (error) {
-                console.log(error);
-                reject(new Error(error));
+                catch (error) {
+                    console.log("Received error " + error);
+                    throw (new Error(error));
+                }
             }
         });
-        // console.log('should be getting some workflow data');
-        // console.log(JSON.stringify(workflowData));
         resolve(workflowData);
     });
+};
+var addToWorkflowData = function (workflowData, wellRow) {
+    var parentLibrary = {};
+    try {
+        parentLibrary.rnaiId = wellRow.rnaiId;
+        parentLibrary.libraryId = wellRow.libraryId;
+        parentLibrary.rnaiType = wellRow.rnaiType;
+        parentLibrary.plate = wellRow.plate;
+        parentLibrary.well = wellRow.well;
+        parentLibrary.chrom = wellRow.chrom;
+        parentLibrary.geneName = wellRow.geneName;
+        parentLibrary.fwdPrimer = wellRow.fwdPrimer;
+        parentLibrary.revPrimer = wellRow.revPrimer;
+        parentLibrary.bioloc = wellRow.bioloc;
+        parentLibrary.stocktitle = wellRow.stocktitle;
+        parentLibrary.stockloc = wellRow.stockloc;
+    }
+    catch (error) {
+        console.log("Received error " + error);
+        throw (new Error(error));
+    }
+    return parentLibrary;
 };
 var buildRnaiLibraryWhere = function (lookUp) {
     var where = {};
@@ -136,8 +155,21 @@ var buildRnaiLibraryWhere = function (lookUp) {
     return where;
 };
 var parseWell = function (workflowData, wellData) {
-    var lookUpIndex = workflowData.search.library.rnai.ahringer.lookUpIndex;
-    var commentIndex = workflowData.search.library.rnai.ahringer.commentIndex;
+    // let lookUpIndex = workflowData.search.library.rnai.ahringer.lookUpIndex;
+    // let commentIndex = workflowData.search.library.rnai.ahringer.commentIndex;
+    var lookUpIndex = 0;
+    var commentIndex = 1;
+    if (lodash_1.isEqual(wellData.splitLookUp.length, 1)) {
+        lookUpIndex = 0;
+    }
+    else if (wellData.splitLookUp[0].split('-').length > 2) {
+        lookUpIndex = 0;
+        commentIndex = 1;
+    }
+    else {
+        lookUpIndex = 1;
+        commentIndex = 0;
+    }
     return new Promise(function (resolve, reject) {
         var obj = {
             wellData: wellData,
@@ -159,24 +191,28 @@ var parseWell = function (workflowData, wellData) {
                 reject(new Error('Not able to find a corresponding library well!'));
             }
             else {
-                app.models.RnaiLibrary.find({
+                app.models.RnaiLibrary.findOne({
                     where: where,
                 })
-                    .then(function (tresults) {
-                    if (!tresults[0]) {
+                    .then(function (results) {
+                    if (!results || lodash_1.isEmpty(results)) {
                         resolve();
                     }
                     else {
-                        var results = tresults[0];
                         results.wellData = wellData;
                         results.origWell = results.well;
                         results.well = wellData.assayWell;
                         results.comment = comment_1;
                         results.lookUp = data_1;
-                        resolve(results);
+                        return findOtherGeneNames(results.geneName)
+                            .then(function (otherTaxTerms) {
+                            results.geneData = otherTaxTerms;
+                            resolve(results);
+                        });
                     }
                 })
                     .catch(function (error) {
+                    console.log("Received error " + error);
                     reject(new Error(error.stack));
                 });
             }
@@ -203,24 +239,30 @@ var parseCustomPlate = function (workflowData) {
     var wellData = workflowData.data.library.wellData;
     var rows = app.etlWorkflow.helpers.rows;
     var list = [];
-    rows.map(function (row) {
-        var obj = wellData[row];
-        for (var key in obj) {
-            var dataObj = {};
-            var lookUp = obj[key];
-            var newKey = ('00' + key)
-                .slice(-2);
-            if (lookUp) {
-                var splitLookUp = lookUp.split('\n');
-                dataObj['splitLookUp'] = splitLookUp;
-                dataObj['row'] = row;
-                dataObj['origKey'] = key;
-                dataObj['assayWell'] = row + newKey;
-                list.push(dataObj);
+    return new Promise(function (resolve, reject) {
+        rows.map(function (row) {
+            var obj = wellData[row];
+            for (var key in obj) {
+                var dataObj = {};
+                var lookUp = obj[key];
+                var newKey = ('00' + key)
+                    .slice(-2);
+                if (lookUp) {
+                    var splitLookUp = void 0;
+                    try {
+                        splitLookUp = lookUp.split('\n');
+                        dataObj['splitLookUp'] = splitLookUp;
+                        dataObj['row'] = row;
+                        dataObj['origKey'] = key;
+                        dataObj['assayWell'] = row + newKey;
+                        list.push(dataObj);
+                    }
+                    catch (error) {
+                        reject(new Error(error));
+                    }
+                }
             }
-        }
-    });
-    return new Promise(function (resolve) {
+        });
         resolve(list);
     });
 };

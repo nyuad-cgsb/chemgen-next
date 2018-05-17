@@ -70,7 +70,7 @@ RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate, libr
                     well: well,
                     stockLibraryData: createStock,
                     parentLibraryData: libraryResult,
-                    annotationData: { geneName: libraryResult.geneName, taxTerm: libraryResult.geneName, taxTerms: taxTerms }
+                    annotationData: { geneName: libraryResult.geneName, taxTerm: libraryResult.geneName, taxTerms: taxTerms, dbXRefs: wormTaxTerms.xrefs }
                 });
             });
         })

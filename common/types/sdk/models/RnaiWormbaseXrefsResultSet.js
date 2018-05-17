@@ -33,7 +33,7 @@ var RnaiWormbaseXrefsResultSet = /** @class */ (function () {
             name: 'RnaiWormbaseXrefsResultSet',
             plural: 'RnaiWormbaseXrefsResultSets',
             path: 'RnaiWormbaseXrefs',
-            idName: 'id',
+            idName: 'wbGeneSequenceId',
             properties: {
                 "wbGeneSequenceId": {
                     name: 'wbGeneSequenceId',
@@ -70,10 +70,6 @@ var RnaiWormbaseXrefsResultSet = /** @class */ (function () {
                 "uniprotAccession": {
                     name: 'uniprotAccession',
                     type: 'string'
-                },
-                "id": {
-                    name: 'id',
-                    type: 'number'
                 },
             },
             relations: {}

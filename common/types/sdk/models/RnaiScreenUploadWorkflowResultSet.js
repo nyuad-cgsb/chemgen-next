@@ -47,6 +47,18 @@ var RnaiScreenUploadWorkflowResultSet = /** @class */ (function () {
                     name: 'platePlan',
                     type: 'any'
                 },
+                "platePlanId": {
+                    name: 'platePlanId',
+                    type: 'string'
+                },
+                "assayViewType": {
+                    name: 'assayViewType',
+                    type: 'string'
+                },
+                "plateViewType": {
+                    name: 'plateViewType',
+                    type: 'string'
+                },
                 "wells": {
                     name: 'wells',
                     type: 'Array&lt;any&gt;',
@@ -55,6 +67,10 @@ var RnaiScreenUploadWorkflowResultSet = /** @class */ (function () {
                 "screenId": {
                     name: 'screenId',
                     type: 'number'
+                },
+                "screenName": {
+                    name: 'screenName',
+                    type: 'string'
                 },
                 "instrumentId": {
                     name: 'instrumentId',
@@ -156,6 +172,10 @@ var RnaiScreenUploadWorkflowResultSet = /** @class */ (function () {
                 },
                 "librarycode": {
                     name: 'librarycode',
+                    type: 'string'
+                },
+                "instrumentPlateIdLookup": {
+                    name: 'instrumentPlateIdLookup',
                     type: 'string'
                 },
                 "id": {

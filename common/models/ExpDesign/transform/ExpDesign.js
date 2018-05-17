@@ -81,6 +81,7 @@ ExpDesign.transform.prepareExpDesign = function (workflowData, groups, matchedEx
             });
         });
     });
+    expDesignRows = _.uniqWith(expDesignRows, _.isEqual);
     return expDesignRows;
 };
 //# sourceMappingURL=ExpDesign.js.map

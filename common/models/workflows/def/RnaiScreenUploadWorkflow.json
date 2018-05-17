@@ -130,6 +130,9 @@
     "screenId": {
       "type": "number"
     },
+    "screenName": {
+      "type": "string"
+    },
     "instrumentId": {
       "type": "number"
     },

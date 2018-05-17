@@ -10,6 +10,7 @@ import {PlateCollection, RnaiWellCollection, annotationData} from "../../../type
 
 import Promise = require('bluebird');
 import * as _ from "lodash";
+import {shuffle} from 'lodash';
 import fs = require('fs');
 
 const request = require('request-promise');
@@ -44,7 +45,7 @@ const ExpAssay = app.models['ExpAssay'] as (typeof WorkflowModel);
  */
 ExpAssay.load.workflows.processExpPlates = function (workflowData: any, expPlates: ExpPlateResultSet[]) {
   return new Promise((resolve, reject) => {
-    Promise.map(expPlates, (expPlate: ExpPlateResultSet) => {
+    Promise.map(shuffle(expPlates), (expPlate: ExpPlateResultSet) => {
       app.winston.info(`Begin Exp Plate: ${expPlate.barcode} load experiment data`);
       return ExpAssay.load.workflows.processExpPlate(workflowData, expPlate)
         .then((results: PlateCollection) => {
@@ -52,7 +53,7 @@ ExpAssay.load.workflows.processExpPlates = function (workflowData: any, expPlate
           app.winston.info(`Begin Exp Plate: ${expPlate.barcode} load annotation data`);
           return ExpAssay.load.prepareAnnotationData(workflowData, results);
         });
-    }, {concurrency: 1})
+    })
       .then((results: PlateCollection) => {
         resolve(results);
       })
@@ -131,7 +132,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
       app.winston.error(error);
       reject(new Error(error));
     }
-    Promise.map(expPlateData.wellDataList, function (wellData: RnaiWellCollection) {
+    Promise.map(shuffle(expPlateData.wellDataList), function (wellData: RnaiWellCollection) {
       /*
       Check status of well
       1. Its a well with a reagent
@@ -207,7 +208,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
         };
         return wellData;
       }
-    }, {concurrency: 1})
+    })
       .then((results) => {
         resolve(results);
       })
@@ -392,6 +393,7 @@ ExpAssay.load.prepareAnnotationData = function (workflowData, plateData: PlateCo
       wellTerms.map(function (taxTerm) {
         wellData.annotationData.taxTerms.push(taxTerm);
       });
+      wellData.annotationData.taxTerms = _.uniqWith(wellData.annotationData.taxTerms, _.isEqual);
     });
     resolve(plateData);
   });

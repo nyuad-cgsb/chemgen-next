@@ -17,10 +17,8 @@ agenda.define('testJob', function (job) {
     console.log('There is a testJob ' + JSON.stringify(job.attr.data, null, 2));
 });
 agenda.define('ExpScreenUploadWorkflow.doWork', function (job, done) {
-    console.log('In agenda do work!!!');
     app.models.ExpScreenUploadWorkflow.load.workflows.doWork(job.attrs.data.workflowData)
         .then(function () {
-        console.log('Finished!!!');
         done();
     })
         .catch(function (error) {
@@ -28,14 +26,14 @@ agenda.define('ExpScreenUploadWorkflow.doWork', function (job, done) {
     });
 });
 // require('./jobs/jobs.js')(agenda);
-agenda.on('ready', function () {
-    agenda.processEvery('2 seconds');
-    agenda.maxConcurrency(5);
-    agenda.defaultConcurrency(1);
-    agenda.start();
-});
+// agenda.on('ready', function () {
+//   agenda.processEvery('2 seconds');
+//   agenda.maxConcurrency(100);
+//   agenda.defaultConcurrency(20);
+//   agenda.start();
+// });
 agenda.on('complete', function (job) {
-    console.log('Job %s finished', job.attrs.name);
+    // console.log('Job %s finished', job.attrs.name);
     job.remove(function (err) {
         if (err) {
             console.log('there was a problem removing job ' + err);

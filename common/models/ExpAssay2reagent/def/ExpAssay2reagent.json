@@ -221,12 +221,6 @@
     }
   },
   "relations": {
-    "reagentLibrarys": {
-      "type": "hasMany",
-      "model": "ReagentLibrary",
-      "foreignKey": "libraryId",
-      "propertyId": "libraryId"
-    },
     "expAssays": {
       "type": "hasMany",
       "model": "ExpAssay",
@@ -244,6 +238,12 @@
       "model": "ExpScreen",
       "foreignKey": "screenId",
       "propertyId": "screenId"
+    },
+    "reagentLibrarys": {
+      "type": "hasMany",
+      "model": "ReagentLibrary",
+      "foreignKey": "libraryId",
+      "propertyId": "libraryId"
     }
   }
 }

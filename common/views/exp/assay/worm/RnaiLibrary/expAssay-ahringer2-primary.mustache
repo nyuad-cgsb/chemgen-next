@@ -3,8 +3,12 @@
     <div class="col-md-6">
       <div id="screenInfo">
         <h2>Screen Information</h2>
+        <p><strong>Screen</strong> {{{workflowData.screenName}}}</p>
+        <p><strong>Gene</strong> {{{libraryData.cosmid_id}}} {{{wellData.annotationData.taxTerm}}}</p>
+        <p><strong>Upload Name</strong> {{{workflowData.name}}}</p>
+        <p><strong>Assay Date</strong>{{{workflowData.assayDate}}}</p>
+        <P><strong>Imaging Date</strong>{{{expPlate.plateImageDate}}}</P>
         <h3>Plate View</h3>
-        <p> Screen {{{workflowData.screenName}}} {{{wellData.taxTerm}}}</p>
         <!--TODO Make sure plateURL is correct Format-->
         <a href="{{{expPlate.plateWpPost}}}">{{expPlate.barcode}}</a>
       </div>
@@ -54,14 +58,6 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div id="thisWell" class="col-md-8">
-      [envira-gallery-dynamic id="tags-AI-{{{wellData.expAssay.assayId}}}" cols="1"]
-    </div>
-    <div class="col-md-4">
-      <p>Model Data Coming Soon!</p>
-    </div>
-  </div>
 
   <div class="row">
     <div class="col-md-12">
@@ -73,51 +69,51 @@
           {{/hasTaxTerm}}
           <!-- !Tax Term Header-->
 
-          <h3> Permissive </h3>
+          <h3> {{{screenType}}} {{{workflowData.temperature}}}C Gene: {{{wellData.annotationData.taxTerm}}} {{{libraryData.cosmid_id}}} </h3>
 
-          <!-- Permissive Mutant Strain + L4440-->
-          {{#annotationData.ctrl_rnai}}
+          <!-- Permissive Mutant Strain (mel-28)+ L4440  ctrl_strain-->
+          {{#annotationData.ctrl_strain}}
             <div id="enviraCPM">
-              <h3>Permissive {{{ workflowData.biosamples.experimentBiosample.name }}} + L4440 </h3>
+              <h3>{{{screenType}}} {{{workflowData.temperature}}}C WS {{{ workflowData.biosamples.experimentBiosample.name }}} + L4440 </h3>
               <p>
-                [envira-gallery-dynamic id="tags-EGI-{{{annotationData.ctrl_rnai.expGroupId}}}" columns="4" limit="4"
-                sort="random"]
+                <!--This should always be on 1 line!-->
+                [envira-gallery-dynamic id="tags-EGI-{{{annotationData.ctrl_strain.expGroupId}}}" columns="4" limit="4" sort="random"]
               </p>
             </div>
-          {{/annotationData.ctrl_rnai}}
+          {{/annotationData.ctrl_strain}}
           <!-- !Permissive Mutant Strain + L4440-->
 
-          <!-- Permissive Mutant Strain + RNAi-->
+          <!-- Permissive Mutant Strain (mel-28) + RNAi treat_rnai-->
           {{#hasTaxTerm}}
             <div id="enviraEM">
-              <h3>Permissive {{{ workflowData.biosamples.experimentBiosample.name }}} + RNAi </h3>
+              <h3>{{{screenType}}} {{{workflowData.temperature}}}C WS {{{ workflowData.biosamples.experimentBiosample.name }}} + {{{libraryData.cosmid_id}}} {{{wellData.annotationData.taxTerm}}} RNAi </h3>
               <p>
-                [envira-gallery-dynamic id="tags-EGI-{{{annotationData.treat_rnai.expGroupId}}}" cols="2"]
+                [envira-gallery-dynamic id="tags-EGI-{{{annotationData.treat_rnai.expGroupId}}}" columns="2"]
               </p>
             </div>
           {{/hasTaxTerm}}
           <!-- !Permissive Mutant Strain + RNAi-->
 
-          <!-- Permissive WildType Strain + L4440-->
+          <!-- Permissive WildType Strain (N2) + L4440 ctrl_null-->
           {{#annotationData.ctrl_null}}
             <div id="enviraCPN">
-              <h3>Permissive {{{ workflowData.biosamples.ctrlBiosample.name }}} + L4440</h3>
+              <h3>{{{screenType}}} {{{workflowData.temperature}}}C WS {{{ workflowData.biosamples.ctrlBiosample.name }}} + L4440</h3>
               <p>
-                [envira-gallery-dynamic id="tags-EGI-{{annotationData.ctrl_null.expGroupId}}" columns="4" limit="4"
-                sort="random"]
+                <!--This should always be on 1 line!-->
+                [envira-gallery-dynamic id="tags-EGI-{{annotationData.ctrl_null.expGroupId}}" columns="4" limit="4" sort="random"]
               </p>
             </div>
           {{/annotationData.ctrl_null}}
           <!-- !! Permissive WildType Strain + L4440-->
 
-          <!--Permissive WildType Strain + RNAi-->
+          <!--Permissive WildType Strain (N2) + RNAi ctrl_rnai-->
           {{#hasTaxTerm}}
-              <div id="enviraEN">
-                <h3>Permissive {{{ workflowData.biosamples.ctrlBiosample.name }}} + RNAi</h3>
-                <p>
-                  [envira-gallery-dynamic id="tags-EGI-{{{annotationData.ctrl_rnai.expGroupId}}}" cols="2"]
-                </p>
-              </div>
+            <div id="enviraEN">
+              <h3>{{{screenType}}} {{{workflowData.temperature}}}C WS {{{ workflowData.biosamples.ctrlBiosample.name }}} + {{{libraryData.cosmid_id}}} {{{wellData.annotationData.taxTerm}}} RNAi</h3>
+              <p>
+                [envira-gallery-dynamic id="tags-EGI-{{{annotationData.ctrl_rnai.expGroupId}}}" columns="2"]
+              </p>
+            </div>
           {{/hasTaxTerm}}
           <!-- !! Permissive WildType Strain + RNAi-->
 
@@ -128,4 +124,3 @@
   </div>
 
 </div>
-

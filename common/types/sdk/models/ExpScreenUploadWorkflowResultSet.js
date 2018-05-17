@@ -47,6 +47,22 @@ var ExpScreenUploadWorkflowResultSet = /** @class */ (function () {
                     name: 'platePlan',
                     type: 'any'
                 },
+                "platePlanId": {
+                    name: 'platePlanId',
+                    type: 'any'
+                },
+                "assayViewType": {
+                    name: 'assayViewType',
+                    type: 'string'
+                },
+                "plateViewType": {
+                    name: 'plateViewType',
+                    type: 'string'
+                },
+                "instrumentPlateIdLookup": {
+                    name: 'instrumentPlateIdLookup',
+                    type: 'string'
+                },
                 "wells": {
                     name: 'wells',
                     type: 'Array&lt;any&gt;',
@@ -55,6 +71,10 @@ var ExpScreenUploadWorkflowResultSet = /** @class */ (function () {
                 "screenId": {
                     name: 'screenId',
                     type: 'number'
+                },
+                "screenName": {
+                    name: 'screenName',
+                    type: 'string'
                 },
                 "instrumentId": {
                     name: 'instrumentId',
@@ -102,7 +122,7 @@ var ExpScreenUploadWorkflowResultSet = /** @class */ (function () {
                 },
                 "assayDates": {
                     name: 'assayDates',
-                    type: 'any'
+                    type: 'Array&lt;any&gt;'
                 },
                 "search": {
                     name: 'search',

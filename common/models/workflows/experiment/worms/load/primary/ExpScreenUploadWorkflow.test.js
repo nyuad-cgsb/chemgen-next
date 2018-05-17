@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../../../../server/server.js");
+var jsonfile = require("jsonfile");
 var assert = require("assert");
 var _ = require("lodash");
 var ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow;
@@ -39,9 +40,11 @@ describe('ExpScreenUploadWorkflow.worms.primary', function () {
             .then(function (results) {
             assert.equal(results.expDesignList.length, 9);
             assert.equal(results.plateDataList.length, 8);
+            var treatmentId = results.expDesignList[0].treatmentGroupId;
             var countTreatment = _.filter(results.expDesignList, function (expDesign) {
-                return _.isEqual(expDesign.treatmentGroupId, 6);
+                return _.isEqual(expDesign.treatmentGroupId, treatmentId);
             }).length;
+            jsonfile.writeFileSync('rnai_primary_new_screen.json', results);
             assert.equal(countTreatment, 3);
             done();
         })
@@ -52,8 +55,6 @@ describe('ExpScreenUploadWorkflow.worms.primary', function () {
     it('ExpScreenUploadWorkflow.load.workflows.worms.primary.createExpInterfaces', function (done) {
         this.timeout(30000);
         delete workflowData.id;
-        // ExpScreenUploadWorkflow.load.workflows.worms.primary.populateExperimentData(workflowData, instrumentPlates)
-        //   .then((screenData: ScreenCollection) => {
         ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces(workflowData, screenData)
             .then(function (results) {
             assert.equal(workflowData.biosamples.ctrlBiosample.name, 'N2');

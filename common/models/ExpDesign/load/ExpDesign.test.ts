@@ -37,6 +37,7 @@ describe('ExpDesign.load primary', function () {
   shared.sharedAfter();
 });
 
+//TODO Create a plate plan!!
 describe('ExpDesign.load secondary', function () {
   shared.prepareRnai();
 
