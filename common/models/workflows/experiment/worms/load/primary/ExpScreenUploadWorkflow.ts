@@ -2,7 +2,7 @@ import app = require('../../../../../../../server/server.js');
 import Promise = require('bluebird');
 import {ExpPlateResultSet, ExpScreenUploadWorkflowResultSet, PlateResultSet} from "../../../../../../types/sdk/models";
 import {WorkflowModel} from "../../../../../index";
-import {PlateCollection, RnaiWellCollection, ScreenCollection} from "../../../../../../types/wellData";
+import {PlateCollection, WellCollection, ScreenCollection} from "../../../../../../types/wellData";
 
 const ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow as (typeof WorkflowModel);
 

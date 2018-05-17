@@ -7,13 +7,13 @@ var annotationData = /** @class */ (function () {
     return annotationData;
 }());
 exports.annotationData = annotationData;
-var RnaiWellCollection = /** @class */ (function () {
-    function RnaiWellCollection(data) {
+var WellCollection = /** @class */ (function () {
+    function WellCollection(data) {
         Object.assign(this, data);
     }
-    return RnaiWellCollection;
+    return WellCollection;
 }());
-exports.RnaiWellCollection = RnaiWellCollection;
+exports.WellCollection = WellCollection;
 var PlateCollection = /** @class */ (function () {
     function PlateCollection(data) {
         Object.assign(this, data);

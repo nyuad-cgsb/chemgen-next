@@ -9,6 +9,7 @@
       "../common/models/ExpDesign/def",
       "../common/models/ExpBiosample/def",
       "../common/models/ChemicalLibrary/def",
+      "../common/models/ChemicalXrefs/def",
       "../common/models/ChemicalLibraryStock/def",
       "../common/models/ExpAssay2reagent/def",
       "../common/models/ExpScreen/def",
@@ -80,6 +81,10 @@
     "public": true
   },
   "ChemicalLibraryStock": {
+    "dataSource": "chemgenDS",
+    "public": true
+  },
+  "ChemicalXrefs": {
     "dataSource": "chemgenDS",
     "public": true
   },

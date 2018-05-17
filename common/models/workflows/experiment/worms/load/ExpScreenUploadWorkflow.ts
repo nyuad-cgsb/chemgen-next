@@ -5,7 +5,7 @@ import {
   PlateResultSet
 } from "../../../../../types/sdk/models";
 import {WorkflowModel} from "../../../../index";
-import {PlateCollection, RnaiWellCollection, ScreenCollection} from "../../../../../types/wellData";
+import {PlateCollection, WellCollection, ScreenCollection} from "../../../../../types/wellData";
 import jsonfile = require('jsonfile');
 import {isEqual, isEmpty, get} from 'lodash';
 import deepcopy = require('deepcopy');
@@ -221,7 +221,8 @@ ExpScreenUploadWorkflow.load.createWorkflowInstance = function (workflowData: Ex
  * 1. ExpPlate
  * 2. Gets the plate plan -> mapping of library to exp plate wells
  * 3. Creates the stock
- * 4. Creates the experiment groups - set of experiment condition (treat_rnai,ctrl_null,ctrL_strain,ctrl_rnai)
+ * 4a. Creates the experiment groups - set of experiment condition (treat_rnai,ctrl_null,ctrL_strain,ctrl_rnai)
+ * 4b. Creates the experiment groups - set of experiment condition (treat_chemical,ctrl_null,ctrL_strain,ctrl_chemical)
  * 5. Creates the ExpAssays (expGroupId is inline)
  * 6. Fires off a request to the service that converts images to non proprietary and web format
  * For all plates in an ExperimentSet

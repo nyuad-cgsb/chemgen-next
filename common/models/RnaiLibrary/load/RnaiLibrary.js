@@ -11,8 +11,6 @@ RnaiLibrary.load.workflows.processExpPlates = function (workflowData, expPlates)
     return new Promise(function (resolve, reject) {
         Promise.map(expPlates, function (plateInfo) {
             return RnaiLibrary.load.workflows.processExpPlate(workflowData, plateInfo);
-        }, {
-            concurrency: 6,
         })
             .then(function (results) {
             resolve(results);
@@ -46,6 +44,9 @@ RnaiLibrary.load.createWorkflowSearchObj = function (workflowData) {
 RnaiLibrary.load.primary.createWorkflowSearchObj = function (workflowData) {
     return {
         and: [
+            {
+                libraryId: workflowData.libraryId,
+            },
             {
                 screenId: workflowData.screenId,
             },
@@ -82,6 +83,9 @@ RnaiLibrary.load.secondary.createWorkflowSearchObj = function (workflowData) {
         and: [
             {
                 screenId: workflowData.screenId,
+            },
+            {
+                libraryId: workflowData.libraryId,
             },
             {
                 instrumentId: workflowData.instrumentId,

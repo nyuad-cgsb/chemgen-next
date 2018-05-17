@@ -10,8 +10,6 @@ app.start = function () {
   app.agenda.on('ready', function () {
     app.winston.info('Agenda started...')
     app.agenda.processEvery('2 seconds')
-    app.agenda.maxConcurrency(100)
-    app.agenda.defaultConcurrency(20)
     app.agenda.start()
   })
 

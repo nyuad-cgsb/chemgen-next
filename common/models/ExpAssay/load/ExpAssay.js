@@ -252,7 +252,7 @@ ExpAssay.load.createExpAssays = function (workflowData, expPlateData) {
  * In NY there is a weird tile lookup thing
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @returns {string}
  */
 ExpAssay.load.resolveImagePath.default = function (workflowData, expPlate, wellData) {
@@ -264,7 +264,7 @@ ExpAssay.load.resolveImagePath.default = function (workflowData, expPlate, wellD
  * Base path is not put in here, but in AD its /mnt/image/PlateData/
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ExpAssay.load.resolveImagePath.arrayScan = function (workflowData, expPlate, wellData) {
     return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);
@@ -275,7 +275,7 @@ ExpAssay.load.resolveImagePath.arrayScan = function (workflowData, expPlate, wel
  * TODO Get a mapping of Tile000N -> Well (A01)
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ExpAssay.load.resolveImagePath.nyu = function (workflowData, expPlate, wellData) {
     return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);

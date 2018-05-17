@@ -13,7 +13,7 @@ app.agenda.on('ready', function () {
         .then(function (count) {
         var count_per_batch = 50;
         var batches = count / count_per_batch;
-        var rangeBatches = lodash_1.range(0, batches - 1);
+        var rangeBatches = lodash_1.range(1, batches - 1);
         return Promise.map(rangeBatches, function (batch) {
             // return batch * count_per_batch;
             var skip = batch * count_per_batch;

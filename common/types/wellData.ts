@@ -7,24 +7,27 @@ import {RnaiLibraryStockResultSet} from "./sdk/models";
 import {ChemicalLibraryResultSet, ChemicalLibraryStockResultSet, ExpPlateResultSet} from "./sdk/models";
 
 declare var Object: any;
+
 export interface annotationDataInterface {
- geneName?: string;
- taxTerm?: string;
- taxTerms: Array<any> | WpTermTaxonomyResultSet[];
+  geneName?: string;
+  chemicalName?: string;
+  taxTerm?: string;
+  taxTerms: Array<any> | WpTermTaxonomyResultSet[];
   dbXRefs?: RnaiWormbaseXrefsResultSet | RnaiWormbaseXrefsResultSet[];
 }
 
 export class annotationData {
   geneName?: string;
+  chemicalName?: string;
   taxTerm?: string;
-  taxTerms: Array<any> ;
+  taxTerms: Array<any>;
   dbXRefs?: RnaiWormbaseXrefsResultSet | RnaiWormbaseXrefsResultSet[];
   constructor(data?: annotationDataInterface) {
     Object.assign(this, data);
   }
 }
 
-export interface RnaiWellDataInterface {
+export interface WellDataInterface {
   well?: string;
   parentLibraryData?: RnaiLibraryResultSet | ChemicalLibraryResultSet;
   stockLibraryData?: RnaiLibraryStockResultSet | ChemicalLibraryStockResultSet;
@@ -35,7 +38,7 @@ export interface RnaiWellDataInterface {
   modelPredictedPheno?: ModelPredictedPhenoResultSet;
 }
 
-export class RnaiWellCollection {
+export class WellCollection {
   well?: string;
   parentLibraryData: RnaiLibraryResultSet | ChemicalLibraryResultSet;
   stockLibraryData: RnaiLibraryStockResultSet | ChemicalLibraryStockResultSet;
@@ -44,27 +47,29 @@ export class RnaiWellCollection {
   expAssay?: ExpAssayResultSet;
   expAssay2reagent?: ExpAssay2reagentResultSet;
   modelPredictedPheno?: ModelPredictedPhenoResultSet;
-  constructor(data?: RnaiWellDataInterface) {
+
+  constructor(data?: WellDataInterface) {
     Object.assign(this, data);
   }
 }
 
 export interface PlateDataInterface {
-  wellDataList: RnaiWellCollection[];
+  wellDataList: WellCollection[];
   expPlate: ExpPlateResultSet;
   annotationData?: annotationDataInterface;
 }
 
 export class PlateCollection {
-  wellDataList: RnaiWellCollection[];
+  wellDataList: WellCollection[];
   expPlate: ExpPlateResultSet;
   annotationData?: annotationDataInterface;
+
   constructor(data?: PlateDataInterface) {
     Object.assign(this, data);
   }
 }
 
-export interface ScreenCollectionInterface{
+export interface ScreenCollectionInterface {
   plateDataList: PlateCollection[];
   expDesignList?: ExpDesignResultSet[];
   expGroupList?: ExpGroupResultSet[];
@@ -76,12 +81,13 @@ export class ScreenCollection {
   expDesignList?: ExpDesignResultSet[];
   expGroupList?: ExpGroupResultSet[];
   annotationData?: annotationDataInterface;
+
   constructor(data?: ScreenCollectionInterface) {
     Object.assign(this, data);
   }
 }
 
-export interface ExpSetInterface{
+export interface ExpSetInterface {
   expDesignList: ExpDesignResultSet[];
   expGroupList: ExpGroupResultSet[];
 }
@@ -89,7 +95,8 @@ export interface ExpSetInterface{
 export class ExpSet {
   expDesignList: ExpDesignResultSet[];
   expGroupList: ExpGroupResultSet[];
-  constructor(data?: ExpSetInterface){
+
+  constructor(data?: ExpSetInterface) {
     Object.assign(this, data);
   }
 }

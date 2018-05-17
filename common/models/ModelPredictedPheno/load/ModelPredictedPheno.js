@@ -33,7 +33,7 @@ ModelPredictedPheno.load.workflows.parseScreen = function (workflowData, screenD
  * First look for the assay
  * If it doesn't exist create
  * @param workflowData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ModelPredictedPheno.load.workflows.processAssay = function (workflowData, wellData) {
     return new Promise(function (resolve, reject) {
@@ -69,7 +69,7 @@ ModelPredictedPheno.load.workflows.processAssay = function (workflowData, wellDa
 /**
  * TODO This is hard coded for a particular model - which is NO GOOD
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ModelPredictedPheno.load.getPhenos = function (workflowData, wellData) {
     var phenoJob = { image_file: "/mnt/image/" + wellData.expAssay.assayImagePath + "-autolevel.bmp" };

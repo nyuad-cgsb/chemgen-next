@@ -1,5 +1,5 @@
 import app  = require('../../../../server/server.js');
-import {RnaiWellCollection} from "../../../types/wellData";
+import {WellCollection} from "../../../types/wellData";
 import {ExpPlateResultSet, RnaiLibraryResultSet, RnaiLibraryStockResultSet} from "../../../types/sdk/models";
 import {WorkflowModel} from "../../index";
 import Promise = require('bluebird');
@@ -73,7 +73,7 @@ RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate: ExpP
             preparedBy: '',
           });
 
-          return new RnaiWellCollection({
+          return new WellCollection({
             well: well,
             stockLibraryData: createStock,
             parentLibraryData: libraryResult,

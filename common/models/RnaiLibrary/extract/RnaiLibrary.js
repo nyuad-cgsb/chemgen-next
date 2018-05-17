@@ -66,7 +66,7 @@ RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate, libr
                     datePrepared: workflowData.stockPrepDate,
                     preparedBy: '',
                 });
-                return new wellData_1.RnaiWellCollection({
+                return new wellData_1.WellCollection({
                     well: well,
                     stockLibraryData: createStock,
                     parentLibraryData: libraryResult,

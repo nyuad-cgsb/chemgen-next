@@ -11,6 +11,7 @@ export * from './ExpAssayResultSet';
 export * from './ReagentLibraryResultSet';
 export * from './RnaiLibraryResultSet';
 export * from './ChemicalLibraryStockResultSet';
+export * from './ChemicalXrefsResultSet';
 export * from './RnaiLibraryStockResultSet';
 export * from './RnaiWormbaseXrefsResultSet';
 export * from './PlateResultSet';

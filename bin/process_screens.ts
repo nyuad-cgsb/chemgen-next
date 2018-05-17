@@ -16,7 +16,7 @@ app.agenda.on('ready', function () {
     .then((count) => {
       let count_per_batch = 50;
       const batches = count / count_per_batch;
-      let rangeBatches = range(0, batches - 1 );
+      let rangeBatches = range(1, batches - 1 );
       return Promise.map(rangeBatches, (batch) => {
         // return batch * count_per_batch;
         let skip = batch * count_per_batch;

@@ -7,7 +7,7 @@ import {
 import {WorkflowModel} from "../../index";
 import Promise = require('bluebird');
 
-import {PlateCollection, RnaiWellCollection} from "../../../types/wellData";
+import {PlateCollection, WellCollection} from "../../../types/wellData";
 import * as _ from "lodash";
 
 const RnaiLibrary = app.models['RnaiLibrary'] as (typeof WorkflowModel);
@@ -19,8 +19,6 @@ RnaiLibrary.load.workflows.processExpPlates = function (workflowData: any, expPl
   return new Promise(function (resolve, reject) {
     Promise.map(expPlates, function (plateInfo) {
       return RnaiLibrary.load.workflows.processExpPlate(workflowData, plateInfo);
-    }, {
-      concurrency: 6,
     })
       .then(function (results) {
         resolve(results);
@@ -57,6 +55,9 @@ RnaiLibrary.load.createWorkflowSearchObj = function (workflowData: any) {
 RnaiLibrary.load.primary.createWorkflowSearchObj = function (workflowData: any) {
   return {
     and: [
+      {
+        libraryId: workflowData.libraryId,
+      },
       {
         screenId: workflowData.screenId,
       },
@@ -96,6 +97,9 @@ RnaiLibrary.load.secondary.createWorkflowSearchObj = function (workflowData: any
         screenId: workflowData.screenId,
       },
       {
+        libraryId: workflowData.libraryId,
+      },
+      {
         instrumentId: workflowData.instrumentId,
       },
       {
@@ -126,7 +130,7 @@ RnaiLibrary.load.secondary.genTaxTerms = function (workflowData) {
   return []
 };
 
-RnaiLibrary.load.genLibraryViewData = function (workflowData: ExpScreenUploadWorkflowResultSet, wellData: RnaiWellCollection) {
+RnaiLibrary.load.genLibraryViewData = function (workflowData: ExpScreenUploadWorkflowResultSet, wellData: WellCollection) {
 
   let dbXRefs = wellData.annotationData.dbXRefs;
   if (!_.isEmpty(dbXRefs) || _.isNull(dbXRefs)) {
