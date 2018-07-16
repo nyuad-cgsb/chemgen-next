@@ -17,6 +17,12 @@ const chembridgeLibraryId = 2;
 const fdaFile = path.resolve(__dirname, 'migrate', 'chemical', 'Chemical_FDALibrary.csv');
 const fdaLibraryId = 3;
 
+/**
+ * Previously, each library was in its own table
+ * Now there are two library tables, one for RNA and one for Chemical
+ * They have conceptual mappings to whatever the vendor defined
+ */
+
 //New Chemical table looks like:
 // compund_id
 // library_id

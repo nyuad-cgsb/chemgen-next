@@ -2,7 +2,7 @@ import app  = require('../../../../server/server.js');
 import config = require('config');
 
 import {WorkflowModel} from "../../index";
-import {annotationData, RnaiWellCollection} from "../../../types/wellData";
+import {annotationData, WellCollection} from "../../../types/wellData";
 import {ExpPlateResultSet, ExpScreenUploadWorkflowResultSet, WpTermsResultSet} from "../../../types/sdk/models";
 import {PlateCollection, ScreenCollection} from "../../../types/wellData";
 import {WpTermTaxonomyResultSet} from "../../../types/sdk/models";
@@ -145,10 +145,10 @@ WpTerms.load.genPlateTaxTerms = function (workflowData: ExpScreenUploadWorkflowR
  * EGT - ExpGroupType (This gets added later, after the expgroup is created)
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @returns {({taxonomy: string; taxTerm: Date} | {taxonomy: string; taxTerm: string} | {taxonomy: string; taxTerm: number} | {taxonomy: string; taxTerm})[]}
  */
-WpTerms.load.genWellTaxTerms = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: RnaiWellCollection) {
+WpTerms.load.genWellTaxTerms = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: WellCollection) {
   //TODO Upto barcode are for the plate
   let regexp = /([a-zA-Z]+)(\d+)/g;
   let groups = regexp.exec(wellData.stockLibraryData.well);
@@ -158,6 +158,14 @@ WpTerms.load.genWellTaxTerms = function (workflowData: any, expPlate: ExpPlateRe
       taxonomy: 'envira-tag',
       taxTerm: slug([
         `AI-${wellData.expAssay.assayId}`,
+      ].join('')),
+    },
+    {
+      taxonomy: 'envira-tag',
+      taxTerm: slug([
+        `SI-${workflowData.screenId}`,
+        `_PI-${expPlate.plateId}`,
+        `_R-${groups[1]}`,
       ].join('')),
     },
   ];

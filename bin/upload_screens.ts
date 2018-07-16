@@ -5,6 +5,7 @@ const app = require('../server/server');
 const Promise = require('bluebird');
 const jsonfile = require('jsonfile');
 import {WorkflowModel} from "../common/models";
+import {isArray} from 'lodash';
 
 const path = require('path');
 
@@ -27,22 +28,23 @@ catch (error) {
   console.log(`Could not read file ${workflow}`);
   process.exit(1);
 }
-app.agenda.on('ready', function(){
-  try{
+
+app.agenda.on('ready', function () {
+  console.log('agenda ready!');
+  // app.agenda.start();
+  try {
+    console.log('subbmitting....');
     app.agenda.now('ExpScreenUploadWorkflow.doWork', {workflowData: workflowData});
-  } catch (error){
-   console.log(`Received error: ${error}`);
-   process.exit(1);
+    // process.exit(0);
+  } catch (error) {
+    console.log(`Received error: ${error}`);
+    process.exit(1);
   }
-  process.exit(0);
-  //
-  // ExpScreenUploadWorkflow.load.workflows.worms.doWork(workflowData)
-  //   .then(() => {
-  //     process.exit(0);
-  //   })
-  //   .catch((error) => {
-  //     process.exit(1);
-  //   });
+  if (isArray(workflowData)) {
+    workflowData.map((workflow) =>{
+      app.agenda.now('ExpScreenUploadWorkflow.doWork', {workflowData: workflow});
+    });
+  } else {
+    app.agenda.now('ExpScreenUploadWorkflow.doWork', {workflowData: workflowData});
+  }
 });
-
-

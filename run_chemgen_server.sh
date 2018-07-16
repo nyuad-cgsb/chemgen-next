@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export NODE_ENV='production'
+
 ### ArrayScan MSSQL DB
 export ARRAYSCAN_DB="store"
 export ARRAYSCAN_USER="mysqluser"
@@ -25,7 +27,14 @@ export WP_USER="chemgen_wp_dev"
 
 ## MongoDB - miscalleneous things!
 export MONGO_HOST="onyx.abudhabi.nyu.edu"
-export MONGO_URL="mongodb://admin:admin123@10.230.9.222/chemgen"
+export MONGO_URL="mongodb://admin:admin123@onyx.abudhabi.nyu.edu/chemgen"
 export MONGO_DB="chemgen"
 export MONGO_USER="chemgen"
 export MONGO_PASS="chemGen123"
+
+## MongoDB - miscalleneous things!
+export MONGO_WS250_HOST="onyx.abudhabi.nyu.edu"
+export MONGO_WS250_URL="mongodb://wormbase:wormbase123@onyx.abudhabi.nyu.edu/wormbase"
+export MONGO_WS250_DB="wormbase"
+export MONGO_WS250_USER="wormbase"
+export MONGO_WS250_PASS="wormbase123"

@@ -42,6 +42,14 @@ var ChemicalLibraryResultSet = /** @class */ (function () {
                     name: 'libraryId',
                     type: 'number'
                 },
+                "plate": {
+                    name: 'plate',
+                    type: 'string'
+                },
+                "well": {
+                    name: 'well',
+                    type: 'string'
+                },
                 "compoundLibraryId": {
                     name: 'compoundLibraryId',
                     type: 'number'

@@ -18,3 +18,5 @@ coverage
 node_modules
 npm-debug.log
 run_chemgen_server.sh
+.env
+run_chemgen_server_prod.sh

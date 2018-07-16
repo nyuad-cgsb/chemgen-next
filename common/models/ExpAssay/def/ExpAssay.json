@@ -100,17 +100,17 @@
       }
     },
     "assayExpGroup": {
-      "type": "String",
+      "type": "Number",
       "required": false,
-      "length": 100,
-      "precision": null,
-      "scale": null,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
       "mysql": {
         "columnName": "assay_exp_group",
-        "dataType": "varchar",
-        "dataLength": 100,
-        "dataPrecision": null,
-        "dataScale": null,
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
         "nullable": "Y"
       }
     },
@@ -203,11 +203,23 @@
       "foreignKey": "plateId",
       "propertyId": "plateId"
     },
+    "expAssay2reagent": {
+      "type": "hasMany",
+      "model": "ExpAssay2reagent",
+      "foreignKey": "assayId",
+      "propertyId": "assayId"
+    },
     "expScreens": {
       "type": "hasMany",
       "model": "ExpScreen",
       "foreignKey": "screenId",
       "propertyId": "screenId"
+    },
+    "modelPredictedCounts": {
+      "type": "hasMany",
+      "model": "ModelPredictedCounts",
+      "foreignKey": "assayId",
+      "propertyId": "assayId"
     }
   }
 }

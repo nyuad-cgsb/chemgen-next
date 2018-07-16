@@ -49,7 +49,7 @@ ExpAssay.load.workflows.processExpPlates = function (workflowData, expPlates) {
             resolve(results);
         })
             .catch(function (error) {
-            app.winston.error(error.stack);
+            app.winston.warn(error.stack);
             reject(new Error(error));
         });
     });
@@ -98,6 +98,7 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData, expPlate) {
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.warn(error);
             reject(new Error(error));
         });
     });
@@ -118,7 +119,7 @@ ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
             expGroupData = ExpAssay.load.getExpGroup(workflowData, expPlateData.expPlate);
         }
         catch (error) {
-            app.winston.error(error);
+            app.winston.warn(error);
             reject(new Error(error));
         }
         Promise.map(lodash_1.shuffle(expPlateData.wellDataList), function (wellData) {
@@ -163,7 +164,7 @@ ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
                     expGroupType = ExpAssay.load[workflowData.screenStage].getControlCondition(workflowData, expPlateData.expPlate, expGroupData);
                 }
                 catch (error) {
-                    app.winston.error(error);
+                    app.winston.warn(error);
                     reject(new Error(error));
                 }
                 var createObj = {
@@ -203,6 +204,7 @@ ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.warn(error);
             reject(new Error(error));
         });
     });
@@ -235,6 +237,7 @@ ExpAssay.load.createExpAssays = function (workflowData, expPlateData) {
                 return wellData;
             })
                 .catch(function (error) {
+                app.winston.warn(error);
                 reject(new Error(error));
             });
         })
@@ -242,6 +245,7 @@ ExpAssay.load.createExpAssays = function (workflowData, expPlateData) {
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.info(error);
             reject(new Error(error));
         });
     });
@@ -252,7 +256,7 @@ ExpAssay.load.createExpAssays = function (workflowData, expPlateData) {
  * In NY there is a weird tile lookup thing
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @returns {string}
  */
 ExpAssay.load.resolveImagePath.default = function (workflowData, expPlate, wellData) {
@@ -264,7 +268,7 @@ ExpAssay.load.resolveImagePath.default = function (workflowData, expPlate, wellD
  * Base path is not put in here, but in AD its /mnt/image/PlateData/
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ExpAssay.load.resolveImagePath.arrayScan = function (workflowData, expPlate, wellData) {
     return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);
@@ -275,7 +279,7 @@ ExpAssay.load.resolveImagePath.arrayScan = function (workflowData, expPlate, wel
  * TODO Get a mapping of Tile000N -> Well (A01)
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ExpAssay.load.resolveImagePath.nyu = function (workflowData, expPlate, wellData) {
     return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);
@@ -300,7 +304,8 @@ ExpAssay.load.getExpGroup = function (workflowData, expPlate) {
         })[0];
     }
     catch (error) {
-        return new Error(error);
+        app.winston.info(error);
+        throw new Error(error);
     }
     var biosample = workflowData.experimentGroups[expGroupType]['biosampleId'];
     return { expGroupType: expGroupType, biosampleId: biosample };
@@ -352,6 +357,7 @@ ExpAssay.load.workflows.createAnnotationData = function (workflowData, plateData
             resolve(plateData);
         })
             .catch(function (error) {
+            app.winston.info(error);
             reject(new Error(error));
         });
     });
@@ -391,6 +397,7 @@ ExpAssay.load.workflows.imageConversionPipeline.all = function (workflowData, pl
             resolve(plateData);
         })
             .catch(function (error) {
+            app.winston.info(error);
             reject(new Error(error));
         });
     });

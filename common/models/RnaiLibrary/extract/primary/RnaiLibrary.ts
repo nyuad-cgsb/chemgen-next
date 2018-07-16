@@ -19,7 +19,6 @@ RnaiLibrary.extract.primary.getParentLibrary = function(workflowData, barcode) {
   });
 };
 
-
 /**
  * Get the vendor/parent library data for a particular screen
  * In the primary screen 1 plate corresponds to 1 chrom-plate-quadrant location

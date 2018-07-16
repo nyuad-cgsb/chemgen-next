@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../server/server.js");
-//IMPORT LODASH LIKE THIS!!!!
 var _ = require("lodash");
 //TODO This file needs a lot of cleaning up - lots of leftover logic from the last codebase
 var RnaiLibrary = app.models['RnaiLibrary'];
@@ -118,13 +117,6 @@ RnaiLibrary.helpers.getQuad = function (barcode) {
         Q4: 'B2',
     };
     var plateQuadrant;
-    // for (let key in codes) {
-    //   if (barcode.match(key)) {
-    //     plateQuadrant = codes[key];
-    //   } else if (barcode.match(codes[key])) {
-    //     plateQuadrant = codes[key];
-    //   }
-    // }
     Object.keys(codes).map(function (key) {
         if (barcode.match(key)) {
             plateQuadrant = codes[key];

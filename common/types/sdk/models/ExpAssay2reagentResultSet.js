@@ -82,6 +82,10 @@ var ExpAssay2reagentResultSet = /** @class */ (function () {
                     name: 'reagentType',
                     type: 'string'
                 },
+                "assayExpGroup": {
+                    name: 'assayExpGroup',
+                    type: 'number'
+                },
                 "reagentTable": {
                     name: 'reagentTable',
                     type: 'string'

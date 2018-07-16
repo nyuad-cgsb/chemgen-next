@@ -4,14 +4,20 @@
 declare var Object: any;
 export interface ExpDesignResultSetInterface {
   "expDesignId"?: number;
+  "screenId"?: number;
+  "expWorkflowId"?: string;
   "treatmentGroupId": number;
   "controlGroupId"?: number;
+  "controlGroupReagentType"?: string;
 }
 
 export class ExpDesignResultSet implements ExpDesignResultSetInterface {
   "expDesignId": number;
+  "screenId": number;
+  "expWorkflowId": string;
   "treatmentGroupId": number;
   "controlGroupId": number;
+  "controlGroupReagentType": string;
   constructor(data?: ExpDesignResultSetInterface) {
     Object.assign(this, data);
   }
@@ -49,6 +55,14 @@ export class ExpDesignResultSet implements ExpDesignResultSetInterface {
           name: 'expDesignId',
           type: 'number'
         },
+        "screenId": {
+          name: 'screenId',
+          type: 'number'
+        },
+        "expWorkflowId": {
+          name: 'expWorkflowId',
+          type: 'string'
+        },
         "treatmentGroupId": {
           name: 'treatmentGroupId',
           type: 'number'
@@ -56,6 +70,10 @@ export class ExpDesignResultSet implements ExpDesignResultSetInterface {
         "controlGroupId": {
           name: 'controlGroupId',
           type: 'number'
+        },
+        "controlGroupReagentType": {
+          name: 'controlGroupReagentType',
+          type: 'string'
         },
       },
       relations: {

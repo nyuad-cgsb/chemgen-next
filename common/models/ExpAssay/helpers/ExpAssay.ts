@@ -11,7 +11,7 @@ const readFile = Promise.promisify(require('fs').readFile);
 
 const ExpAssay = app.models['ExpAssay'] as (typeof WorkflowModel);
 
-//TODO This is worm only - nyuad only logic
+//TODO This is worm nyuad only logic
 //TODO Preface all basename(baseImage) with the instrumentPlateId, that way we get unique image names
 ExpAssay.helpers.genImageFileNames = function(expPlate: ExpPlateResultSet, well: string) {
   let imageArray = expPlate.instrumentPlateImagePath.split('\\');
@@ -27,6 +27,7 @@ ExpAssay.helpers.genImageFileNames = function(expPlate: ExpPlateResultSet, well:
     imageId
   ].join('');
 
+  //This is only for worms - cells are different
   let ext = 'f00d0.C01';
   let instrumentImage = imagePath + '_' + well + ext;
   let outDir = '/mnt/image/';

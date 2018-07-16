@@ -16,6 +16,7 @@ __export(require("./ExpAssayResultSet"));
 __export(require("./ReagentLibraryResultSet"));
 __export(require("./RnaiLibraryResultSet"));
 __export(require("./ChemicalLibraryStockResultSet"));
+__export(require("./ChemicalXrefsResultSet"));
 __export(require("./RnaiLibraryStockResultSet"));
 __export(require("./RnaiWormbaseXrefsResultSet"));
 __export(require("./PlateResultSet"));
@@ -28,7 +29,9 @@ __export(require("./WpTermTaxonomyResultSet"));
 __export(require("./RnaiScreenUploadWorkflowResultSet"));
 __export(require("./ModelPredictedPhenoResultSet"));
 __export(require("./ModelPredictedCountsResultSet"));
+__export(require("./ModelPredictedRankResultSet"));
 __export(require("./PlatePlan96ResultSet"));
+__export(require("./AnalysisResultSet"));
 __export(require("./BaseModels"));
 __export(require("./FireLoopRef"));
 //# sourceMappingURL=index.js.map

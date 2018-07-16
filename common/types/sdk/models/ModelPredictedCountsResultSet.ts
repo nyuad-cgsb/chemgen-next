@@ -20,6 +20,8 @@ export interface ModelPredictedCountsResultSetInterface {
   "larvaCount"?: number;
   "eggCount"?: number;
   "percEmbLeth"?: number;
+  "percSter"?: number;
+  "broodSize"?: number;
   expAssay2reagents?: ExpAssay2reagentResultSet[];
   expAssays?: ExpAssayResultSet[];
   expPlates?: ExpPlateResultSet[];
@@ -38,6 +40,8 @@ export class ModelPredictedCountsResultSet implements ModelPredictedCountsResult
   "larvaCount": number;
   "eggCount": number;
   "percEmbLeth": number;
+  "percSter": number;
+  "broodSize": number;
   expAssay2reagents: ExpAssay2reagentResultSet[];
   expAssays: ExpAssayResultSet[];
   expPlates: ExpPlateResultSet[];
@@ -117,6 +121,14 @@ export class ModelPredictedCountsResultSet implements ModelPredictedCountsResult
         },
         "percEmbLeth": {
           name: 'percEmbLeth',
+          type: 'number'
+        },
+        "percSter": {
+          name: 'percSter',
+          type: 'number'
+        },
+        "broodSize": {
+          name: 'broodSize',
           type: 'number'
         },
       },

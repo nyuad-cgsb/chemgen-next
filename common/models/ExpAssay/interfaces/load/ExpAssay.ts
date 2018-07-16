@@ -1,7 +1,7 @@
 import app  = require('../../../../../server/server.js');
 
 import path = require('path');
-import {PlateCollection, RnaiWellCollection, ScreenCollection, ExpSet} from "../../../../types/wellData";
+import {PlateCollection, WellCollection, ScreenCollection, ExpSet} from "../../../../types/wellData";
 import {WorkflowModel} from "../../../index";
 
 import slug = require('slug');
@@ -66,7 +66,7 @@ ExpAssay.load.workflows.createExpAssayInterfaces = function (workflowData: any, 
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
  */
-ExpAssay.load.workflows.getAssayRelations = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, plateData: PlateCollection, wellData: RnaiWellCollection) {
+ExpAssay.load.workflows.getAssayRelations = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, plateData: PlateCollection, wellData: WellCollection) {
   return new Promise((resolve, reject) => {
     app.models.ExpDesign.extract.workflows.getExpSetByExpGroupId(wellData.expGroup.expGroupId, screenData.expDesignList)
       .then((expDesignList: ExpDesignResultSet[]) => {
@@ -113,11 +113,11 @@ ExpAssay.load.mapAssayRelations = function (workflowData: ExpScreenUploadWorkflo
  * TODO - Create a file resolver to allow for customized templates
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * /common/views/exp/assay/worm/RnaiLibrary/expAssay-rnailibrary-ahringer2-primary-permissive.mustache
  */
 // return ExpAssay.load.genHtmlView(workflowData, screenData, plateData, wellData, annotationData);
-ExpAssay.load.genHtmlView = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, plateData: PlateCollection, wellData: RnaiWellCollection, annotationData: any) {
+ExpAssay.load.genHtmlView = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, plateData: PlateCollection, wellData: WellCollection, annotationData: any) {
   const templateName = `${workflowData.librarycode}-${workflowData.screenStage}.mustache`;
   let templateFile = path.join(path.dirname(__filename), `../../../../../common/views/exp/assay/${workflowData.biosampleType}/${workflowData.libraryModel}/expAssay-${templateName}`);
   let screenType = _.capitalize(workflowData.screenType);
@@ -150,10 +150,10 @@ ExpAssay.load.genHtmlView = function (workflowData: ExpScreenUploadWorkflowResul
  * Here is where the content is actually loaded into the Wordpress WpPosts table
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param {string} postContent
  */
-ExpAssay.load.workflows.createWpPosts = function (workflowData: ExpScreenUploadWorkflowResultSet, plateData: PlateCollection, wellData: RnaiWellCollection, postContent: string) {
+ExpAssay.load.workflows.createWpPosts = function (workflowData: ExpScreenUploadWorkflowResultSet, plateData: PlateCollection, wellData: WellCollection, postContent: string) {
   return new Promise((resolve, reject) => {
     let plateId = plateData.expPlate.plateId;
     let title = `${plateId}-${wellData.expAssay.assayCodeName}`;
@@ -188,10 +188,10 @@ ExpAssay.load.workflows.createWpPosts = function (workflowData: ExpScreenUploadW
 
 /**
  * Once we have the created the expAssay interface, update the ResultSet with the post Id
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postData
  */
-ExpAssay.load.updateExpAssay = function (wellData: RnaiWellCollection, postData: any) {
+ExpAssay.load.updateExpAssay = function (wellData: WellCollection, postData: any) {
   return new Promise((resolve, reject) => {
     wellData.expAssay.assayWpAssayPostId = postData.postData.id;
     ExpAssay.upsert(wellData.expAssay)
@@ -228,10 +228,10 @@ ExpAssay.load.updateExpAssay = function (wellData: RnaiWellCollection, postData:
  };
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postsResults
  */
-ExpAssay.load.relateTaxToPost = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, wellData: RnaiWellCollection) {
+ExpAssay.load.relateTaxToPost = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, wellData: WellCollection) {
   let results = _.map(wellData.annotationData.taxTerms, (taxTerm) => {
     return _.filter(screenData.annotationData.taxTerms, (taxTermResultSet) => {
       return _.isEqual(String(taxTermResultSet.term), String(taxTerm.taxTerm)) && _.isEqual(String(taxTermResultSet.taxonomy), String(taxTerm.taxonomy));
@@ -247,10 +247,10 @@ ExpAssay.load.relateTaxToPost = function (workflowData: ExpScreenUploadWorkflowR
  * This associates the post to the taxonomy terms
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postData
  */
-ExpAssay.load.workflows.createPostTaxRels = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, wellData: RnaiWellCollection, postData: any) {
+ExpAssay.load.workflows.createPostTaxRels = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, wellData: WellCollection, postData: any) {
   return new Promise((resolve, reject) => {
     let taxTerms = ExpAssay.load.relateTaxToPost(workflowData, screenData, wellData);
     taxTerms = _.uniqWith(taxTerms, _.isEqual);

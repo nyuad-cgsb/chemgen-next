@@ -1,5 +1,6 @@
 const loopback = require('loopback')
 const boot = require('loopback-boot')
+let cluster = require('express-cluster')
 
 const app = module.exports = loopback()
 
@@ -7,14 +8,6 @@ app.agenda = require('../agenda/agenda')
 
 app.start = function () {
   // start the web server
-  app.agenda.on('ready', function () {
-    app.winston.info('Agenda started...')
-    app.agenda.processEvery('2 seconds')
-    app.agenda.maxConcurrency(100)
-    app.agenda.defaultConcurrency(20)
-    app.agenda.start()
-  })
-
   return app.listen(() => {
     app.emit('started')
     const baseUrl = app.get('url').replace(/\/$/, '')

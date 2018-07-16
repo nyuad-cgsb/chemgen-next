@@ -33,8 +33,12 @@ var RnaiWormbaseXrefsResultSet = /** @class */ (function () {
             name: 'RnaiWormbaseXrefsResultSet',
             plural: 'RnaiWormbaseXrefsResultSets',
             path: 'RnaiWormbaseXrefs',
-            idName: 'wbGeneSequenceId',
+            idName: 'id',
             properties: {
+                "id": {
+                    name: 'id',
+                    type: 'number'
+                },
                 "wbGeneSequenceId": {
                     name: 'wbGeneSequenceId',
                     type: 'string'

@@ -1,8 +1,9 @@
 import app  = require('../../../../server/server.js');
-import {RnaiWellCollection} from "../../../types/wellData";
+import {WellCollection} from "../../../types/wellData";
 import {ExpPlateResultSet, RnaiLibraryResultSet, RnaiLibraryStockResultSet} from "../../../types/sdk/models";
 import {WorkflowModel} from "../../index";
 import Promise = require('bluebird');
+import {get} from 'lodash';
 
 const RnaiLibrary = app.models['RnaiLibrary'] as (typeof WorkflowModel);
 
@@ -18,69 +19,88 @@ RnaiLibrary.extract.parseLibraryResults = function (workflowData, expPlate: ExpP
     let plateId = expPlate.plateId;
 
 
-    //TODO Need to incorporate multiple wells
-    Promise.map(allWells, function (well) {
-      let createStocks = [];
-      let parentLibraryResults  = [];
+    let platedbXrefSearch = [];
+    allWells.map((well) => {
       let libraryResult: RnaiLibraryResultSet = RnaiLibrary.helpers.genLibraryResult(barcode, libraryResults, well);
-      return app.models.RnaiWormbaseXrefs.extract.genTaxTerms({
-        where: {
+      if (get(libraryResult, 'compoundLibraryId')) {
+        let where = {
           wbGeneSequenceId: libraryResult.geneName,
-        },
+        };
+        platedbXrefSearch.push(where);
+      }
+    });
+
+    //TODO Need to incorporate multiple wells
+    app.models.RnaiWormbaseXrefs.find({where: {or: platedbXrefSearch}})
+      .then((dbXrefs) =>{
+        return Promise.map(allWells, function (well) {
+          let createStocks = [];
+          let parentLibraryResults = [];
+          let libraryResult: RnaiLibraryResultSet = RnaiLibrary.helpers.genLibraryResult(barcode, libraryResults, well);
+          return app.models.RnaiWormbaseXrefs.extract.genTaxTerms(dbXrefs, {
+            where: {
+              wbGeneSequenceId: libraryResult.geneName,
+            },
+          })
+            .then(function (wormTaxTerms) {
+              // TODO Add taxTerms per library / screenStage
+              let taxTerms = [];
+              // For secondary plates we need to add an additional taxTerm for control wells
+              wormTaxTerms.taxTerms.forEach(function (wormTaxTerm) {
+                taxTerms.push(wormTaxTerm);
+              });
+
+              //In the primary screen we have an entire barcode with L4440s
+              if (barcode.match('L4440')) {
+                taxTerms.push({
+                  taxonomy: 'wb_gene_sequence_id',
+                  taxTerm: 'L4440'
+                });
+                libraryResult.geneName = 'L4440';
+              }
+              //In the secondary screen we have just genes
+              else if (libraryResult.geneName === 'empty') {
+                taxTerms.push({
+                  taxonomy: 'wb_gene_sequence_id',
+                  taxTerm: 'empty'
+                });
+                libraryResult.geneName = 'empty';
+              }
+              if (wormTaxTerms.taxTerms.length === 0) {
+                taxTerms.push({
+                  taxonomy: 'wb_gene_sequence_id',
+                  taxTerm: libraryResult.geneName,
+                });
+              }
+
+              //This is the skeleton for the stock creator
+              //But it does not actually get created until
+              //The assay is created
+              let createStock: RnaiLibraryStockResultSet = new RnaiLibraryStockResultSet({
+                plateId: plateId,
+                libraryId: workflowData.libraryId,
+                rnaiId: libraryResult.rnaiId,
+                well: well,
+                //These should be in the workflowData
+                location: '',
+                datePrepared: workflowData.stockPrepDate,
+                preparedBy: '',
+              });
+
+              return new WellCollection({
+                well: well,
+                stockLibraryData: createStock,
+                parentLibraryData: libraryResult,
+                annotationData: {
+                  geneName: libraryResult.geneName,
+                  taxTerm: libraryResult.geneName,
+                  taxTerms: taxTerms,
+                  dbXRefs: wormTaxTerms.xrefs
+                }
+              });
+            });
+        })
       })
-        .then(function (wormTaxTerms) {
-          // TODO Add taxTerms per library / screenStage
-          let taxTerms = [];
-          // For secondary plates we need to add an additional taxTerm for control wells
-          wormTaxTerms.taxTerms.forEach(function (wormTaxTerm) {
-            taxTerms.push(wormTaxTerm);
-          });
-
-          //In the primary screen we have an entire barcode with L4440s
-          if (barcode.match('L4440')) {
-            taxTerms.push({
-              taxonomy: 'wb_gene_sequence_id',
-              taxTerm: 'L4440'
-            });
-            libraryResult.geneName = 'L4440';
-          }
-          //In the secondary screen we have just genes
-          else if (libraryResult.geneName === 'empty') {
-            taxTerms.push({
-              taxonomy: 'wb_gene_sequence_id',
-              taxTerm: 'empty'
-            });
-            libraryResult.geneName = 'empty';
-          }
-          if (wormTaxTerms.taxTerms.length === 0) {
-            taxTerms.push({
-              taxonomy: 'wb_gene_sequence_id',
-              taxTerm: libraryResult.geneName,
-            });
-          }
-
-          //This is the skeleton for the stock creator
-          //But it does not actually get created until
-          //The assay is created
-          let createStock: RnaiLibraryStockResultSet = new RnaiLibraryStockResultSet({
-            plateId: plateId,
-            libraryId: workflowData.libraryId,
-            rnaiId: libraryResult.rnaiId,
-            well: well,
-            //These should be in the workflowData
-            location: '',
-            datePrepared: workflowData.stockPrepDate,
-            preparedBy: '',
-          });
-
-          return new RnaiWellCollection({
-            well: well,
-            stockLibraryData: createStock,
-            parentLibraryData: libraryResult,
-            annotationData: {geneName: libraryResult.geneName, taxTerm: libraryResult.geneName, taxTerms: taxTerms, dbXRefs: wormTaxTerms.xrefs}
-          });
-        });
-    })
       .then(function (results) {
         resolve(results);
       })

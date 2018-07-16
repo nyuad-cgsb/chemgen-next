@@ -92,6 +92,7 @@ exports.prepareRnai = function () {
   })
 }
 
+// RNAiData
 exports.rnaiData = {}
 exports.rnaiData.workflowData = require('../test/data/rnai_workflow_data')
 exports.rnaiData.secondaryWorkflowData = require('../test/data/rnai_secondary_2016-12-11')
@@ -99,3 +100,7 @@ exports.rnaiData.secondaryInstrumentPlates = require('../test/data/rnai_secondar
 exports.rnaiData.secondaryScreenData = require('../test/data/rnai-secondary-screen-data')
 exports.rnaiData.instrumentPlates = require('../test/data/rnai_instrument_plate_data_list')
 exports.rnaiData.screenData = require('../test/data/rnai_primary_results_screen_data')
+
+// Chemical Data
+exports.chemicalData = {chembridge: {primary: {}}, fda: {secondary: {}}}
+exports.chemicalData.chembridge.primary.workflowData = require('../test/data/chemical/chembridge/primary/chembridge_primary_one_screen')

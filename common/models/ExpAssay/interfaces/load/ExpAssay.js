@@ -101,7 +101,7 @@ ExpAssay.load.mapAssayRelations = function (workflowData, expSet) {
  * TODO - Create a file resolver to allow for customized templates
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * /common/views/exp/assay/worm/RnaiLibrary/expAssay-rnailibrary-ahringer2-primary-permissive.mustache
  */
 // return ExpAssay.load.genHtmlView(workflowData, screenData, plateData, wellData, annotationData);
@@ -137,7 +137,7 @@ ExpAssay.load.genHtmlView = function (workflowData, screenData, plateData, wellD
  * Here is where the content is actually loaded into the Wordpress WpPosts table
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param {string} postContent
  */
 ExpAssay.load.workflows.createWpPosts = function (workflowData, plateData, wellData, postContent) {
@@ -172,7 +172,7 @@ ExpAssay.load.workflows.createWpPosts = function (workflowData, plateData, wellD
 };
 /**
  * Once we have the created the expAssay interface, update the ResultSet with the post Id
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postData
  */
 ExpAssay.load.updateExpAssay = function (wellData, postData) {
@@ -211,7 +211,7 @@ ExpAssay.load.updateExpAssay = function (wellData, postData) {
  };
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postsResults
  */
 ExpAssay.load.relateTaxToPost = function (workflowData, screenData, wellData) {
@@ -229,7 +229,7 @@ ExpAssay.load.relateTaxToPost = function (workflowData, screenData, wellData) {
  * This associates the post to the taxonomy terms
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postData
  */
 ExpAssay.load.workflows.createPostTaxRels = function (workflowData, screenData, wellData, postData) {

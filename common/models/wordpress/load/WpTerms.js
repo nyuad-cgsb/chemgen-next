@@ -132,7 +132,7 @@ WpTerms.load.genPlateTaxTerms = function (workflowData, expPlate) {
  * EGT - ExpGroupType (This gets added later, after the expgroup is created)
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @returns {({taxonomy: string; taxTerm: Date} | {taxonomy: string; taxTerm: string} | {taxonomy: string; taxTerm: number} | {taxonomy: string; taxTerm})[]}
  */
 WpTerms.load.genWellTaxTerms = function (workflowData, expPlate, wellData) {
@@ -145,6 +145,14 @@ WpTerms.load.genWellTaxTerms = function (workflowData, expPlate, wellData) {
             taxonomy: 'envira-tag',
             taxTerm: slug([
                 "AI-" + wellData.expAssay.assayId,
+            ].join('')),
+        },
+        {
+            taxonomy: 'envira-tag',
+            taxTerm: slug([
+                "SI-" + workflowData.screenId,
+                "_PI-" + expPlate.plateId,
+                "_R-" + groups[1],
             ].join('')),
         },
     ];

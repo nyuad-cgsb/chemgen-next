@@ -5,6 +5,7 @@ var program = require('commander');
 var app = require('../server/server');
 var Promise = require('bluebird');
 var jsonfile = require('jsonfile');
+var lodash_1 = require("lodash");
 var path = require('path');
 var ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow;
 program
@@ -23,21 +24,24 @@ catch (error) {
     process.exit(1);
 }
 app.agenda.on('ready', function () {
+    console.log('agenda ready!');
+    // app.agenda.start();
     try {
+        console.log('subbmitting....');
         app.agenda.now('ExpScreenUploadWorkflow.doWork', { workflowData: workflowData });
+        // process.exit(0);
     }
     catch (error) {
         console.log("Received error: " + error);
         process.exit(1);
     }
-    process.exit(0);
-    //
-    // ExpScreenUploadWorkflow.load.workflows.worms.doWork(workflowData)
-    //   .then(() => {
-    //     process.exit(0);
-    //   })
-    //   .catch((error) => {
-    //     process.exit(1);
-    //   });
+    if (lodash_1.isArray(workflowData)) {
+        workflowData.map(function (workflow) {
+            app.agenda.now('ExpScreenUploadWorkflow.doWork', { workflowData: workflow });
+        });
+    }
+    else {
+        app.agenda.now('ExpScreenUploadWorkflow.doWork', { workflowData: workflowData });
+    }
 });
 //# sourceMappingURL=upload_screens.js.map

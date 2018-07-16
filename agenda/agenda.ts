@@ -4,13 +4,15 @@ const mongoConnectionString = 'mongodb://admin:admin123@onyx.abudhabi.nyu.edu/ag
 import app = require('../server/server');
 
 let agenda = new Agenda({
+  defaultConcurrency: 5,
+  maxConcurrency: 100,
   db: {
     address: mongoConnectionString,
   },
 });
 
 agenda.on('start', function (job) {
-  // console.log('Job %s starting', job.attrs.name);
+  console.log('Job %s starting', job.attrs.name);
 });
 
 agenda.on('error', function (error) {
@@ -33,12 +35,14 @@ agenda.define('ExpScreenUploadWorkflow.doWork', function (job, done) {
 
 // require('./jobs/jobs.js')(agenda);
 
-// agenda.on('ready', function () {
-//   agenda.processEvery('2 seconds');
-//   agenda.maxConcurrency(100);
-//   agenda.defaultConcurrency(20);
-//   agenda.start();
-// });
+agenda.on('ready', function () {
+  // console.log('Agenda ready!');
+  //TODO set this up as a separate worker script
+  // agenda.processEvery('2 seconds');
+  // agenda.maxConcurrency(100);
+  // agenda.defaultConcurrency(20);
+  // agenda.start();
+});
 
 agenda.on('complete', function (job) {
   // console.log('Job %s finished', job.attrs.name);

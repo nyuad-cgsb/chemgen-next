@@ -202,7 +202,8 @@ ExpScreenUploadWorkflow.load.createWorkflowInstance = function (workflowData) {
  * 1. ExpPlate
  * 2. Gets the plate plan -> mapping of library to exp plate wells
  * 3. Creates the stock
- * 4. Creates the experiment groups - set of experiment condition (treat_rnai,ctrl_null,ctrL_strain,ctrl_rnai)
+ * 4a. Creates the experiment groups - set of experiment condition (treat_rnai,ctrl_null,ctrL_strain,ctrl_rnai)
+ * 4b. Creates the experiment groups - set of experiment condition (treat_chemical,ctrl_null,ctrL_strain,ctrl_chemical)
  * 5. Creates the ExpAssays (expGroupId is inline)
  * 6. Fires off a request to the service that converts images to non proprietary and web format
  * For all plates in an ExperimentSet

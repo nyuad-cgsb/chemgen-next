@@ -6,7 +6,7 @@ import {
   WpTermsResultSet, WpTermTaxonomyResultSet
 } from "../../../types/sdk/models/index";
 import {WorkflowModel} from "../../index";
-import {PlateCollection, RnaiWellCollection, annotationData} from "../../../types/wellData";
+import {PlateCollection, WellCollection, annotationData} from "../../../types/wellData";
 
 import Promise = require('bluebird');
 import * as _ from "lodash";
@@ -58,7 +58,7 @@ ExpAssay.load.workflows.processExpPlates = function (workflowData: any, expPlate
         resolve(results);
       })
       .catch((error) => {
-        app.winston.error(error.stack);
+        app.winston.warn(error.stack);
         reject(new Error(error));
       });
   });
@@ -81,10 +81,10 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData: any, expPlate:
       .then((results: PlateCollection) => {
         return ExpAssay.load.createExpGroups(workflowData, results);
       })
-      .then((results: RnaiWellCollection) => {
+      .then((results: WellCollection) => {
         return ExpAssay.load.createExpAssays(workflowData, {expPlate: expPlate, wellDataList: results});
       })
-      .then((results: RnaiWellCollection) => {
+      .then((results: WellCollection) => {
         //TODO Clean this up - shouldn't be creating new objects all over the place
         // let plateData = new PlateCollection({expPlate: expPlate, wellDataList: results});
         return app.models[workflowData.libraryStockModel].load.createStocks(workflowData, {
@@ -92,13 +92,13 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData: any, expPlate:
           wellDataList: results
         });
       })
-      .then((results: RnaiWellCollection) => {
+      .then((results: WellCollection) => {
         return app.models.ExpAssay2reagent.load.createAssayStock(workflowData, {
           expPlate: expPlate,
           wellDataList: results
         });
       })
-      .then((results: RnaiWellCollection) => {
+      .then((results: WellCollection) => {
         let plateData = new PlateCollection({expPlate: expPlate, wellDataList: results});
         return ExpAssay.load.workflows.imageConversionPipeline.all(workflowData, plateData);
       })
@@ -108,6 +108,7 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData: any, expPlate:
         resolve(results);
       })
       .catch((error) => {
+        app.winston.warn(error);
         reject(new Error(error));
       })
   });
@@ -129,10 +130,10 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
       expGroupData = ExpAssay.load.getExpGroup(workflowData, expPlateData.expPlate);
     }
     catch (error) {
-      app.winston.error(error);
+      app.winston.warn(error);
       reject(new Error(error));
     }
-    Promise.map(shuffle(expPlateData.wellDataList), function (wellData: RnaiWellCollection) {
+    Promise.map(shuffle(expPlateData.wellDataList), function (wellData: WellCollection) {
       /*
       Check status of well
       1. Its a well with a reagent
@@ -173,7 +174,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
           expGroupType = ExpAssay.load[workflowData.screenStage].getControlCondition(workflowData, expPlateData.expPlate, expGroupData);
         }
         catch (error) {
-          app.winston.error(error);
+          app.winston.warn(error);
           reject(new Error(error));
         }
 
@@ -213,6 +214,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
         resolve(results);
       })
       .catch((error) => {
+        app.winston.warn(error);
         reject(new Error(error));
       });
   });
@@ -225,7 +227,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
  */
 ExpAssay.load.createExpAssays = function (workflowData: any, expPlateData: PlateCollection) {
   return new Promise((resolve, reject) => {
-    Promise.map(expPlateData.wellDataList, function (wellData: RnaiWellCollection) {
+    Promise.map(expPlateData.wellDataList, function (wellData: WellCollection) {
       let createObj: ExpAssayResultSet;
       let assayCodeName = `${expPlateData.expPlate.barcode}_${wellData.stockLibraryData.well}`;
 
@@ -247,6 +249,7 @@ ExpAssay.load.createExpAssays = function (workflowData: any, expPlateData: Plate
           return wellData;
         })
         .catch((error) => {
+          app.winston.warn(error);
           reject(new Error(error));
         });
     })
@@ -254,6 +257,7 @@ ExpAssay.load.createExpAssays = function (workflowData: any, expPlateData: Plate
         resolve(results);
       })
       .catch((error) => {
+        app.winston.info(error);
         reject(new Error(error));
       });
   });
@@ -265,10 +269,10 @@ ExpAssay.load.createExpAssays = function (workflowData: any, expPlateData: Plate
  * In NY there is a weird tile lookup thing
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @returns {string}
  */
-ExpAssay.load.resolveImagePath.default = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: RnaiWellCollection) {
+ExpAssay.load.resolveImagePath.default = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: WellCollection) {
   return `${expPlate.plateImagePath}/${expPlate.barcode}_${wellData.stockLibraryData.well}`;
 };
 
@@ -278,9 +282,9 @@ ExpAssay.load.resolveImagePath.default = function (workflowData: any, expPlate: 
  * Base path is not put in here, but in AD its /mnt/image/PlateData/
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
-ExpAssay.load.resolveImagePath.arrayScan = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: RnaiWellCollection) {
+ExpAssay.load.resolveImagePath.arrayScan = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: WellCollection) {
   return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);
 };
 
@@ -290,9 +294,9 @@ ExpAssay.load.resolveImagePath.arrayScan = function (workflowData: any, expPlate
  * TODO Get a mapping of Tile000N -> Well (A01)
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
-ExpAssay.load.resolveImagePath.nyu = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: RnaiWellCollection) {
+ExpAssay.load.resolveImagePath.nyu = function (workflowData: any, expPlate: ExpPlateResultSet, wellData: WellCollection) {
   return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);
 };
 
@@ -316,7 +320,8 @@ ExpAssay.load.getExpGroup = function (workflowData: any, expPlate: ExpPlateResul
     })[0];
   }
   catch (error) {
-    return new Error(error);
+    app.winston.info(error);
+    throw new Error(error);
   }
   let biosample = workflowData.experimentGroups[expGroupType]['biosampleId'];
 
@@ -373,6 +378,7 @@ ExpAssay.load.workflows.createAnnotationData = function (workflowData, plateData
         resolve(plateData);
       })
       .catch((error) => {
+        app.winston.info(error);
         reject(new Error(error));
       })
   });
@@ -414,6 +420,7 @@ ExpAssay.load.workflows.imageConversionPipeline.all = function (workflowData: an
         resolve(plateData);
       })
       .catch((error) => {
+        app.winston.info(error);
         reject(new Error(error));
       });
   });
@@ -430,7 +437,7 @@ ExpAssay.load.workflows.imageConversionPipeline.all = function (workflowData: an
  */
 ExpAssay.load.workflows.imageConversionPipeline.arrayScan = function (workflowData: any, plateData: PlateCollection) {
   return new Promise((resolve, reject) => {
-    Promise.map(plateData.wellDataList, (wellData: RnaiWellCollection) => {
+    Promise.map(plateData.wellDataList, (wellData: WellCollection) => {
       let images: any = ExpAssay.helpers.genImageFileNames(plateData.expPlate, wellData.stockLibraryData.well);
       return ExpAssay.helpers.genConvertImageCommands(images)
         .then((commands: string) => {
