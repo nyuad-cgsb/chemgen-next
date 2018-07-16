@@ -20,5 +20,9 @@ module.exports = {
   mongoDB: {
     name: 'mongoDB',
     connector: 'memory'
+  },
+  mongoDBWS250: {
+    name: 'mongoDB',
+    connector: 'memory'
   }
 }

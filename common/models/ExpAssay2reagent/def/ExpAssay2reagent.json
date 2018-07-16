@@ -39,6 +39,21 @@
         "nullable": "Y"
       }
     },
+    "libraryId": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "library_id",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
     "plateId": {
       "type": "Number",
       "required": false,
@@ -174,6 +189,21 @@
         "nullable": "Y"
       }
     },
+    "assayExpGroup": {
+      "type": "Number",
+      "required": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "assay_exp_group",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "Y"
+      }
+    },
     "reagentTable": {
       "type": "String",
       "required": false,
@@ -206,12 +236,6 @@
     }
   },
   "relations": {
-    "expAssays": {
-      "type": "hasMany",
-      "model": "ExpAssay",
-      "foreignKey": "assayId",
-      "propertyId": "assayId"
-    },
     "expPlates": {
       "type": "hasMany",
       "model": "ExpPlate",
@@ -223,6 +247,18 @@
       "model": "ExpScreen",
       "foreignKey": "screenId",
       "propertyId": "screenId"
+    },
+    "expAssays": {
+      "type": "hasMany",
+      "model": "ExpAssay",
+      "foreignKey": "assayId",
+      "propertyId": "assayId"
+    },
+    "reagentLibrarys": {
+      "type": "hasMany",
+      "model": "ReagentLibrary",
+      "foreignKey": "libraryId",
+      "propertyId": "libraryId"
     }
   }
 }

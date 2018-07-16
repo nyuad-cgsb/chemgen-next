@@ -3,6 +3,7 @@
 /* Jillian */
 declare var Object: any;
 export interface RnaiWormbaseXrefsResultSetInterface {
+  "id"?: number;
   "wbGeneSequenceId": string;
   "wbGeneAccession"?: string;
   "wbGeneCgcName"?: string;
@@ -15,6 +16,7 @@ export interface RnaiWormbaseXrefsResultSetInterface {
 }
 
 export class RnaiWormbaseXrefsResultSet implements RnaiWormbaseXrefsResultSetInterface {
+  "id": number;
   "wbGeneSequenceId": string;
   "wbGeneAccession": string;
   "wbGeneCgcName": string;
@@ -55,8 +57,12 @@ export class RnaiWormbaseXrefsResultSet implements RnaiWormbaseXrefsResultSetInt
       name: 'RnaiWormbaseXrefsResultSet',
       plural: 'RnaiWormbaseXrefsResultSets',
       path: 'RnaiWormbaseXrefs',
-      idName: 'wbGeneSequenceId',
+      idName: 'id',
       properties: {
+        "id": {
+          name: 'id',
+          type: 'number'
+        },
         "wbGeneSequenceId": {
           name: 'wbGeneSequenceId',
           type: 'string'

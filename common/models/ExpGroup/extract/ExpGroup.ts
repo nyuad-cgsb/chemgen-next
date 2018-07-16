@@ -4,7 +4,7 @@ import {WorkflowModel} from "../../index";
 
 import Promise = require('bluebird');
 import * as _ from "lodash";
-import {PlateCollection, RnaiWellCollection, ScreenCollection} from "../../../types/wellData";
+import {PlateCollection, WellCollection, ScreenCollection} from "../../../types/wellData";
 import {ExpGroupResultSet} from "../../../types/sdk/models";
 
 const ExpGroup = app.models['ExpGroup'] as (typeof WorkflowModel);
@@ -19,7 +19,7 @@ const ExpGroup = app.models['ExpGroup'] as (typeof WorkflowModel);
 ExpGroup.extract.getExpGroupFromScreenData = function (expGroupId: number, screenData: ScreenCollection) {
   let expGroups = [];
   _.map(screenData.plateDataList, (plateData: PlateCollection) =>{
-    _.map(plateData.wellDataList, (wellData: RnaiWellCollection)=>{
+    _.map(plateData.wellDataList, (wellData: WellCollection)=>{
       if(_.isEqual(wellData.expGroup.expGroupId, expGroupId)){
         expGroups.push(wellData.expGroup);
       }

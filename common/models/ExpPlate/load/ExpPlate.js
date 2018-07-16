@@ -4,6 +4,7 @@ var app = require("../../../../server/server.js");
 var Promise = require("bluebird");
 var path = require("path");
 var Mustache = require("mustache");
+var _ = require("lodash");
 var readFile = Promise.promisify(require('fs').readFile);
 var ExpPlate = app.models.ExpPlate;
 //TODO Consider moving these to worm/cell specific logic
@@ -35,8 +36,14 @@ ExpPlate.load.workflows.processInstrumentPlates = function (workflowData, instru
  * @param {PlateResultSet} instrumentPlate
  */
 ExpPlate.load.createExperimentPlate = function (workflowData, instrumentPlate) {
-    var createObjList = ExpPlate.load.transformInstrumentPlate(workflowData, instrumentPlate);
     return new Promise(function (resolve, reject) {
+        var createObjList;
+        try {
+            createObjList = ExpPlate.load.transformInstrumentPlate(workflowData, instrumentPlate);
+        }
+        catch (error) {
+            reject(new Error("Unable to parse instrument plate " + workflowData.screenName + " " + workflowData.name + " " + instrumentPlate.csPlateid));
+        }
         ExpPlate
             .findOrCreate({
             where: app.etlWorkflow.helpers.findOrCreateObj(createObjList[1]),
@@ -54,10 +61,21 @@ ExpPlate.load.createExperimentPlate = function (workflowData, instrumentPlate) {
  * Given the experimentalData (workflowData) transform the instrument plate to a expPlate
  * @param workflowData
  * @param instrumentPlate
- * @returns {{plateImagePath: string; screenId: any | number | {name: string; type: string} | {name; type}; barcode; screenStage: any | string | {name: string; type: string} | {name; type} | number; instrumentId: any | number; instrumentPlateId: number | {name: string; type: string} | {name; type}; plateStartTime: string | Date | {name: string; type: string} | {name; type}; plateCreationDate: Date | {name: string; type: string} | {name; type} | string}}
+ * @returns [ExpPlateResultSet, ExpPlateResultSet]
  */
 ExpPlate.load.transformInstrumentPlate = function (workflowData, instrumentPlate) {
-    var imagePath = path.normalize(instrumentPlate.imagepath).split('\\');
+    var csPlateid = instrumentPlate.csPlateid;
+    var imagepath = instrumentPlate.imagepath;
+    var barcode = instrumentPlate.name;
+    var creationdate = instrumentPlate.creationdate;
+    //path.normalize does not work the same on osx as on linux
+    //because of course it doesn't
+    var imagePath = imagepath.split('\\');
+    imagePath = _.compact(imagePath);
+    if (!imagePath[2] || _.isNull(imagePath[2])) {
+        app.winston.error('Image Path is Null!!');
+        throw new Error('Plate Path is invalid');
+    }
     /*
     For some reason if I searched on the whole plate object it was always returning not found
     So I just search for a subset of the plate object
@@ -68,7 +86,7 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData, instrumentPlate
         expWorkflowId: workflowData.id,
         //Instrument Plate Things
         instrumentId: workflowData.instrumentId,
-        instrumentPlateId: instrumentPlate.csPlateid,
+        instrumentPlateId: csPlateid,
     };
     var plateObj = {
         //Screen Info
@@ -78,13 +96,13 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData, instrumentPlate
         expWorkflowId: workflowData.id,
         //Instrument Plate Things
         instrumentId: workflowData.instrumentId,
-        instrumentPlateId: instrumentPlate.csPlateid,
-        instrumentPlateImagePath: instrumentPlate.imagepath,
+        instrumentPlateId: csPlateid,
+        instrumentPlateImagePath: imagepath,
         //Plate Data
-        plateImagePath: imagePath[4] + "/" + instrumentPlate.csPlateid,
-        barcode: instrumentPlate.name,
+        plateImagePath: imagePath[2] + "/" + csPlateid,
+        barcode: barcode,
         plateAssayDate: workflowData.stockPrepDate,
-        plateImageDate: instrumentPlate.creationdate,
+        plateImageDate: creationdate,
         plateTemperature: workflowData.temperature,
     };
     return [plateObj, lookUpPlateObj];
@@ -99,7 +117,7 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData, instrumentPlate
  * @param plateData
  */
 ExpPlate.load.workflows.createExpPlateInterface = function (workflowData, screenData, plateData) {
-    var templateName = workflowData.librarycode + "-" + workflowData.screenStage + "-" + workflowData.screenType + ".mustache";
+    var templateName = workflowData.librarycode + "-" + workflowData.screenStage + ".mustache";
     var templateFile = path.join(path.dirname(__filename), "../../../../common/views/exp/assay/" + workflowData.biosampleType + "/" + workflowData.libraryModel + "/expPlate-" + templateName);
     return new Promise(function (resolve, reject) {
         readFile(templateFile, 'utf8')
@@ -108,10 +126,11 @@ ExpPlate.load.workflows.createExpPlateInterface = function (workflowData, screen
                 expPlate: plateData.expPlate,
                 workflowData: workflowData,
             });
-            resolve();
+            resolve(assayView);
         })
             .catch(function (error) {
             reject(new Error(error));
         });
     });
 };
+//# sourceMappingURL=ExpPlate.js.map

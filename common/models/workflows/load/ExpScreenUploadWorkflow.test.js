@@ -141,5 +141,30 @@ describe('ExpScreenUploadWorkflow.load', function () {
             done(new Error(error));
         });
     });
+    it('ExpScreenUploadWorkflow.findOrCreate on deeply nested object - secondary', function (done) {
+        //This only sort of works. Just flattening the whole thing got me funny results.
+        //TODO Write tests against the mongodb datastore - this is ridiculous
+        var search = app.models[workflowData.libraryModel].load.createWorkflowSearchObj(shared.rnaiData.secondaryWorkflowData[0]);
+        Promise.map([1, 2, 3, 4], function () {
+            return ExpScreenUploadWorkflow
+                .findOrCreate({
+                where: search,
+            }, shared.rnaiData.secondaryWorkflowData[0])
+                .then(function (results) {
+                return results[0];
+            });
+        }, { concurrency: 1 })
+            .then(function (results) {
+            assert.equal(results[0].id, 1);
+            assert.equal(results[1].id, 1);
+            assert.equal(results[2].id, 1);
+            assert.equal(results[3].id, 1);
+            done();
+        })
+            .catch(function (error) {
+            done(new Error(error));
+        });
+    });
     shared.sharedAfter();
 });
+//# sourceMappingURL=ExpScreenUploadWorkflow.test.js.map

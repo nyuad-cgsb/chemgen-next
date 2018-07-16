@@ -8,6 +8,7 @@ import {ExpScreenUploadWorkflowResultSet} from "../../../types/sdk/models";
 import {ScreenCollection} from "../../../types/wellData";
 import Mustache = require('mustache');
 import deepclone = require('deepclone');
+import * as _ from "lodash";
 
 const readFile = Promise.promisify(require('fs').readFile);
 
@@ -45,9 +46,14 @@ ExpPlate.load.workflows.processInstrumentPlates = function (workflowData, instru
  */
 ExpPlate.load.createExperimentPlate = function (workflowData, instrumentPlate: PlateResultSet) {
 
-  const createObjList: PlateResultSet[] = ExpPlate.load.transformInstrumentPlate(workflowData, instrumentPlate);
-
   return new Promise(function (resolve, reject) {
+    let createObjList: PlateResultSet[];
+    try {
+      createObjList = ExpPlate.load.transformInstrumentPlate(workflowData, instrumentPlate);
+    } catch (error) {
+      reject(new Error(`Unable to parse instrument plate ${workflowData.screenName} ${workflowData.name} ${instrumentPlate.csPlateid}`));
+    }
+
     ExpPlate
       .findOrCreate({
         where: app.etlWorkflow.helpers.findOrCreateObj(createObjList[1]),
@@ -66,10 +72,23 @@ ExpPlate.load.createExperimentPlate = function (workflowData, instrumentPlate: P
  * Given the experimentalData (workflowData) transform the instrument plate to a expPlate
  * @param workflowData
  * @param instrumentPlate
- * @returns {{plateImagePath: string; screenId: any | number | {name: string; type: string} | {name; type}; barcode; screenStage: any | string | {name: string; type: string} | {name; type} | number; instrumentId: any | number; instrumentPlateId: number | {name: string; type: string} | {name; type}; plateStartTime: string | Date | {name: string; type: string} | {name; type}; plateCreationDate: Date | {name: string; type: string} | {name; type} | string}}
+ * @returns [ExpPlateResultSet, ExpPlateResultSet]
  */
 ExpPlate.load.transformInstrumentPlate = function (workflowData: ExpScreenUploadWorkflowResultSet, instrumentPlate: PlateResultSet) {
-  let imagePath = path.normalize(instrumentPlate.imagepath).split('\\');
+
+  let csPlateid = instrumentPlate.csPlateid;
+  let imagepath = instrumentPlate.imagepath;
+  let barcode = instrumentPlate.name;
+  let creationdate = instrumentPlate.creationdate;
+
+  //path.normalize does not work the same on osx as on linux
+  //because of course it doesn't
+  let imagePath = imagepath.split('\\');
+  imagePath = _.compact(imagePath);
+  if (! imagePath[2] || _.isNull(imagePath[2])) {
+    app.winston.error('Image Path is Null!!');
+    throw new Error('Plate Path is invalid');
+  }
 
   /*
   For some reason if I searched on the whole plate object it was always returning not found
@@ -81,7 +100,7 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData: ExpScreenUpload
     expWorkflowId: workflowData.id,
     //Instrument Plate Things
     instrumentId: workflowData.instrumentId,
-    instrumentPlateId: instrumentPlate.csPlateid,
+    instrumentPlateId: csPlateid,
   };
   let plateObj: ExpPlateResultSet = {
     //Screen Info
@@ -91,13 +110,13 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData: ExpScreenUpload
     expWorkflowId: workflowData.id,
     //Instrument Plate Things
     instrumentId: workflowData.instrumentId,
-    instrumentPlateId: instrumentPlate.csPlateid,
-    instrumentPlateImagePath: instrumentPlate.imagepath,
+    instrumentPlateId: csPlateid,
+    instrumentPlateImagePath: imagepath,
     //Plate Data
-    plateImagePath: `${imagePath[4]}/${instrumentPlate.csPlateid}`,
-    barcode: instrumentPlate.name,
+    plateImagePath: `${imagePath[2]}/${csPlateid}`,
+    barcode: barcode,
     plateAssayDate: workflowData.stockPrepDate,
-    plateImageDate: instrumentPlate.creationdate,
+    plateImageDate: creationdate,
     plateTemperature: workflowData.temperature,
   };
   return [plateObj, lookUpPlateObj];
@@ -114,7 +133,7 @@ ExpPlate.load.transformInstrumentPlate = function (workflowData: ExpScreenUpload
  * @param plateData
  */
 ExpPlate.load.workflows.createExpPlateInterface = function (workflowData: ExpScreenUploadWorkflowResultSet, screenData: ScreenCollection, plateData) {
-  const templateName = `${workflowData.librarycode}-${workflowData.screenStage}-${workflowData.screenType}.mustache`;
+  const templateName = `${workflowData.librarycode}-${workflowData.screenStage}.mustache`;
   let templateFile = path.join(path.dirname(__filename), `../../../../common/views/exp/assay/${workflowData.biosampleType}/${workflowData.libraryModel}/expPlate-${templateName}`);
 
   return new Promise((resolve, reject) => {
@@ -124,12 +143,11 @@ ExpPlate.load.workflows.createExpPlateInterface = function (workflowData: ExpScr
           expPlate: plateData.expPlate,
           workflowData: workflowData,
         });
-        resolve();
+        resolve(assayView);
       })
       .catch(function (error) {
         reject(new Error(error));
       });
   })
-
 };
 

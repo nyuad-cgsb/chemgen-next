@@ -3,8 +3,16 @@
 /* Jillian */
 declare var Object: any;
 export interface ExpScreenUploadWorkflowResultSetInterface {
+  "name"?: string;
+  "comment"?: string;
+  "platePlan"?: any;
+  "platePlanId"?: any;
+  "assayViewType"?: string;
+  "plateViewType"?: string;
+  "instrumentPlateIdLookup"?: string;
   "wells"?: Array<any>;
   "screenId"?: number;
+  "screenName"?: string;
   "instrumentId"?: number;
   "libraryId"?: number;
   "screenStage"?: string;
@@ -16,7 +24,7 @@ export interface ExpScreenUploadWorkflowResultSetInterface {
   "instrumentLookUp"?: string;
   "biosampleType"?: string;
   "stockPrepDate"?: Date;
-  "assayDates"?: any;
+  "assayDates"?: Array<any>;
   "search"?: any;
   "replicates"?: any;
   "conditions"?: Array<any>;
@@ -32,8 +40,16 @@ export interface ExpScreenUploadWorkflowResultSetInterface {
 }
 
 export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflowResultSetInterface {
+  "name": string;
+  "comment": string;
+  "platePlan": any;
+  "platePlanId": any;
+  "assayViewType": string;
+  "plateViewType": string;
+  "instrumentPlateIdLookup": string;
   "wells": Array<any>;
   "screenId": number;
+  "screenName": string;
   "instrumentId": number;
   "libraryId": number;
   "screenStage": string;
@@ -45,7 +61,7 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
   "instrumentLookUp": string;
   "biosampleType": string;
   "stockPrepDate": Date;
-  "assayDates": any;
+  "assayDates": Array<any>;
   "search": any;
   "replicates": any;
   "conditions": Array<any>;
@@ -91,6 +107,34 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
       path: 'ExpScreenUploadWorkflows',
       idName: 'id',
       properties: {
+        "name": {
+          name: 'name',
+          type: 'string'
+        },
+        "comment": {
+          name: 'comment',
+          type: 'string'
+        },
+        "platePlan": {
+          name: 'platePlan',
+          type: 'any'
+        },
+        "platePlanId": {
+          name: 'platePlanId',
+          type: 'any'
+        },
+        "assayViewType": {
+          name: 'assayViewType',
+          type: 'string'
+        },
+        "plateViewType": {
+          name: 'plateViewType',
+          type: 'string'
+        },
+        "instrumentPlateIdLookup": {
+          name: 'instrumentPlateIdLookup',
+          type: 'string'
+        },
         "wells": {
           name: 'wells',
           type: 'Array&lt;any&gt;',
@@ -99,6 +143,10 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
         "screenId": {
           name: 'screenId',
           type: 'number'
+        },
+        "screenName": {
+          name: 'screenName',
+          type: 'string'
         },
         "instrumentId": {
           name: 'instrumentId',
@@ -146,7 +194,7 @@ export class ExpScreenUploadWorkflowResultSet implements ExpScreenUploadWorkflow
         },
         "assayDates": {
           name: 'assayDates',
-          type: 'any'
+          type: 'Array&lt;any&gt;'
         },
         "search": {
           name: 'search',

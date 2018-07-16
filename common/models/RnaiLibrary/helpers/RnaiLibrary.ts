@@ -1,5 +1,4 @@
 import app  = require('../../../../server/server.js');
-//IMPORT LODASH LIKE THIS!!!!
 import * as _ from "lodash";
 import {RnaiLibraryResultSet} from "../../../types/sdk/models";
 import {WorkflowModel} from "../../index";
@@ -143,13 +142,6 @@ RnaiLibrary.helpers.getQuad = function(barcode) {
   };
 
   let plateQuadrant : string | number;
-  // for (let key in codes) {
-  //   if (barcode.match(key)) {
-  //     plateQuadrant = codes[key];
-  //   } else if (barcode.match(codes[key])) {
-  //     plateQuadrant = codes[key];
-  //   }
-  // }
 
   Object.keys(codes).map((key: string) => {
     if (barcode.match(key)) {
@@ -264,6 +256,7 @@ RnaiLibrary.search = function(where : object) {
  * @returns {{}}
  */
 RnaiLibrary.helpers.genLibraryResult = function(barcode : string, libraryResults : RnaiLibraryResultSet[], well : string) {
+  let thisWellLibraryResults = [];
   let libraryResult : RnaiLibraryResultSet = {};
   if (barcode.match('L4440')) {
     libraryResult.name = 'L4440';
@@ -271,12 +264,13 @@ RnaiLibrary.helpers.genLibraryResult = function(barcode : string, libraryResults
   } else {
     // I'm sure I use the quadrant for something  - just not sure what
     // var quadrant = RnaiLibrary.helpers.getQuad(barcode);
+    // TODO
+    //Return all the wells - change to filter
     libraryResult = _.find(libraryResults, {
       well: well,
     });
+    libraryResult = RnaiLibrary.helpers.checkLibraryResult(libraryResult);
   }
-
-  libraryResult = RnaiLibrary.helpers.checkLibraryResult(libraryResult);
 
   return libraryResult;
 };

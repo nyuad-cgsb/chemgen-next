@@ -14,13 +14,37 @@ import shared = require('../../../../test/shared');
 
 shared.makeMemoryDb();
 
-describe('ExpDesign.load', function () {
+describe('ExpDesign.load primary', function () {
   shared.prepareRnai();
 
   it('ExpDesign.load.workflows.createExpDesigns', function (done) {
     this.timeout(5000);
     //This test fails when run in the test suite
     ExpScreenUploadWorkflow.load.workflows.worms.primary.populatePlateData(workflowData, instrumentPlates)
+      .then((results: PlateCollection[]) => {
+        let expDesignRows = ExpDesign.transform.workflows.screenDataToExpSets(workflowData, results);
+        return ExpDesign.load.workflows.createExpDesigns(workflowData, expDesignRows)
+      })
+      .then((results) => {
+        assert.equal(results.length, 9);
+        done();
+      })
+      .catch((error) => {
+        done(new Error(error));
+      })
+  });
+
+  shared.sharedAfter();
+});
+
+//TODO Create a plate plan!!
+describe('ExpDesign.load secondary', function () {
+  shared.prepareRnai();
+
+  it('ExpDesign.load.workflows.createExpDesigns', function (done) {
+    this.timeout(5000);
+    //This test fails when run in the test suite
+    ExpScreenUploadWorkflow.load.workflows.worms.populatePlateData(shared.rnaiData.secondaryWorkflowData[0], shared.rnaiData.secondaryInstrumentPlates)
       .then((results: PlateCollection[]) => {
         let expDesignRows = ExpDesign.transform.workflows.screenDataToExpSets(workflowData, results);
         return ExpDesign.load.workflows.createExpDesigns(workflowData, expDesignRows)

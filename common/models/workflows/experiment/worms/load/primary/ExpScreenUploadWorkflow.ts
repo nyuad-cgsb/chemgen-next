@@ -2,11 +2,9 @@ import app = require('../../../../../../../server/server.js');
 import Promise = require('bluebird');
 import {ExpPlateResultSet, ExpScreenUploadWorkflowResultSet, PlateResultSet} from "../../../../../../types/sdk/models";
 import {WorkflowModel} from "../../../../../index";
-import {PlateCollection, RnaiWellCollection, ScreenCollection} from "../../../../../../types/wellData";
+import {PlateCollection, WellCollection, ScreenCollection} from "../../../../../../types/wellData";
 
 const ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow as (typeof WorkflowModel);
-
-ExpScreenUploadWorkflow.load.workflows.worms.primary = {};
 
 /**
  * This workflow goes from the upload screenData to building the interfaces
@@ -58,10 +56,10 @@ ExpScreenUploadWorkflow.load.workflows.worms.primary.processWorkflow = function 
       .then((screenData: ScreenCollection) => {
         return ExpScreenUploadWorkflow.load.workflows.worms.createExpInterfaces(workflowData, screenData)
       })
-      .then((screenData: ScreenCollection) => {
-        app.winston.info('RETURNING Scores');
-        return app.models.ModelPredictedPheno.load.workflows.parseScreen(workflowData, screenData)
-      })
+      // .then((screenData: ScreenCollection) => {
+      //   app.winston.info('RETURNING Scores');
+      //   return app.models.ModelPredictedPheno.load.workflows.parseScreen(workflowData, screenData)
+      // })
       .then(() => {
         resolve();
       })

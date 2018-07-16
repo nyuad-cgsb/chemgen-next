@@ -3,7 +3,7 @@ import {ExpPlateResultSet} from "../../";
 import {WorkflowModel} from "../../index";
 import Promise = require('bluebird');
 
-import {PlateCollection, RnaiWellCollection} from "../../../types/wellData";
+import {PlateCollection, WellCollection} from "../../../types/wellData";
 import {ExpAssay2reagentResultSet} from "../../../types/sdk/models";
 
 const ExpAssay2reagent = app.models['ExpAssay2reagent'] as (typeof WorkflowModel);
@@ -17,6 +17,7 @@ ExpAssay2reagent.load.createAssayStock = function (workflowData: any, expPlateDa
         plateId: expPlateData.expPlate.plateId,
         screenId: workflowData.screenId,
         stockId: wellData.stockLibraryData.stockId,
+        libraryId: workflowData.libraryId,
         reagentId: wellData.stockLibraryData[workflowData.reagentLookUp],
         parentLibraryPlate: wellData.parentLibraryData.plate,
         parentLibraryWell: wellData.parentLibraryData.well,

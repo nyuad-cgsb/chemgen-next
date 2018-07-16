@@ -56,3 +56,4 @@ describe('ModelPredictedPheno.load.workflows.parseScreen', function () {
     });
     shared.sharedAfter();
 });
+//# sourceMappingURL=ModelPredictedPheno.test.js.map

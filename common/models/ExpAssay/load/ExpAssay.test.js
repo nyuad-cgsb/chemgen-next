@@ -154,21 +154,8 @@ describe('ExpAssay.load', function () {
             .then(function (results) {
             return ExpAssay.load.prepareAnnotationData(workflowData, results);
         })
-            .then(function (results) {
-            assert.equal(results.length, 54);
-            done();
-        })
-            .catch(function (error) {
-            done(new Error(error));
-        });
-    });
-    it('ExpAssay.load.workflows.createAnnotationData', function (done) {
-        ExpAssay.load.workflows.processExpPlate(workflowData, expPlates[4])
-            .then(function (results) {
-            return ExpAssay.load.workflows.createAnnotationData(workflowData, results);
-        })
-            .then(function (results) {
-            assert.equal(results.annotationData.taxTerms.length, 54);
+            .then(function (plateData) {
+            assert.equal(plateData.wellDataList[0].annotationData.taxTerms.length, 12);
             done();
         })
             .catch(function (error) {
@@ -195,13 +182,8 @@ describe('ExpAssay.load', function () {
         ExpAssay.load.workflows.processExpPlates(workflowData, expPlates)
             .then(function (results) {
             assert.equal(results.length, 5);
-            assert.equal(results[0].hasOwnProperty('annotationData'), true);
             assert.equal(results[0].hasOwnProperty('expPlate'), true);
             assert.equal(results[0].hasOwnProperty('wellDataList'), true);
-            //Term is not technically on the WpTermTaxonomy class def, but it gets added in there for convenience
-            assert.equal(results[0].annotationData.taxTerms[0].term, 'C48E7.5');
-            assert.equal(results[0].annotationData.taxTerms[0].termId, 1);
-            assert.equal(results[0].annotationData.taxTerms[0].taxonomy, 'wb_gene_sequence_id');
             done();
         })
             .catch(function (error) {
@@ -210,3 +192,4 @@ describe('ExpAssay.load', function () {
     });
     shared.sharedAfter();
 });
+//# sourceMappingURL=ExpAssay.test.js.map

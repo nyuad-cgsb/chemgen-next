@@ -5,6 +5,7 @@ var config = require("config");
 var wellData_1 = require("../../../types/wellData");
 var Promise = require("bluebird");
 var _ = require("lodash");
+var lodash_1 = require("lodash");
 var fs = require("fs");
 var request = require('request-promise');
 var ExpAssay = app.models['ExpAssay'];
@@ -35,18 +36,20 @@ var ExpAssay = app.models['ExpAssay'];
  */
 ExpAssay.load.workflows.processExpPlates = function (workflowData, expPlates) {
     return new Promise(function (resolve, reject) {
-        Promise.map(expPlates, function (expPlate) {
+        Promise.map(lodash_1.shuffle(expPlates), function (expPlate) {
+            app.winston.info("Begin Exp Plate: " + expPlate.barcode + " load experiment data");
             return ExpAssay.load.workflows.processExpPlate(workflowData, expPlate)
                 .then(function (results) {
-                //This should be done on the entire screen instead of 1 plate at a time
-                return ExpAssay.load.workflows.createAnnotationData(workflowData, results);
+                //This should probably be done at the expGroups stage
+                app.winston.info("Begin Exp Plate: " + expPlate.barcode + " load annotation data");
+                return ExpAssay.load.prepareAnnotationData(workflowData, results);
             });
-        }, { concurrency: 1 })
+        })
             .then(function (results) {
             resolve(results);
         })
             .catch(function (error) {
-            app.winston.error(error.stack);
+            app.winston.warn(error.stack);
             reject(new Error(error));
         });
     });
@@ -66,25 +69,24 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData, expPlate) {
     return new Promise(function (resolve, reject) {
         app.models[workflowData.libraryModel].load.workflows.processExpPlate(workflowData, expPlate)
             .then(function (results) {
-            app.winston.info('Create Exp Groups');
             return ExpAssay.load.createExpGroups(workflowData, results);
         })
             .then(function (results) {
-            app.winston.info('Create Exp Assays');
             return ExpAssay.load.createExpAssays(workflowData, { expPlate: expPlate, wellDataList: results });
         })
             .then(function (results) {
             //TODO Clean this up - shouldn't be creating new objects all over the place
             // let plateData = new PlateCollection({expPlate: expPlate, wellDataList: results});
-            app.winston.info('Create Library Stocks');
             return app.models[workflowData.libraryStockModel].load.createStocks(workflowData, {
                 expPlate: expPlate,
                 wellDataList: results
             });
         })
             .then(function (results) {
-            app.winston.info('Create Assay2Reagent');
-            return app.models.ExpAssay2reagent.load.createAssayStock(workflowData, { expPlate: expPlate, wellDataList: results });
+            return app.models.ExpAssay2reagent.load.createAssayStock(workflowData, {
+                expPlate: expPlate,
+                wellDataList: results
+            });
         })
             .then(function (results) {
             var plateData = new wellData_1.PlateCollection({ expPlate: expPlate, wellDataList: results });
@@ -96,13 +98,13 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData, expPlate) {
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.warn(error);
             reject(new Error(error));
         });
     });
 };
-//TODO Move this to library? RnaiID/Things specific
-//TODO Figure out how to deal with L4440 Plates
 /**
+ * TODO Do this in the beginning of the workflow when the platePlan is gathered
  * ExpGroup is a grouping that is used later to match wells their matching conditions
  * Match ExpBiosample (mel-28) to CtrlBiosample (N2) with some particular gene
  * Match ExpBiosample (mel-28) to its L4440 (L4440E_M) controls
@@ -112,8 +114,15 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData, expPlate) {
  */
 ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
     return new Promise(function (resolve, reject) {
-        var expGroupData = ExpAssay.load.getExpGroup(workflowData, expPlateData.expPlate);
-        Promise.map(expPlateData.wellDataList, function (wellData) {
+        var expGroupData;
+        try {
+            expGroupData = ExpAssay.load.getExpGroup(workflowData, expPlateData.expPlate);
+        }
+        catch (error) {
+            app.winston.warn(error);
+            reject(new Error(error));
+        }
+        Promise.map(lodash_1.shuffle(expPlateData.wellDataList), function (wellData) {
             /*
             Check status of well
             1. Its a well with a reagent
@@ -137,7 +146,6 @@ ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
                     wellData.expGroup = results[0];
                     wellData.annotationData.taxTerms.push({ taxonomy: 'exp_group_id', taxTerm: results[0].expGroupId });
                     wellData.annotationData.taxTerms.push({ taxonomy: 'envira-tag', taxTerm: "EGI-" + results[0].expGroupId });
-                    wellData.annotationData.taxTerms.push({ taxonomy: 'envira-tag', taxTerm: "EGT-" + results[0].expGroupType });
                     wellData.annotationData.taxTerms.push({
                         taxonomy: 'envira-tag',
                         taxTerm: "EGT-" + results[0].expGroupType + "-EGI-" + results[0].expGroupId
@@ -151,7 +159,14 @@ ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
                 Well is a control well
                 If the biosample is an expBiosample get the corresponding ctrl for that biosample
                  */
-                var expGroupType = ExpAssay.load[workflowData.screenStage].getControlCondition(workflowData, expPlateData.expPlate, expGroupData);
+                var expGroupType = void 0;
+                try {
+                    expGroupType = ExpAssay.load[workflowData.screenStage].getControlCondition(workflowData, expPlateData.expPlate, expGroupData);
+                }
+                catch (error) {
+                    app.winston.warn(error);
+                    reject(new Error(error));
+                }
                 var createObj = {
                     screenId: workflowData.screenId,
                     libraryId: workflowData.libraryId,
@@ -163,7 +178,13 @@ ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
                     .findOrCreate({ where: app.etlWorkflow.helpers.findOrCreateObj(createObj) }, createObj)
                     .then(function (results) {
                     wellData.expGroup = results[0];
+                    //TODO This should be a function
                     wellData.annotationData.taxTerms.push({ taxonomy: 'exp_group_id', taxTerm: results[0].expGroupId });
+                    wellData.annotationData.taxTerms.push({ taxonomy: 'envira-tag', taxTerm: "EGI-" + results[0].expGroupId });
+                    wellData.annotationData.taxTerms.push({
+                        taxonomy: 'envira-tag',
+                        taxTerm: "EGT-" + results[0].expGroupType + "-EGI-" + results[0].expGroupId
+                    });
                     return wellData;
                 });
             }
@@ -178,11 +199,12 @@ ExpAssay.load.createExpGroups = function (workflowData, expPlateData) {
                 };
                 return wellData;
             }
-        }, { concurrency: 1 })
+        })
             .then(function (results) {
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.warn(error);
             reject(new Error(error));
         });
     });
@@ -215,6 +237,7 @@ ExpAssay.load.createExpAssays = function (workflowData, expPlateData) {
                 return wellData;
             })
                 .catch(function (error) {
+                app.winston.warn(error);
                 reject(new Error(error));
             });
         })
@@ -222,6 +245,7 @@ ExpAssay.load.createExpAssays = function (workflowData, expPlateData) {
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.info(error);
             reject(new Error(error));
         });
     });
@@ -232,7 +256,7 @@ ExpAssay.load.createExpAssays = function (workflowData, expPlateData) {
  * In NY there is a weird tile lookup thing
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @returns {string}
  */
 ExpAssay.load.resolveImagePath.default = function (workflowData, expPlate, wellData) {
@@ -244,7 +268,7 @@ ExpAssay.load.resolveImagePath.default = function (workflowData, expPlate, wellD
  * Base path is not put in here, but in AD its /mnt/image/PlateData/
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ExpAssay.load.resolveImagePath.arrayScan = function (workflowData, expPlate, wellData) {
     return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);
@@ -255,7 +279,7 @@ ExpAssay.load.resolveImagePath.arrayScan = function (workflowData, expPlate, wel
  * TODO Get a mapping of Tile000N -> Well (A01)
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
 ExpAssay.load.resolveImagePath.nyu = function (workflowData, expPlate, wellData) {
     return ExpAssay.load.resolveImagePath.default(workflowData, expPlate, wellData);
@@ -265,15 +289,24 @@ ExpAssay.load.resolveImagePath.nyu = function (workflowData, expPlate, wellData)
  * ExpDesign is a bit different for primary/secondary screens
  * primary each condition is its own plate
  * secondary the control wells are on the same plate
+ * Weird things happen when saving the workflow as a mongodb object that do not happen on an in memory object
+ * The deeply nested things are saved as strings instead of integers, which is a huge pain
  * @param workflowData
  * @param {ExpPlateResultSet} expPlate
  * @returns {{expGroupType: string; biosampleId: any}}
  */
 ExpAssay.load.getExpGroup = function (workflowData, expPlate) {
     //TODO need to return the index here
-    var expGroupType = Object.keys(workflowData.experimentGroups).filter(function (condition) {
-        return _.find(workflowData.experimentGroups[condition]['plates'], ['instrumentPlateId', expPlate.instrumentPlateId]);
-    })[0];
+    var expGroupType;
+    try {
+        expGroupType = Object.keys(workflowData.experimentGroups).filter(function (condition) {
+            return _.find(workflowData.experimentGroups[condition]['plates'], ['instrumentPlateId', String(expPlate.instrumentPlateId)]) || _.find(workflowData.experimentGroups[condition]['plates'], ['instrumentPlateId', expPlate.instrumentPlateId]);
+        })[0];
+    }
+    catch (error) {
+        app.winston.info(error);
+        throw new Error(error);
+    }
     var biosample = workflowData.experimentGroups[expGroupType]['biosampleId'];
     return { expGroupType: expGroupType, biosampleId: biosample };
 };
@@ -301,7 +334,7 @@ ExpAssay.load.primary.getControlCondition = function (workflowData, expPlate, ex
     return expGroup.expGroupType;
 };
 ExpAssay.load.secondary.getControlCondition = function (workflowData, expPlate, expGroup) {
-    return workflowData.biosampleControlConditions[expGroup.expGroupType];
+    return workflowData.biosampleMatchConditions[expGroup.expGroupType];
 };
 /**
  * TODO This should get moved to after the screen , in the same spot as ExperimentDesign
@@ -320,11 +353,11 @@ ExpAssay.load.workflows.createAnnotationData = function (workflowData, plateData
             return app.models.WpTermTaxonomy.load.createTaxTerms(results);
         })
             .then(function (results) {
-            plateData.annotationData = {};
-            plateData.annotationData.taxTerms = results;
+            plateData.annotationData = new wellData_1.annotationData({ taxTerms: results });
             resolve(plateData);
         })
             .catch(function (error) {
+            app.winston.info(error);
             reject(new Error(error));
         });
     });
@@ -338,19 +371,15 @@ ExpAssay.load.workflows.createAnnotationData = function (workflowData, plateData
  */
 ExpAssay.load.prepareAnnotationData = function (workflowData, plateData) {
     return new Promise(function (resolve) {
-        var taxTermsTotal = [];
         plateData.wellDataList.map(function (wellData) {
-            wellData.annotationData.taxTerms.map(function (taxTerm) {
-                taxTermsTotal.push(taxTerm);
+            var wellTerms = app.models.WpTerms.load
+                .genWellTaxTerms(workflowData, plateData.expPlate, wellData);
+            wellTerms.map(function (taxTerm) {
+                wellData.annotationData.taxTerms.push(taxTerm);
             });
-            app.models.WpTerms.load
-                .genWellTaxTerms(workflowData, plateData.expPlate, wellData)
-                .map(function (taxTerm) {
-                taxTermsTotal.push(taxTerm);
-            });
+            wellData.annotationData.taxTerms = _.uniqWith(wellData.annotationData.taxTerms, _.isEqual);
         });
-        var uniqTaxTerms = _.uniqWith(taxTermsTotal, _.isEqual);
-        resolve(uniqTaxTerms);
+        resolve(plateData);
     });
 };
 /**
@@ -368,6 +397,7 @@ ExpAssay.load.workflows.imageConversionPipeline.all = function (workflowData, pl
             resolve(plateData);
         })
             .catch(function (error) {
+            app.winston.info(error);
             reject(new Error(error));
         });
     });
@@ -432,3 +462,4 @@ ExpAssay.load.workflows.imageConversionPipeline.arrayScan = function (workflowDa
         });
     });
 };
+//# sourceMappingURL=ExpAssay.js.map

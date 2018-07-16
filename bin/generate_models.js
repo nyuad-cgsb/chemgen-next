@@ -7,6 +7,7 @@ const app = require('../server/server')
 const mkdirp = require('mkdirp-promise')
 const camelCase = require('camelcase')
 const upperCamelCase = require('uppercamelcase')
+const fs = require('fs')
 
 const datasource = app.datasources.chemgenDS
 
@@ -77,7 +78,12 @@ function addForiegnKeys (model, modelData, fKeyData) {
     fKeyData.map(data => {
       let relationName = String(camelCase(data.pkTableName))
       let modelName = upperCamelCase(data.pkTableName)
-      relations[`${relationName}s`] = {type: 'hasMany', model: modelName, foreignKey: camelCase(data.fkColumnName), propertyId: camelCase(data.pkColumnName)}
+      relations[`${relationName}s`] = {
+        type: 'hasMany',
+        model: modelName,
+        foreignKey: camelCase(data.fkColumnName),
+        propertyId: camelCase(data.pkColumnName)
+      }
     })
     modelData.relations = relations
     resolve(modelData)
@@ -107,13 +113,18 @@ function writeModelFile (modelData) {
     mkdirp(modelPath)
       .then(() => {
         const fileContents = JSON.stringify(modelData, null, 2)
-        return writeFile(path.resolve(modelPath, `${modelData.name}.json`), fileContents)
-      })
-      .then(() => {
-        resolve()
-      })
-      .catch((error) => {
-        reject(new Error(error))
+        let filePath = path.resolve(modelPath, `${modelData.name}.json`)
+        // if (!fs.existsSync(filePath)) {
+          writeFile(path.resolve(modelPath, `${modelData.name}.json`), fileContents)
+            .then(() => {
+              resolve()
+            })
+            .catch((error) => {
+              reject(new Error(error))
+            })
+        // } else {
+        //   resolve()
+        // }
       })
   })
 }

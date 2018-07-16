@@ -1,5 +1,6 @@
 'use strict'
 const Promise = require('bluebird')
+const app = require('../../../../server/server')
 
 module.exports = function (ExpScreenUploadWorkflow) {
   ExpScreenUploadWorkflow.load = {}
@@ -11,15 +12,22 @@ module.exports = function (ExpScreenUploadWorkflow) {
   ExpScreenUploadWorkflow.load.workflows = {}
   ExpScreenUploadWorkflow.load.workflows.worms = {}
   ExpScreenUploadWorkflow.load.workflows.worms.secondary = {}
+  ExpScreenUploadWorkflow.load.workflows.worms.primary = {}
+  ExpScreenUploadWorkflow.load.primary = {}
+  ExpScreenUploadWorkflow.load.secondary = {}
+
 
   ExpScreenUploadWorkflow.on('attached', function () {
     require('../load/ExpScreenUploadWorkflow')
     require('../experiment/worms/load/primary/ExpScreenUploadWorkflow')
+    require('../experiment/worms/load/ExpScreenUploadWorkflow')
   })
 
   ExpScreenUploadWorkflow.doWork = function (workflowData) {
     return new Promise((resolve, reject) => {
       // ExpScreenUploadWorkflow.load.workflows.worms.primary.doWork
+      // app.winston.info(JSON.stringify(workflowData, null, 2))
+      app.agenda.now('ExpScreenUploadWorkflow.doWork', {workflowData: workflowData})
       resolve({'status': 'ok'})
     })
   }

@@ -39,6 +39,36 @@
         "nullable": "Y"
       }
     },
+    "plate": {
+      "type": "String",
+      "required": true,
+      "length": 200,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "plate",
+        "dataType": "varchar",
+        "dataLength": 200,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "N"
+      }
+    },
+    "well": {
+      "type": "String",
+      "required": true,
+      "length": 200,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "well",
+        "dataType": "varchar",
+        "dataLength": 200,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "N"
+      }
+    },
     "compoundLibraryId": {
       "type": "Number",
       "required": false,

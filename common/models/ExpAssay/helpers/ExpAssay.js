@@ -6,7 +6,7 @@ var Promise = require("bluebird");
 var Mustache = require("mustache");
 var readFile = Promise.promisify(require('fs').readFile);
 var ExpAssay = app.models['ExpAssay'];
-//TODO This is worm only - nyuad only logic
+//TODO This is worm nyuad only logic
 //TODO Preface all basename(baseImage) with the instrumentPlateId, that way we get unique image names
 ExpAssay.helpers.genImageFileNames = function (expPlate, well) {
     var imageArray = expPlate.instrumentPlateImagePath.split('\\');
@@ -20,6 +20,7 @@ ExpAssay.helpers.genImageFileNames = function (expPlate, well) {
         imageId, '/',
         imageId
     ].join('');
+    //This is only for worms - cells are different
     var ext = 'f00d0.C01';
     var instrumentImage = imagePath + '_' + well + ext;
     var outDir = '/mnt/image/';
@@ -67,3 +68,4 @@ ExpAssay.helpers.genConvertImageCommands = function (images) {
         });
     });
 };
+//# sourceMappingURL=ExpAssay.js.map

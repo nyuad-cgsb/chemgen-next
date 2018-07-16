@@ -35,6 +35,18 @@ var PlatePlan96ResultSet = /** @class */ (function () {
             path: 'PlatePlan96s',
             idName: 'id',
             properties: {
+                "platePlanName": {
+                    name: 'platePlanName',
+                    type: 'string'
+                },
+                "platePlanUploadDate": {
+                    name: 'platePlanUploadDate',
+                    type: 'Date'
+                },
+                "libraryId": {
+                    name: 'libraryId',
+                    type: 'number'
+                },
                 "A01": {
                     name: 'A01',
                     type: 'any'
@@ -430,3 +442,4 @@ var PlatePlan96ResultSet = /** @class */ (function () {
     return PlatePlan96ResultSet;
 }());
 exports.PlatePlan96ResultSet = PlatePlan96ResultSet;
+//# sourceMappingURL=PlatePlan96ResultSet.js.map

@@ -56,12 +56,17 @@ ExpDesign.transform.groupExpConditions = function (workflowData, plateDataList) 
 ExpDesign.transform.createExpSets = function (workflowData, groupsData) {
     var exp = Object.keys(workflowData.experimentMatchConditions)[0];
     var control = workflowData.experimentMatchConditions[exp];
-    return groupsData[exp].map(function (expGroup) {
-        var reagentId = expGroup.reagentId;
-        var well = expGroup.well;
-        var controlGroup = _.find(groupsData[control], { reagentId: reagentId, well: well });
-        return { expGroup: expGroup, controlGroup: controlGroup };
-    });
+    if (_.get(groupsData, exp)) {
+        return groupsData[exp].map(function (expGroup) {
+            var reagentId = expGroup.reagentId;
+            var well = expGroup.well;
+            var controlGroup = _.find(groupsData[control], { reagentId: reagentId, well: well });
+            return { expGroup: expGroup, controlGroup: controlGroup };
+        });
+    }
+    else {
+        return [];
+    }
 };
 ExpDesign.transform.prepareExpDesign = function (workflowData, groups, matchedExpGroups) {
     var expDesignRows = [];
@@ -76,5 +81,7 @@ ExpDesign.transform.prepareExpDesign = function (workflowData, groups, matchedEx
             });
         });
     });
+    expDesignRows = _.uniqWith(expDesignRows, _.isEqual);
     return expDesignRows;
 };
+//# sourceMappingURL=ExpDesign.js.map

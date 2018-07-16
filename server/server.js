@@ -1,8 +1,10 @@
-
 const loopback = require('loopback')
 const boot = require('loopback-boot')
+let cluster = require('express-cluster')
 
 const app = module.exports = loopback()
+
+app.agenda = require('../agenda/agenda')
 
 app.start = function () {
   // start the web server
@@ -16,7 +18,6 @@ app.start = function () {
     }
   })
 }
-
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
 boot(app, __dirname, (err) => {

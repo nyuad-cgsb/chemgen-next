@@ -1,12 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var RnaiWellCollection = /** @class */ (function () {
-    function RnaiWellCollection(data) {
+var annotationData = /** @class */ (function () {
+    function annotationData(data) {
         Object.assign(this, data);
     }
-    return RnaiWellCollection;
+    return annotationData;
 }());
-exports.RnaiWellCollection = RnaiWellCollection;
+exports.annotationData = annotationData;
+var WellCollection = /** @class */ (function () {
+    function WellCollection(data) {
+        Object.assign(this, data);
+    }
+    return WellCollection;
+}());
+exports.WellCollection = WellCollection;
 var PlateCollection = /** @class */ (function () {
     function PlateCollection(data) {
         Object.assign(this, data);
@@ -28,3 +35,4 @@ var ExpSet = /** @class */ (function () {
     return ExpSet;
 }());
 exports.ExpSet = ExpSet;
+//# sourceMappingURL=wellData.js.map

@@ -20,3 +20,4 @@ var WorkflowModel = /** @class */ (function (_super) {
     return WorkflowModel;
 }(loopback_1.PersistedModel));
 exports.WorkflowModel = WorkflowModel;
+//# sourceMappingURL=index.js.map

@@ -14,7 +14,7 @@ export interface ExpAssayResultSetInterface {
   "biosampleId"?: number;
   "assayCodeName"?: string;
   "assayWell"?: string;
-  "assayExpGroup"?: string;
+  "assayExpGroup"?: number;
   "assayReplicateNum"?: number;
   "assayImagePath"?: string;
   "assayWpAssayPostId"?: number;
@@ -32,7 +32,7 @@ export class ExpAssayResultSet implements ExpAssayResultSetInterface {
   "biosampleId": number;
   "assayCodeName": string;
   "assayWell": string;
-  "assayExpGroup": string;
+  "assayExpGroup": number;
   "assayReplicateNum": number;
   "assayImagePath": string;
   "assayWpAssayPostId": number;
@@ -100,7 +100,7 @@ export class ExpAssayResultSet implements ExpAssayResultSetInterface {
         },
         "assayExpGroup": {
           name: 'assayExpGroup',
-          type: 'string'
+          type: 'number'
         },
         "assayReplicateNum": {
           name: 'assayReplicateNum',

@@ -13,8 +13,8 @@
     "instrumentLookUp": "arrayScan",
     "biosampleType": "worm",
     "screenName": "mel-28 Primary RNAi Enhancer Screen",
-    "assayViewType": "experiment_assay_ahringer2",
-    "plateViewType": "experiment_plate_ahringer2",
+    "assayViewType": "exp_assay_ahringer2",
+    "plateViewType": "exp_plate_ahringer2",
     "stockPrepDate": "2016-08-17T06:02:06.000Z",
     "assayDates": [
       "2016-08-17T06:02:06.000Z"

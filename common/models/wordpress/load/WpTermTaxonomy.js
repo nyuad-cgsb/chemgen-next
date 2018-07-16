@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../server/server.js");
 var Promise = require("bluebird");
+var lodash_1 = require("lodash");
 var WpTermTaxonomy = app.models['WpTermTaxonomy'];
 WpTermTaxonomy.load.createTaxTerms = function (taxTermsList) {
     return new Promise(function (resolve, reject) {
-        Promise.map(taxTermsList, function (taxTermObj) {
+        Promise.map(lodash_1.shuffle(taxTermsList), function (taxTermObj) {
             var createObj = {
                 termId: taxTermObj.termId,
                 //taxTerm from original object
@@ -19,6 +20,9 @@ WpTermTaxonomy.load.createTaxTerms = function (taxTermsList) {
             return WpTermTaxonomy
                 .findOrCreate({ where: app.etlWorkflow.helpers.findOrCreateObj(createObj) }, createObj)
                 .then(function (results) {
+                //This is technically not ok
+                //The term gets added back in to make it easier to assocate the posts with the terms
+                results[0].term = taxTermObj.name;
                 return results[0];
             })
                 .catch(function (error) {
@@ -33,3 +37,4 @@ WpTermTaxonomy.load.createTaxTerms = function (taxTermsList) {
         });
     });
 };
+//# sourceMappingURL=WpTermTaxonomy.js.map

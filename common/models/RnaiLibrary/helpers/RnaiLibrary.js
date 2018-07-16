@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../server/server.js");
-//IMPORT LODASH LIKE THIS!!!!
 var _ = require("lodash");
 //TODO This file needs a lot of cleaning up - lots of leftover logic from the last codebase
 var RnaiLibrary = app.models['RnaiLibrary'];
@@ -118,13 +117,6 @@ RnaiLibrary.helpers.getQuad = function (barcode) {
         Q4: 'B2',
     };
     var plateQuadrant;
-    // for (let key in codes) {
-    //   if (barcode.match(key)) {
-    //     plateQuadrant = codes[key];
-    //   } else if (barcode.match(codes[key])) {
-    //     plateQuadrant = codes[key];
-    //   }
-    // }
     Object.keys(codes).map(function (key) {
         if (barcode.match(key)) {
             plateQuadrant = codes[key];
@@ -236,6 +228,7 @@ RnaiLibrary.search = function (where) {
  * @returns {{}}
  */
 RnaiLibrary.helpers.genLibraryResult = function (barcode, libraryResults, well) {
+    var thisWellLibraryResults = [];
     var libraryResult = {};
     if (barcode.match('L4440')) {
         libraryResult.name = 'L4440';
@@ -244,11 +237,13 @@ RnaiLibrary.helpers.genLibraryResult = function (barcode, libraryResults, well) 
     else {
         // I'm sure I use the quadrant for something  - just not sure what
         // var quadrant = RnaiLibrary.helpers.getQuad(barcode);
+        // TODO
+        //Return all the wells - change to filter
         libraryResult = _.find(libraryResults, {
             well: well,
         });
+        libraryResult = RnaiLibrary.helpers.checkLibraryResult(libraryResult);
     }
-    libraryResult = RnaiLibrary.helpers.checkLibraryResult(libraryResult);
     return libraryResult;
 };
 /**
@@ -265,3 +260,4 @@ RnaiLibrary.helpers.checkLibraryResult = function (libraryResult) {
     }
     return libraryResult;
 };
+//# sourceMappingURL=RnaiLibrary.js.map

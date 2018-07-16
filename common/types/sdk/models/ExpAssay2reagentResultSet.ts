@@ -2,7 +2,8 @@
 import {
   ExpScreenResultSet,
   ExpPlateResultSet,
-  ExpAssayResultSet
+  ExpAssayResultSet,
+  ReagentLibraryResultSet
 } from '../index';
 
 /* Jillian */
@@ -10,6 +11,7 @@ declare var Object: any;
 export interface ExpAssay2reagentResultSetInterface {
   "assay2reagentId"?: number;
   "screenId"?: number;
+  "libraryId"?: number;
   "plateId"?: number;
   "assayId"?: number;
   "stockId"?: number;
@@ -19,16 +21,19 @@ export interface ExpAssay2reagentResultSetInterface {
   "stockLibraryWell"?: string;
   "reagentName"?: string;
   "reagentType"?: string;
+  "assayExpGroup"?: number;
   "reagentTable"?: string;
   "assay2reagentMeta"?: string;
   expScreens?: ExpScreenResultSet[];
   expPlates?: ExpPlateResultSet[];
   expAssays?: ExpAssayResultSet[];
+  reagentLibrarys?: ReagentLibraryResultSet[];
 }
 
 export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInterface {
   "assay2reagentId": number;
   "screenId": number;
+  "libraryId": number;
   "plateId": number;
   "assayId": number;
   "stockId": number;
@@ -38,11 +43,13 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
   "stockLibraryWell": string;
   "reagentName": string;
   "reagentType": string;
+  "assayExpGroup": number;
   "reagentTable": string;
   "assay2reagentMeta": string;
   expScreens: ExpScreenResultSet[];
   expPlates: ExpPlateResultSet[];
   expAssays: ExpAssayResultSet[];
+  reagentLibrarys: ReagentLibraryResultSet[];
   constructor(data?: ExpAssay2reagentResultSetInterface) {
     Object.assign(this, data);
   }
@@ -84,6 +91,10 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
           name: 'screenId',
           type: 'number'
         },
+        "libraryId": {
+          name: 'libraryId',
+          type: 'number'
+        },
         "plateId": {
           name: 'plateId',
           type: 'number'
@@ -120,6 +131,10 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
           name: 'reagentType',
           type: 'string'
         },
+        "assayExpGroup": {
+          name: 'assayExpGroup',
+          type: 'number'
+        },
         "reagentTable": {
           name: 'reagentTable',
           type: 'string'
@@ -153,6 +168,14 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
           relationType: 'hasMany',
                   keyFrom: 'assay2reagentId',
           keyTo: 'assayId'
+        },
+        reagentLibrarys: {
+          name: 'reagentLibrarys',
+          type: 'ReagentLibraryResultSet[]',
+          model: 'ReagentLibrary',
+          relationType: 'hasMany',
+                  keyFrom: 'assay2reagentId',
+          keyTo: 'libraryId'
         },
       }
     }

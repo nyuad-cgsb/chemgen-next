@@ -34,9 +34,10 @@ ExpAssay.load.workflows.createExpAssayInterfaces = function (workflowData, scree
             })
                 .then(function (results) {
                 //Then associate taxTerms to posts
-                return ExpAssay.load.workflows.createPostTaxRels(workflowData, plateData, wellData, results);
+                return ExpAssay.load.workflows.createPostTaxRels(workflowData, screenData, wellData, results);
             })
                 .catch(function (error) {
+                app.winston.error('Error in ExpAssay.load.createExpAssayInterfaces .map');
                 reject(new Error(error));
             });
         })
@@ -44,6 +45,7 @@ ExpAssay.load.workflows.createExpAssayInterfaces = function (workflowData, scree
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.workflows.createExpAssayInterfaces');
             reject(new Error(error));
         });
     });
@@ -74,6 +76,7 @@ ExpAssay.load.workflows.getAssayRelations = function (workflowData, screenData, 
             }
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.getAssayRelations');
             reject(new Error(error));
         });
     });
@@ -98,19 +101,23 @@ ExpAssay.load.mapAssayRelations = function (workflowData, expSet) {
  * TODO - Create a file resolver to allow for customized templates
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {ExpPlateResultSet} expPlate
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * /common/views/exp/assay/worm/RnaiLibrary/expAssay-rnailibrary-ahringer2-primary-permissive.mustache
  */
 // return ExpAssay.load.genHtmlView(workflowData, screenData, plateData, wellData, annotationData);
 ExpAssay.load.genHtmlView = function (workflowData, screenData, plateData, wellData, annotationData) {
-    var templateName = workflowData.librarycode + "-" + workflowData.screenStage + "-" + workflowData.screenType + ".mustache";
+    var templateName = workflowData.librarycode + "-" + workflowData.screenStage + ".mustache";
     var templateFile = path.join(path.dirname(__filename), "../../../../../common/views/exp/assay/" + workflowData.biosampleType + "/" + workflowData.libraryModel + "/expAssay-" + templateName);
+    var screenType = _.capitalize(workflowData.screenType);
     //TODO Generate WpUrl for Plate
     var table = app.models.WpTerms.load.genTermTable(wellData.annotationData.taxTerms);
+    var libraryData = app.models[workflowData.libraryModel].load.genLibraryViewData(workflowData, wellData);
     return new Promise(function (resolve, reject) {
         readFile(templateFile, 'utf8')
             .then(function (contents) {
             var assayView = Mustache.render(contents, {
+                libraryData: libraryData,
+                screenType: screenType,
                 wellData: wellData,
                 expPlate: plateData.expPlate,
                 workflowData: workflowData,
@@ -121,6 +128,7 @@ ExpAssay.load.genHtmlView = function (workflowData, screenData, plateData, wellD
             resolve(assayView);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.genHtmlView');
             reject(new Error(error));
         });
     });
@@ -129,7 +137,7 @@ ExpAssay.load.genHtmlView = function (workflowData, screenData, plateData, wellD
  * Here is where the content is actually loaded into the Wordpress WpPosts table
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param {string} postContent
  */
 ExpAssay.load.workflows.createWpPosts = function (workflowData, plateData, wellData, postContent) {
@@ -142,7 +150,7 @@ ExpAssay.load.workflows.createWpPosts = function (workflowData, plateData, wellD
             title: title,
             titleSlug: slug(title),
             postContent: postContent,
-            imagePath: assayImagePath + ".jpeg",
+            imagePath: assayImagePath + "-autolevel.jpeg",
         };
         app.models.WpPosts.load.workflows.createPost(workflowData, postData)
             .then(function (result) {
@@ -157,13 +165,14 @@ ExpAssay.load.workflows.createWpPosts = function (workflowData, plateData, wellD
             resolve(postData);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.workflows.createWpPosts');
             reject(new Error(error));
         });
     });
 };
 /**
  * Once we have the created the expAssay interface, update the ResultSet with the post Id
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postData
  */
 ExpAssay.load.updateExpAssay = function (wellData, postData) {
@@ -175,11 +184,13 @@ ExpAssay.load.updateExpAssay = function (wellData, postData) {
             resolve(postData);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.updateExpAssay');
             reject(new Error(error));
         });
     });
 };
 /**
+ * TODO move this to WpTerms - it can be used for ExpPlate and ExpAssay
  * Annotation data gets preprocessed at the end of each plate
  * plateData.annotationData is an array of taxonomy -> termIds relationships
  * In Annotation Data it looks like this
@@ -200,12 +211,12 @@ ExpAssay.load.updateExpAssay = function (wellData, postData) {
  };
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postsResults
  */
-ExpAssay.load.relateTaxToPost = function (workflowData, plateData, wellData) {
+ExpAssay.load.relateTaxToPost = function (workflowData, screenData, wellData) {
     var results = _.map(wellData.annotationData.taxTerms, function (taxTerm) {
-        return _.filter(plateData.annotationData.taxTerms, function (taxTermResultSet) {
+        return _.filter(screenData.annotationData.taxTerms, function (taxTermResultSet) {
             return _.isEqual(String(taxTermResultSet.term), String(taxTerm.taxTerm)) && _.isEqual(String(taxTermResultSet.taxonomy), String(taxTerm.taxonomy));
         });
     });
@@ -218,12 +229,13 @@ ExpAssay.load.relateTaxToPost = function (workflowData, plateData, wellData) {
  * This associates the post to the taxonomy terms
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
  * @param {PlateCollection} plateData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  * @param postData
  */
-ExpAssay.load.workflows.createPostTaxRels = function (workflowData, plateData, wellData, postData) {
+ExpAssay.load.workflows.createPostTaxRels = function (workflowData, screenData, wellData, postData) {
     return new Promise(function (resolve, reject) {
-        var taxTerms = ExpAssay.load.relateTaxToPost(workflowData, plateData, wellData);
+        var taxTerms = ExpAssay.load.relateTaxToPost(workflowData, screenData, wellData);
+        taxTerms = _.uniqWith(taxTerms, _.isEqual);
         Promise.map(Object.keys(postData), function (postType) {
             return app.models.WpTermRelationships.load
                 .createRelationships(postData[postType].id, taxTerms);
@@ -232,7 +244,10 @@ ExpAssay.load.workflows.createPostTaxRels = function (workflowData, plateData, w
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.error('Error in ExpAssay.load.PostTaxRels');
+            app.winston.error(error);
             reject(new Error(error));
         });
     });
 };
+//# sourceMappingURL=ExpAssay.js.map

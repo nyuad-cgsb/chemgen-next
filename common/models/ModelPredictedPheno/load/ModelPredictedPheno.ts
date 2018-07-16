@@ -7,7 +7,7 @@ import {
   WpTermsResultSet, WpTermTaxonomyResultSet
 } from "../../../types/sdk/models/index";
 import {WorkflowModel} from "../../index";
-import {PlateCollection, RnaiWellCollection, ScreenCollection} from "../../../types/wellData";
+import {PlateCollection, WellCollection, ScreenCollection} from "../../../types/wellData";
 
 import Promise = require('bluebird');
 import * as _ from "lodash";
@@ -27,7 +27,7 @@ ModelPredictedPheno.load.workflows.parseScreen = function (workflowData: ExpScre
   return new Promise((resolve, reject) => {
     //Have to set these to concurrency 1 or else we overload the server
     Promise.map(screenData.plateDataList, (plateData: PlateCollection) => {
-      return Promise.map(plateData.wellDataList, (wellData: RnaiWellCollection) => {
+      return Promise.map(plateData.wellDataList, (wellData: WellCollection) => {
         return ModelPredictedPheno.load.workflows.processAssay(workflowData, wellData);
       }, {concurrency: 1});
     }, {concurrency: 1})
@@ -50,9 +50,9 @@ ModelPredictedPheno.load.workflows.parseScreen = function (workflowData: ExpScre
  * First look for the assay
  * If it doesn't exist create
  * @param workflowData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
-ModelPredictedPheno.load.workflows.processAssay = function (workflowData, wellData: RnaiWellCollection) {
+ModelPredictedPheno.load.workflows.processAssay = function (workflowData, wellData: WellCollection) {
   return new Promise((resolve, reject) => {
     if (_.isEqual(wellData.annotationData.taxTerm, 'empty')) {
       resolve(wellData);
@@ -86,9 +86,9 @@ ModelPredictedPheno.load.workflows.processAssay = function (workflowData, wellDa
 /**
  * TODO This is hard coded for a particular model - which is NO GOOD
  * @param {ExpScreenUploadWorkflowResultSet} workflowData
- * @param {RnaiWellCollection} wellData
+ * @param {WellCollection} wellData
  */
-ModelPredictedPheno.load.getPhenos = function (workflowData: ExpScreenUploadWorkflowResultSet, wellData: RnaiWellCollection) {
+ModelPredictedPheno.load.getPhenos = function (workflowData: ExpScreenUploadWorkflowResultSet, wellData: WellCollection) {
   let phenoJob = {image_file: `/mnt/image/${wellData.expAssay.assayImagePath}-autolevel.bmp`};
   return new Promise((resolve, reject) => {
     return request({
