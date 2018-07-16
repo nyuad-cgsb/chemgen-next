@@ -60,7 +60,7 @@ var ExpAssayResultSet = /** @class */ (function () {
                 },
                 "assayExpGroup": {
                     name: 'assayExpGroup',
-                    type: 'string'
+                    type: 'number'
                 },
                 "assayReplicateNum": {
                     name: 'assayReplicateNum',

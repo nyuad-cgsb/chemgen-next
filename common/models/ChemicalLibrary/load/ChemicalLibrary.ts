@@ -12,6 +12,7 @@ import {PlateCollection, WellCollection} from "../../../types/wellData";
 const ChemicalLibrary = app.models['ChemicalLibrary'] as (typeof WorkflowModel);
 
 ChemicalLibrary.load.workflows.processExpPlates = function (workflowData: any, expPlates: ExpPlateResultSet[]) {
+  app.winston.info(`ChemicalLibrary.load. Processing plates ${workflowData.name}`);
   return new Promise(function (resolve, reject) {
     Promise.map(expPlates, function (plateInfo) {
       return ChemicalLibrary.load.workflows.processExpPlate(workflowData, plateInfo);
@@ -20,13 +21,14 @@ ChemicalLibrary.load.workflows.processExpPlates = function (workflowData: any, e
         resolve(results);
       })
       .catch(function (error) {
-        app.winston.warn(error.stack);
+        app.winston.warn(error);
         reject(new Error(error));
       });
   });
 };
 
 ChemicalLibrary.load.workflows.processExpPlate = function (workflowData: any, expPlate: ExpPlateResultSet) {
+  app.winston.info(`ChemicalLibrary.load. Processing plate ${workflowData.name} ${expPlate.barcode}`);
   return new Promise(function (resolve, reject) {
     ChemicalLibrary['extract'][workflowData.screenStage].getParentLibrary(workflowData, expPlate.barcode)
       .then(function (libraryResults) {
@@ -37,7 +39,7 @@ ChemicalLibrary.load.workflows.processExpPlate = function (workflowData: any, ex
         resolve(plateData);
       })
       .catch(function (error) {
-        // app.winston.warn(error.stack);
+        app.winston.warn(error);
         reject(new Error(error));
       });
   });
@@ -51,6 +53,9 @@ ChemicalLibrary.load.createWorkflowSearchObj = function (workflowData: any) {
 ChemicalLibrary.load.primary.createWorkflowSearchObj = function (workflowData: any) {
   return {
     and: [
+      {
+        name: workflowData.name,
+      },
       {
         libraryId: workflowData.libraryId,
       },
@@ -66,12 +71,17 @@ ChemicalLibrary.load.primary.createWorkflowSearchObj = function (workflowData: a
       {
         stockPrepDate: workflowData.stockPrepDate,
       },
-      {
-        'replicates.1.0': workflowData.replicates[1][0],
-      },
-      {
-        'search.chemicalLibrary.plate': workflowData.search.chemicalLibrary.plate,
-      },
+      // {
+      //   'replicates.1.0': workflowData.replicates[1][0],
+      // },
+      //   "search": {
+      // "library": {
+      //   "chemical": {
+      //     "chembridge": {
+
+      // {
+      //   'search.library.chemical.chembridge.plate': workflowData.search.library.chemical.chembridge.plate,
+      // },
     ]
   };
 };
@@ -98,16 +108,16 @@ ChemicalLibrary.load.secondary.createWorkflowSearchObj = function (workflowData:
       {
         'platePlan.platePlanName': workflowData.platePlan.platePlanName,
       },
-      {
-        'replicates.1.0': workflowData.replicates[1][0],
-      }
+      // {
+      //   'replicates.1.0': workflowData.replicates[1][0],
+      // }
     ]
   };
 };
 
 ChemicalLibrary.load.primary.genTaxTerms = function (workflowData) {
   return [
-    {taxonomy: 'chemical_plate', taxTerm: workflowData.search.chemicalLibrary.plate},
+    {taxonomy: 'chemical_plate', taxTerm: workflowData.search.library.chemical.chembridge.plate},
   ]
 };
 

@@ -11,6 +11,7 @@ ChemicalLibrary.extract.primary.getParentLibrary = function (workflowData, barco
             resolve(results);
         })
             .catch(function (error) {
+            app.winston.warn(error);
             reject(new Error(error));
         });
     });
@@ -24,13 +25,21 @@ ChemicalLibrary.extract.primary.getParentLibrary = function (workflowData, barco
  * @param {string} barcode
  */
 ChemicalLibrary.extract.primary.getLibraryInfo = function (workflowData, barcode) {
-    var where = {
-        plate: workflowData.search.chemicalLibrary.plate,
-        libraryId: workflowData.libraryId,
-    };
+    var where;
+    try {
+        where = {
+            plate: workflowData.search.library.chemical[workflowData.librarycode].plate,
+            libraryId: workflowData.libraryId,
+        };
+    }
+    catch (error) {
+        app.winston.error("Error extracting library info from workflowData " + error);
+        throw (new Error(error));
+    }
     return new Promise(function (resolve, reject) {
         ChemicalLibrary.find({
             where: where,
+            limit: 1000,
         })
             .then(function (results) {
             resolve(results);

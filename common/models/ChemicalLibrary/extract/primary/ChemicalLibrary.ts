@@ -7,13 +7,14 @@ import Promise = require('bluebird');
 const ChemicalLibrary = app.models.ChemicalLibrary as (typeof WorkflowModel);
 
 //TODO Change this get plateplan
-ChemicalLibrary.extract.primary.getParentLibrary = function(workflowData, barcode) {
-  return new Promise(function(resolve, reject) {
+ChemicalLibrary.extract.primary.getParentLibrary = function (workflowData, barcode) {
+  return new Promise(function (resolve, reject) {
     ChemicalLibrary.extract.primary.getLibraryInfo(workflowData, barcode)
-      .then(function(results) {
+      .then(function (results) {
         resolve(results);
       })
-      .catch(function(error) {
+      .catch(function (error) {
+        app.winston.warn(error);
         reject(new Error(error));
       });
   });
@@ -28,20 +29,27 @@ ChemicalLibrary.extract.primary.getParentLibrary = function(workflowData, barcod
  * @param workflowData
  * @param {string} barcode
  */
-ChemicalLibrary.extract.primary.getLibraryInfo = function(workflowData : any , barcode : string) {
-  const where =  {
-    plate: workflowData.search.chemicalLibrary.plate,
-    libraryId: workflowData.libraryId,
-  };
+ChemicalLibrary.extract.primary.getLibraryInfo = function (workflowData: any, barcode: string) {
+  let where;
+  try {
+    where = {
+      plate: workflowData.search.library.chemical[workflowData.librarycode].plate,
+      libraryId: workflowData.libraryId,
+    };
+  } catch (error) {
+    app.winston.error(`Error extracting library info from workflowData ${error}`);
+    throw(new Error(error));
+  }
 
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     ChemicalLibrary.find({
       where: where,
+      limit: 1000,
     })
-      .then(function(results : ChemicalLibraryResultSet[]) {
+      .then(function (results: ChemicalLibraryResultSet[]) {
         resolve(results);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         reject(new Error(error));
       });
   });

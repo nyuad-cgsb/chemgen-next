@@ -20,12 +20,14 @@
       "../common/models/RnaiLibrary/def",
       "../common/models/RnaiWormbaseXrefs/def",
       "../common/models/ModelPredictedPheno/def",
+      "../common/models/ModelPredictedRank/def",
       "../common/models/ModelPredictedCounts/def",
       "../common/models/Models/def",
       "../common/models/RnaiLibraryStock/def",
       "../common/models/Instruments/ArrayScan/def",
       "../common/models/workflows/def",
       "../common/models/PlatePlan/def",
+      "../common/models/Analysis/def",
       "../common/models/wordpress/def"
     ],
     "mixins": [
@@ -135,7 +137,15 @@
     "dataSource": "chemgenDS",
     "public": true
   },
+  "ModelPredictedRank": {
+    "dataSource": "chemgenDS",
+    "public": true
+  },
   "PlatePlan96": {
+    "dataSource": "mongoDB",
+    "public": true
+  },
+  "Analysis": {
     "dataSource": "mongoDB",
     "public": true
   }

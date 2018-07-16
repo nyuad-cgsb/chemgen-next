@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var app = require("../../../../server/server.js");
 var Promise = require("bluebird");
 var _ = require("lodash");
+var lodash_1 = require("lodash");
 var ExpDesign = app.models.ExpDesign;
 /**
  * An Experiment Set is the treatment + conditions
@@ -61,7 +62,14 @@ ExpDesign.extract.workflows.getExpSetByExpGroupIdDB = function (expGroupId) {
             where: { or: [{ treatmentGroupId: expGroupId }, { controlGroupId: expGroupId }] }
         })
             .then(function (results) {
-            return ExpDesign.extract.getTreatmentIdsDB(expGroupId, results);
+            if (_.isEmpty(results) || _.isNull(results)) {
+                //TODO Resolve an empty row or throw an error?
+                //If this is empty there is something weird happening
+                resolve();
+            }
+            else {
+                return ExpDesign.extract.getTreatmentIdsDB(expGroupId, results);
+            }
         })
             .then(function (results) {
             resolve(results);
@@ -113,6 +121,43 @@ ExpDesign.extract.workflows.getExpGroup = function (expDesignRows) {
             .then(function (results) {
             results = _.uniqBy(results, 'expGroupId');
             resolve({ expDesignList: expDesignRows, expGroupList: results });
+        })
+            .catch(function (error) {
+            reject(new Error(error));
+        });
+    });
+};
+/**
+ * Given an array of ExpGroupResultSets
+ * Get all the Experiment Sets
+ * ExperimentSets are a set of ExperimentDesigns grouped by TreatmentGroup
+ * @param {ExpGroupResultSet[]} expGroups
+ */
+ExpDesign.extract.workflows.getExpSets = function (expGroups) {
+    var or = [];
+    expGroups.map(function (expGroup) {
+        var obj = { treatmentGroupId: expGroup.expGroupId };
+        or.push(obj);
+        obj = { controlGroupId: expGroup.expGroupId };
+        or.push(obj);
+    });
+    return new Promise(function (resolve, reject) {
+        app.models.ExpDesign
+            .find({ where: { or: or } })
+            .then(function (results) {
+            var groups = lodash_1.groupBy(results, 'treatmentGroupId');
+            var expDesignSets = [];
+            Object.keys(groups).map(function (group) {
+                var t = [];
+                groups[group].map(function (expDesignRow) {
+                    t.push(expDesignRow);
+                });
+                expDesignSets.push(t);
+            });
+            // data.expGroups = expGroups;
+            // data.expDesigns = expDesignSets;
+            resolve({ expGroups: expGroups, expDesigns: expDesignSets });
+            // resolve(data);
         })
             .catch(function (error) {
             reject(new Error(error));

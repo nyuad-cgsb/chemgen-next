@@ -24,6 +24,8 @@ export * from './WpTermTaxonomyResultSet';
 export * from './RnaiScreenUploadWorkflowResultSet';
 export * from './ModelPredictedPhenoResultSet';
 export * from './ModelPredictedCountsResultSet';
+export * from './ModelPredictedRankResultSet';
 export * from './PlatePlan96ResultSet';
+export * from './AnalysisResultSet';
 export * from './BaseModels';
 export * from './FireLoopRef';

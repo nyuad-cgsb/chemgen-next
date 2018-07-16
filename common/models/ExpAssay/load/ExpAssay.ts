@@ -58,7 +58,7 @@ ExpAssay.load.workflows.processExpPlates = function (workflowData: any, expPlate
         resolve(results);
       })
       .catch((error) => {
-        app.winston.error(error.stack);
+        app.winston.warn(error.stack);
         reject(new Error(error));
       });
   });
@@ -108,6 +108,7 @@ ExpAssay.load.workflows.processExpPlate = function (workflowData: any, expPlate:
         resolve(results);
       })
       .catch((error) => {
+        app.winston.warn(error);
         reject(new Error(error));
       })
   });
@@ -129,7 +130,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
       expGroupData = ExpAssay.load.getExpGroup(workflowData, expPlateData.expPlate);
     }
     catch (error) {
-      app.winston.error(error);
+      app.winston.warn(error);
       reject(new Error(error));
     }
     Promise.map(shuffle(expPlateData.wellDataList), function (wellData: WellCollection) {
@@ -173,7 +174,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
           expGroupType = ExpAssay.load[workflowData.screenStage].getControlCondition(workflowData, expPlateData.expPlate, expGroupData);
         }
         catch (error) {
-          app.winston.error(error);
+          app.winston.warn(error);
           reject(new Error(error));
         }
 
@@ -213,6 +214,7 @@ ExpAssay.load.createExpGroups = function (workflowData: any, expPlateData: Plate
         resolve(results);
       })
       .catch((error) => {
+        app.winston.warn(error);
         reject(new Error(error));
       });
   });
@@ -247,6 +249,7 @@ ExpAssay.load.createExpAssays = function (workflowData: any, expPlateData: Plate
           return wellData;
         })
         .catch((error) => {
+          app.winston.warn(error);
           reject(new Error(error));
         });
     })
@@ -254,6 +257,7 @@ ExpAssay.load.createExpAssays = function (workflowData: any, expPlateData: Plate
         resolve(results);
       })
       .catch((error) => {
+        app.winston.info(error);
         reject(new Error(error));
       });
   });
@@ -316,7 +320,8 @@ ExpAssay.load.getExpGroup = function (workflowData: any, expPlate: ExpPlateResul
     })[0];
   }
   catch (error) {
-    return new Error(error);
+    app.winston.info(error);
+    throw new Error(error);
   }
   let biosample = workflowData.experimentGroups[expGroupType]['biosampleId'];
 
@@ -373,6 +378,7 @@ ExpAssay.load.workflows.createAnnotationData = function (workflowData, plateData
         resolve(plateData);
       })
       .catch((error) => {
+        app.winston.info(error);
         reject(new Error(error));
       })
   });
@@ -414,6 +420,7 @@ ExpAssay.load.workflows.imageConversionPipeline.all = function (workflowData: an
         resolve(plateData);
       })
       .catch((error) => {
+        app.winston.info(error);
         reject(new Error(error));
       });
   });

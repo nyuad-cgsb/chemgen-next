@@ -78,6 +78,14 @@ var ModelPredictedCountsResultSet = /** @class */ (function () {
                     name: 'percEmbLeth',
                     type: 'number'
                 },
+                "percSter": {
+                    name: 'percSter',
+                    type: 'number'
+                },
+                "broodSize": {
+                    name: 'broodSize',
+                    type: 'number'
+                },
             },
             relations: {
                 expAssay2reagents: {

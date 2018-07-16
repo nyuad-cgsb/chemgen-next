@@ -2,6 +2,7 @@ import app  = require('../../../../server/server.js');
 import {WorkflowModel} from "../../index";
 import Promise = require('bluebird');
 import * as _ from "lodash";
+import {groupBy} from 'lodash';
 import {ExpDesignResultSet, ExpGroupResultSet} from "../../../types/sdk/models";
 
 const ExpDesign = app.models.ExpDesign as (typeof WorkflowModel);
@@ -66,7 +67,13 @@ ExpDesign.extract.workflows.getExpSetByExpGroupIdDB = function (expGroupId: numb
           {or: [{treatmentGroupId: expGroupId}, {controlGroupId: expGroupId}]}
       })
       .then((results: ExpDesignResultSet[]) => {
-        return ExpDesign.extract.getTreatmentIdsDB(expGroupId, results);
+        if (_.isEmpty(results) || _.isNull(results)) {
+          //TODO Resolve an empty row or throw an error?
+          //If this is empty there is something weird happening
+          resolve();
+        } else {
+          return ExpDesign.extract.getTreatmentIdsDB(expGroupId, results);
+        }
       })
       .then((results: ExpDesignResultSet[]) => {
         resolve(results);
@@ -119,12 +126,50 @@ ExpDesign.extract.workflows.getExpGroup = function (expDesignRows: ExpDesignResu
 
     app.models.ExpGroup
       .find({where: {or: orCondition}})
-      .then((results: ExpGroupResultSet[]) =>{
+      .then((results: ExpGroupResultSet[]) => {
         results = _.uniqBy(results, 'expGroupId');
         resolve({expDesignList: expDesignRows, expGroupList: results});
       })
-      .catch((error) =>{
+      .catch((error) => {
         reject(new Error(error));
       })
   });
 };
+
+/**
+ * Given an array of ExpGroupResultSets
+ * Get all the Experiment Sets
+ * ExperimentSets are a set of ExperimentDesigns grouped by TreatmentGroup
+ * @param {ExpGroupResultSet[]} expGroups
+ */
+ExpDesign.extract.workflows.getExpSets = function(expGroups: ExpGroupResultSet[]) {
+  let or = [];
+  expGroups.map((expGroup: ExpGroupResultSet) => {
+    let obj: any = {treatmentGroupId: expGroup.expGroupId};
+    or.push(obj);
+    obj = {controlGroupId: expGroup.expGroupId};
+    or.push(obj);
+  });
+  return new Promise((resolve, reject) => {
+    app.models.ExpDesign
+      .find({where: {or: or}})
+      .then((results: ExpDesignResultSet[]) => {
+        let groups = groupBy(results, 'treatmentGroupId');
+        let expDesignSets = [];
+        Object.keys(groups).map((group) => {
+          let t = [];
+          groups[group].map((expDesignRow: ExpDesignResultSet) => {
+            t.push(expDesignRow);
+          });
+          expDesignSets.push(t);
+        });
+        // data.expGroups = expGroups;
+        // data.expDesigns = expDesignSets;
+        resolve({expGroups: expGroups, expDesigns: expDesignSets});
+        // resolve(data);
+      })
+      .catch((error) => {
+        reject(new Error(error));
+      });
+  });
+}

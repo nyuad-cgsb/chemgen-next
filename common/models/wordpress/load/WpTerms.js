@@ -147,6 +147,14 @@ WpTerms.load.genWellTaxTerms = function (workflowData, expPlate, wellData) {
                 "AI-" + wellData.expAssay.assayId,
             ].join('')),
         },
+        {
+            taxonomy: 'envira-tag',
+            taxTerm: slug([
+                "SI-" + workflowData.screenId,
+                "_PI-" + expPlate.plateId,
+                "_R-" + groups[1],
+            ].join('')),
+        },
     ];
     return _.concat(plateTaxTerms, wellTaxTerms);
 };

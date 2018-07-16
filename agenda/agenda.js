@@ -28,13 +28,14 @@ agenda.define('ExpScreenUploadWorkflow.doWork', function (job, done) {
     });
 });
 // require('./jobs/jobs.js')(agenda);
-// agenda.on('ready', function () {
-//   console.log('Agenda ready!');
-//   agenda.processEvery('2 seconds');
-//   agenda.maxConcurrency(100);
-//   agenda.defaultConcurrency(20);
-//   agenda.start();
-// });
+agenda.on('ready', function () {
+    // console.log('Agenda ready!');
+    //TODO set this up as a separate worker script
+    // agenda.processEvery('2 seconds');
+    // agenda.maxConcurrency(100);
+    // agenda.defaultConcurrency(20);
+    // agenda.start();
+});
 agenda.on('complete', function (job) {
     // console.log('Job %s finished', job.attrs.name);
     job.remove(function (err) {

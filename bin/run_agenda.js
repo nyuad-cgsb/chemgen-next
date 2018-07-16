@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var agenda = require("../agenda/agenda");
 agenda.define('testJob', function (job) {
     console.log('There is a testJob ' + JSON.stringify(job.attr.data, null, 2));
-    job.attr.data.thing1();
 });
 agenda.on('start', function (job) {
     console.log('Job %s starting', job.attrs.name);

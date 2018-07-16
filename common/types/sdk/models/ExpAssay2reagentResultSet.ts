@@ -21,6 +21,7 @@ export interface ExpAssay2reagentResultSetInterface {
   "stockLibraryWell"?: string;
   "reagentName"?: string;
   "reagentType"?: string;
+  "assayExpGroup"?: number;
   "reagentTable"?: string;
   "assay2reagentMeta"?: string;
   expScreens?: ExpScreenResultSet[];
@@ -42,6 +43,7 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
   "stockLibraryWell": string;
   "reagentName": string;
   "reagentType": string;
+  "assayExpGroup": number;
   "reagentTable": string;
   "assay2reagentMeta": string;
   expScreens: ExpScreenResultSet[];
@@ -128,6 +130,10 @@ export class ExpAssay2reagentResultSet implements ExpAssay2reagentResultSetInter
         "reagentType": {
           name: 'reagentType',
           type: 'string'
+        },
+        "assayExpGroup": {
+          name: 'assayExpGroup',
+          type: 'number'
         },
         "reagentTable": {
           name: 'reagentTable',

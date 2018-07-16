@@ -67,6 +67,19 @@ RnaiLibrary.load.primary.createWorkflowSearchObj = function (workflowData: any) 
       {
         screenStage: workflowData.screenStage,
       },
+      // {
+      //   'biosamples.expBiosample.id': workflowData.biosamples.expBiosample.id,
+      // },
+      // {
+      //   'biosamples.ctrlBiosample.id': workflowData.biosamples.ctrlBiosample.id,
+      // },
+      {
+        stockPrepDate: workflowData.stockPrepDate,
+      },
+      // {
+      //   'replicates.1.0': workflowData.replicates[1][0],
+      // },
+      //These are library specific, but the rest aren't
       {
         'search.rnaiLibrary.plate': workflowData.search.rnaiLibrary.plate,
       },
@@ -76,12 +89,6 @@ RnaiLibrary.load.primary.createWorkflowSearchObj = function (workflowData: any) 
       {
         'search.rnaiLibrary.quadrant': workflowData.search.rnaiLibrary.quadrant,
       },
-      {
-        stockPrepDate: workflowData.stockPrepDate,
-      },
-      {
-        'replicates.1.0': workflowData.replicates[1][0],
-      }
     ]
   };
 };
@@ -91,8 +98,24 @@ RnaiLibrary.load.secondary.createWorkflowSearchObj = function (workflowData: any
   // But for some reason that is not recognized properly
   // It is encoded as a string here and in mongodb
   // TODO Check into changing into an embedded relationship
+  // "biosamples": {
+  //   "experimentBiosample": {
+  //     "id": 5,
+  //       "name": "mel-28"
+  //   },
+  //   "ctrlBiosample": {
+  //     "id": 4,
+  //       "name": "N2"
+  //   }
+  // },
   return {
     and: [
+      // {
+      //   'biosamples.expBiosample.id': workflowData.biosamples.experimentBiosample.id,
+      // },
+      // {
+      //   'biosamples.ctrlBiosample.id': workflowData.biosamples.ctrlBiosample.id,
+      // },
       {
         screenId: workflowData.screenId,
       },
@@ -111,9 +134,9 @@ RnaiLibrary.load.secondary.createWorkflowSearchObj = function (workflowData: any
       {
         'platePlan.platePlanName': workflowData.platePlan.platePlanName,
       },
-      {
-        'replicates.1.0': workflowData.replicates[1][0],
-      }
+      // {
+      //   'replicates.1.0': workflowData.replicates['1'][0],
+      // }
     ]
   };
 };

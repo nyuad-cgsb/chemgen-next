@@ -39,6 +39,14 @@ var ExpDesignResultSet = /** @class */ (function () {
                     name: 'expDesignId',
                     type: 'number'
                 },
+                "screenId": {
+                    name: 'screenId',
+                    type: 'number'
+                },
+                "expWorkflowId": {
+                    name: 'expWorkflowId',
+                    type: 'string'
+                },
                 "treatmentGroupId": {
                     name: 'treatmentGroupId',
                     type: 'number'
@@ -46,6 +54,10 @@ var ExpDesignResultSet = /** @class */ (function () {
                 "controlGroupId": {
                     name: 'controlGroupId',
                     type: 'number'
+                },
+                "controlGroupReagentType": {
+                    name: 'controlGroupReagentType',
+                    type: 'string'
                 },
             },
             relations: {}

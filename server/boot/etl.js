@@ -57,9 +57,34 @@ module.exports = function (app, cb) {
 
     return allVals
   }
+  app.etlWorkflow.helpers.list384Wells = function () {
+    const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P']
+    const cols = ['01', '02', '03', '04', '05',
+      '06', '07', '08', '09', '10', '11', '12',
+      '13', '14', '15', '16', '17', '18', '19',
+      '20', '21', '22', '23', '24'
+    ]
+    let allVals = []
 
+    rows.map(function (row) {
+      cols.map(function (col) {
+        allVals.push(row + col)
+      })
+    })
+
+    return allVals
+  }
+
+  // 384 well plates
+  app.etlWorkflow.helpers.rows384 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P']
+  app.etlWorkflow.helpers.cols384 = ['01', '02', '03', '04', '05',
+    '06', '07', '08', '09', '10', '11', '12',
+    '13', '14', '15', '16', '17', '18', '19',
+    '20', '21', '22', '23', '24'
+  ]
+
+  // 96 Well Plates
   app.etlWorkflow.helpers.rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-
   app.etlWorkflow.helpers.cols = ['01', '02', '03', '04', '05', '06',
     '07', '08', '09', '10', '11', '12'
   ]
