@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+export NODE_ENV=production
+export ARRAYSCAN_DB=store
+export ARRAYSCAN_USER=mysqluser
+export ARRAYSCAN_HOST=10.230.9.202
+export ARRAYSCAN_PASS=password
+export CHEMGEN_HOST=onyx.abudhabi.nyu.edu
+export CHEMGEN_URL=mysql://chemgen:chemGen123@onyx.abudhabi.nyu.edu/chemgen-next-prod
+export CHEMGEN_DB=chemgen-next-prod
+export CHEMGEN_USER=chemgen
+export CHEMGEN_PASS=chemGen123
+export WP_HOST=onyx.abudhabi.nyu.edu
+export WP_PASS=chemGen123
+export WP_SITE=http://onyx.abudhabi.nyu.edu/wordpress
+export WP_DB=chemgen_wp_dev
+export WP_USER=chemgen_wp_dev
+export MONGO_HOST=onyx.abudhabi.nyu.edu
+export MONGO_URL=mongodb://admin:admin123@onyx.abudhabi.nyu.edu/chemgen
+export MONGO_DB=chemgen
+export MONGO_USER=chemgen
+export MONGO_PASS=chemGen123
+export MONGO_WS250_HOST=onyx.abudhabi.nyu.edu
+export MONGO_WS250_URL=mongodb://wormbase:wormbase123@onyx.abudhabi.nyu.edu/wormbase
+export MONGO_WS250_DB=wormbase
+export MONGO_WS250_USER=wormbase
+export MONGO_WS250_PASS=wormbase123
