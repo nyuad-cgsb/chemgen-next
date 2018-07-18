@@ -13,7 +13,7 @@ cd ..
 RSYNC="rsync -avz -e 'ssh -p 4410' ./chemgen-next jdr400@onyx.abudhabi.nyu.edu:/home/jdr400/projects/"  
 echo $RSYNC
 rsync -avz -e 'ssh -p 4410' ./chemgen-next jdr400@onyx.abudhabi.nyu.edu:/home/jdr400/projects/ 
-#rsync -avz -e 'ssh -p 4410' ./chemgen-next-ng jdr400@onyx.abudhabi.nyu.edu:/home/jdr400/projects/ 
+rsync -avz -e 'ssh -p 4410' ./chemgen-next-ng jdr400@onyx.abudhabi.nyu.edu:/home/jdr400/projects/ 
 
 #inotify-hookable \
 #    --watch-directories '.' \
