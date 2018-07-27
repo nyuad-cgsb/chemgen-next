@@ -1,7 +1,7 @@
 import Promise = require('bluebird');
-import app = require('../../../server/server');
-import {find, isEqual, get, isEmpty} from 'lodash';
-import {ChemicalLibraryResultSet} from "../../../common/types/sdk/models";
+import app = require('../../../../server/server');
+import {padStart, find, isEqual, get, isEmpty} from 'lodash';
+import {ChemicalLibraryResultSet} from "../../../../common/types/sdk/models";
 
 const jsonfile = require('jsonfile');
 const path = require('path');
@@ -19,7 +19,6 @@ rows.map(function (row) {
 });
 
 let getParentLibrary = function (workflowData) {
-  console.log('in parent library!');
   return new Promise(function (resolve, reject) {
     parseCustomPlate(workflowData)
       .then(function (results) {
@@ -78,19 +77,14 @@ let migrateToNewFormat = function (wellData) {
   });
 };
 
-let addToWorkflowData = function (workflowData, wellRow) {
+let addToWorkflowData = function (workflowData, wellRow: ChemicalLibraryResultSet) {
   let parentLibrary: any = {};
   try {
-    parentLibrary.compoundId = wellRow.rnaiI;
+    parentLibrary.compoundId = wellRow.compoundId;
     parentLibrary.libraryId = wellRow.libraryId;
     parentLibrary.plate = wellRow.plate;
     parentLibrary.well = wellRow.well;
-    parentLibrary.chemicalName = wellRow.chemicalName;
-    parentLibrary.fwdPrimer = wellRow.fwdPrimer;
-    parentLibrary.revPrimer = wellRow.revPrimer;
-    parentLibrary.bioloc = wellRow.bioloc;
-    parentLibrary.stocktitle = wellRow.stocktitle;
-    parentLibrary.stockloc = wellRow.stockloc;
+    parentLibrary.chemicalName = wellRow.compoundSystematicName;
   }
   catch (error) {
     console.log(`Received error ${error}`);
@@ -101,11 +95,12 @@ let addToWorkflowData = function (workflowData, wellRow) {
 
 let buildChemicalLibraryWhere = function (lookUp) {
   let plateNo = lookUp[0];
-  let well = lookUp[1];
+  plateNo = padStart(plateNo, 2, '0');
+
   return {
     and: [
       {
-        plate: lookUp[0],
+        plate: plateNo,
       },
       {
         well: lookUp[1],
@@ -161,11 +156,11 @@ const parseWell = function (workflowData, wellData) {
             if (!results || isEmpty(results)) {
               resolve();
             } else {
-              results.wellData = wellData;
-              results.origWell = results.well;
+              results['wellData'] = wellData;
+              results['origWell'] = results.well;
               results.well = wellData.assayWell;
-              results.comment = comment;
-              results.lookUp = data;
+              results['comment'] = comment;
+              results['lookUp'] = data;
               resolve(results);
               // return findOtherGeneNames(results.chemicalName)
               //   .then((otherTaxTerms) =>{

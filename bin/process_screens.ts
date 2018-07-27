@@ -14,7 +14,7 @@ const ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow as (typeof Wo
 app.agenda.on('ready', function () {
   ExpScreenUploadWorkflow
     .find({
-      where: {and: [{name: /mip/}, {screenStage: 'primary'}]},
+      where: {and: [{name: /FDA/}, {screenStage: 'secondary'}]},
     })
     .then((results) => {
       results = shuffle(results);

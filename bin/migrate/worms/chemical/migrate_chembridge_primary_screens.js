@@ -1,11 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var app = require("../../../server/server.js");
+var app = require("../../../../server/server.js");
 var jsonfile = require("jsonfile");
 var path = require("path");
 var deepcopy = require("deepcopy");
 var Promise = require("bluebird");
 var lodash_1 = require("lodash");
+/***
+ * WIP
+ * This should run all kinds of queries against the arrayscan DB to get the chemical screens
+ */
 var chembridgeFile = path.resolve(__dirname, 'data', 'primary', 'chembridge_primary_OLD.json');
 var chembridgeData = jsonfile.readFileSync(chembridgeFile);
 var minimalWorkflow = jsonfile.readFileSync(path.resolve(__dirname, 'data', 'primary', 'minimal_primary.json'));
@@ -49,7 +53,7 @@ var combineGroupedPlates = function (grouped) {
             throw new Error("Treat plates for plate " + key + " are empty!");
         }
         workflowData.temperature = 20;
-        workflowData.name = "CHEM Primary " + key + " " + assayDates[0];
+        workflowData.name = "CHEM Chembridge Primary " + key + " " + assayDates[0];
         workflowData.assayDates = assayDates;
         workflowData.experimentGroups.ctrl_chemical.plates = ctrlPlates;
         workflowData.experimentGroups.ctrl_chemical.temperature = 20;
@@ -117,6 +121,7 @@ var findPlates = function (workflowData) {
             .find(search)
             .then(function (results) {
             // console.log(`Results length: ${results.length}`);
+            console.log(JSON.stringify(results));
             if (results.length == 0) {
                 reject(new Error("No Plates found for search " + JSON.stringify(search)));
             }
@@ -187,5 +192,7 @@ var parseWorkflowData = function (workflowDataList) {
         });
     });
 };
+// chembridgeData = shuffle(chembridgeData);
+// chembridgeData = slice(chembridgeData, 0, 10);
 parseWorkflowData(chembridgeData);
 //# sourceMappingURL=migrate_chembridge_primary_screens.js.map

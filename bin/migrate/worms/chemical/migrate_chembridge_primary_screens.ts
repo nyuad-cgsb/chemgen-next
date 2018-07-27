@@ -1,10 +1,15 @@
-import app = require('../../../server/server.js')
+import app = require('../../../../server/server.js')
 import jsonfile = require('jsonfile');
 import path = require('path');
 import deepcopy = require('deepcopy');
 import Promise = require('bluebird');
-import {ExpScreenUploadWorkflowResultSet, PlateResultSet} from "../../../common/types/sdk/models";
-import {get, isEqual, flatten, range, groupBy} from 'lodash';
+import {ExpScreenUploadWorkflowResultSet, PlateResultSet} from "../../../../common/types/sdk/models";
+import {get, isEqual, flatten, range, groupBy, slice, shuffle} from 'lodash';
+
+/***
+ * WIP
+ * This should run all kinds of queries against the arrayscan DB to get the chemical screens
+ */
 
 let chembridgeFile = path.resolve(__dirname, 'data', 'primary', 'chembridge_primary_OLD.json');
 let chembridgeData = jsonfile.readFileSync(chembridgeFile);
@@ -53,7 +58,7 @@ let combineGroupedPlates = function (grouped) {
       throw new Error(`Treat plates for plate ${key} are empty!`);
     }
     workflowData.temperature = 20;
-    workflowData.name = `CHEM Primary ${key} ${assayDates[0]}`;
+    workflowData.name = `CHEM Chembridge Primary ${key} ${assayDates[0]}`;
     workflowData.assayDates = assayDates;
     workflowData.experimentGroups.ctrl_chemical.plates = ctrlPlates;
     workflowData.experimentGroups.ctrl_chemical.temperature = 20;
@@ -123,6 +128,7 @@ let findPlates = function (workflowData) {
       .find(search)
       .then((results: PlateResultSet[]) => {
         // console.log(`Results length: ${results.length}`);
+        console.log(JSON.stringify(results));
         if (results.length == 0) {
           reject(new Error(`No Plates found for search ${JSON.stringify(search)}`));
         }
@@ -196,4 +202,6 @@ let parseWorkflowData = function (workflowDataList) {
   });
 };
 
+// chembridgeData = shuffle(chembridgeData);
+// chembridgeData = slice(chembridgeData, 0, 10);
 parseWorkflowData(chembridgeData);

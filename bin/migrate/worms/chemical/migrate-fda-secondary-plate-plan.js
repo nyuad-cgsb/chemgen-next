@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Promise = require("bluebird");
-var app = require("../../../server/server");
+var app = require("../../../../server/server");
 var lodash_1 = require("lodash");
 var jsonfile = require('jsonfile');
 var path = require('path');
@@ -16,7 +16,6 @@ rows.map(function (row) {
     });
 });
 var getParentLibrary = function (workflowData) {
-    console.log('in parent library!');
     return new Promise(function (resolve, reject) {
         parseCustomPlate(workflowData)
             .then(function (results) {
@@ -75,16 +74,11 @@ var migrateToNewFormat = function (wellData) {
 var addToWorkflowData = function (workflowData, wellRow) {
     var parentLibrary = {};
     try {
-        parentLibrary.compoundId = wellRow.rnaiI;
+        parentLibrary.compoundId = wellRow.compoundId;
         parentLibrary.libraryId = wellRow.libraryId;
         parentLibrary.plate = wellRow.plate;
         parentLibrary.well = wellRow.well;
-        parentLibrary.chemicalName = wellRow.chemicalName;
-        parentLibrary.fwdPrimer = wellRow.fwdPrimer;
-        parentLibrary.revPrimer = wellRow.revPrimer;
-        parentLibrary.bioloc = wellRow.bioloc;
-        parentLibrary.stocktitle = wellRow.stocktitle;
-        parentLibrary.stockloc = wellRow.stockloc;
+        parentLibrary.chemicalName = wellRow.compoundSystematicName;
     }
     catch (error) {
         console.log("Received error " + error);
@@ -94,11 +88,11 @@ var addToWorkflowData = function (workflowData, wellRow) {
 };
 var buildChemicalLibraryWhere = function (lookUp) {
     var plateNo = lookUp[0];
-    var well = lookUp[1];
+    plateNo = lodash_1.padStart(plateNo, 2, '0');
     return {
         and: [
             {
-                plate: lookUp[0],
+                plate: plateNo,
             },
             {
                 well: lookUp[1],
@@ -155,11 +149,11 @@ var parseWell = function (workflowData, wellData) {
                         resolve();
                     }
                     else {
-                        results.wellData = wellData;
-                        results.origWell = results.well;
+                        results['wellData'] = wellData;
+                        results['origWell'] = results.well;
                         results.well = wellData.assayWell;
-                        results.comment = comment_1;
-                        results.lookUp = data_1;
+                        results['comment'] = comment_1;
+                        results['lookUp'] = data_1;
                         resolve(results);
                         // return findOtherGeneNames(results.chemicalName)
                         //   .then((otherTaxTerms) =>{

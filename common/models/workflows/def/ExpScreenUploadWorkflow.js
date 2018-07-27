@@ -27,6 +27,7 @@ module.exports = function (ExpScreenUploadWorkflow) {
     return new Promise((resolve, reject) => {
       // ExpScreenUploadWorkflow.load.workflows.worms.primary.doWork
       // app.winston.info(JSON.stringify(workflowData, null, 2))
+      app.winston.info(`ExpScreenUploadWorkflow.doWork ${workflowData.name}`);
       app.agenda.now('ExpScreenUploadWorkflow.doWork', {workflowData: workflowData})
       resolve({'status': 'ok'})
     })
