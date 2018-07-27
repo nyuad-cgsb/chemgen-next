@@ -1,18 +1,34 @@
-const loopback = require('loopback')
+let loopback = require('loopback')
 const boot = require('loopback-boot')
-let cluster = require('express-cluster')
+const cluster = require('cluster')
 
 const app = module.exports = loopback()
-const instances = 5
-
-app.agenda = require('../agenda/agenda')
+const instances = 2
+const numCPUs = require('os').cpus().length
 
 /**
  * This starts the server in multiprocess mode, one instance per count
  */
-cluster(function (worker) {
+
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`)
+  for (let i = 0; i < instances; i++) {
+    cluster.fork()
+    startAgenda()
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`)
+  })
+} else {
+  startApp();
+  console.log(`Worker ${process.pid} started`)
+}
+
+function startApp () {
   app.start = function () {
     // start the web server
+    startAgenda()
     return app.listen(() => {
       app.emit('started')
       const baseUrl = app.get('url').replace(/\/$/, '')
@@ -22,15 +38,6 @@ cluster(function (worker) {
         console.log('Browse your REST API at %s%s', baseUrl, explorerPath)
       }
 
-      app.agenda.on('ready', function () {
-        console.log('Agenda cluster ready!')
-        //TODO set this up as a separate worker script
-        app.agenda.processEvery('2 seconds')
-        app.agenda.maxConcurrency(100)
-        app.agenda.defaultConcurrency(20)
-        app.agenda.start()
-      })
-
     })
   }
   // Bootstrap the application, configure models, datasources and middleware.
@@ -39,6 +46,23 @@ cluster(function (worker) {
     if (err) throw err
 
     // start the server if `$ node server.js`
-    if (require.main === module) { app.start() }
+    if (require.main === module) {
+      app.start()
+    }
   })
-}, {count: instances})
+
+}
+
+function startAgenda () {
+  app.agenda = require('../agenda/agenda')
+  app.agenda.on('ready', function () {
+    console.log('Agenda cluster ready!')
+    //TODO set this up as a separate worker script
+    app.agenda.processEvery('2 seconds')
+    app.agenda.maxConcurrency(100)
+    app.agenda.defaultConcurrency(20)
+    app.agenda.start()
+    //This just ensures the agenda cluster started
+    app.agenda.now('testJob', {'hello': 'world'})
+  })
+}

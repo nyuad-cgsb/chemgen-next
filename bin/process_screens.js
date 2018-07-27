@@ -10,7 +10,7 @@ var ExpScreenUploadWorkflow = app.models.ExpScreenUploadWorkflow;
 app.agenda.on('ready', function () {
     ExpScreenUploadWorkflow
         .find({
-        where: { and: [{ name: /mip/ }, { screenStage: 'primary' }] },
+        where: { and: [{ name: /FDA/ }, { screenStage: 'secondary' }] },
     })
         .then(function (results) {
         results = lodash_1.shuffle(results);
